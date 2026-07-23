@@ -1,0 +1,95 @@
+/*
+ * SVC Placement Cell — Design Tokens (single source of truth)
+ * ---------------------------------------------------------------------------
+ * The whole color palette lives here as CSS custom properties. tailwind.config.ts
+ * maps every semantic color token (bg, surface, ink, accent, gold, line, ...) to
+ * these variables, so flipping `.dark` on <html> re-themes the entire app without
+ * renaming a single Tailwind class.
+ *
+ * Two representations are used, on purpose:
+ *   - Solid colors are stored as space-separated RGB *channels* (e.g. `10 37 64`)
+ *     and consumed in Tailwind as `rgb(var(--x) / <alpha-value>)`. This is what
+ *     keeps opacity modifiers working (bg-surface/95, border-ink/15, text-gold/30).
+ *   - A few tokens are inherently translucent (line, *-soft). Those keep a baked
+ *     rgba() value and are consumed as plain `var(--x)`.
+ *
+ * ThemeContext.tsx adds/removes the `.dark` class on document.documentElement
+ * (i.e. <html>), which is why the dark overrides below are scoped to `html.dark`.
+ */
+
+:root {
+  /* ---- Surface (light: Stripe-style near-white) ---- */
+  --bg: 246 248 251;        /* #f6f8fb */
+  --bg-2: 238 241 246;      /* #eef1f6 */
+  --surface: 255 255 255;   /* #ffffff */
+  --surface-2: 250 251 253; /* #fafbfd */
+
+  /* ---- Ink / text ---- */
+  --ink: 10 37 64;          /* #0a2540 */
+  --ink-2: 61 70 99;        /* #3d4663 */
+  --ink-3: 105 115 134;     /* #697386 */
+
+  /* ---- Gold accent (institution identity) ---- */
+  --gold: 156 122 58;       /* #9c7a3a */
+  --gold-deep: 107 83 38;   /* #6b5326 */
+  --gold-soft: rgba(156, 122, 58, 0.08);
+
+  /* ---- Accent (Stripe-style hyperlink / CTA) ---- */
+  --accent: 99 91 255;      /* #635bff */
+  --accent-deep: 79 72 213; /* #4f48d5 */
+  --accent-soft: rgba(99, 91, 255, 0.08);
+
+  /* ---- Structure / hairlines (baked alpha) ---- */
+  --line: rgba(10, 37, 64, 0.08);
+  --line-2: rgba(10, 37, 64, 0.14);
+
+  /* ---- Motion (kept in sync with src/lib/animations/easing.ts) ---- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Layout ---- */
+  --content-max: 1200px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
+
+  /* ---- Shadows (light values match the previous hardcoded card shadows) ---- */
+  --shadow-soft: 0 1px 2px rgba(10, 37, 64, 0.04), 0 8px 24px rgba(10, 37, 64, 0.06);
+  --shadow-soft-lg: 0 2px 4px rgba(10, 37, 64, 0.05), 0 16px 40px rgba(10, 37, 64, 0.08);
+}
+
+/*
+ * Dark theme overrides. Deep navy-black base, elevated surfaces, lifted ink,
+ * white-based hairlines, and slightly brighter accent/gold so they read on dark.
+ */
+html.dark {
+  /* ---- Surface ---- */
+  --bg: 10 14 26;           /* #0a0e1a */
+  --bg-2: 15 20 36;         /* #0f1424 */
+  --surface: 19 24 48;      /* #131830 */
+  --surface-2: 22 28 56;    /* #161c38 */
+
+  /* ---- Ink / text ---- */
+  --ink: 231 236 243;       /* #e7ecf3 */
+  --ink-2: 168 177 201;     /* #a8b1c9 */
+  --ink-3: 110 120 152;     /* #6e7898 */
+
+  /* ---- Gold accent (brightened for dark) ---- */
+  --gold: 200 165 105;      /* #c8a569 */
+  --gold-deep: 156 122 58;  /* #9c7a3a */
+  --gold-soft: rgba(200, 165, 105, 0.12);
+
+  /* ---- Accent (brightened for dark) ---- */
+  --accent: 124 118 255;    /* #7c76ff */
+  --accent-deep: 99 91 255; /* #635bff */
+  --accent-soft: rgba(124, 118, 255, 0.14);
+
+  /* ---- Structure / hairlines (light on dark) ---- */
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+
+  /* ---- Shadows (deeper on dark) ---- */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.40);
+  --shadow-soft-lg: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.50);
+}

@@ -1,0 +1,47 @@
+import type { Coordinator } from '@/types';
+
+/**
+ * Placement coordinators for cycle 2026-27.
+ * Sourced from Placement_Cell_2026-67_Team_Members.xlsx.
+ */
+export const coordinators: Coordinator[] = [
+  { id: 'jia-manchanda', name: 'Jia Manchanda', course: 'B.A. (H) Economics', year: 'I' },
+  { id: 'shreya-shalini', name: 'Shreya Shalini', course: 'B.A. (H) Economics', year: 'I' },
+  { id: 'aditya-kumar', name: 'Aditya Kumar', course: 'B.Com (H)', year: 'I' },
+  { id: 'yash-gupta', name: 'Yash Gupta', course: 'B.Com (H)', year: 'I' },
+  { id: 'suhani', name: 'Suhani', course: 'B.Com (H)', year: 'I' },
+  { id: 'mayank-mishra', name: 'Mayank Mishra', course: 'B.Com (P)', year: 'I' },
+  { id: 'amit-kumar', name: 'Amit Kumar', course: 'B.Com (P)', year: 'I' },
+  { id: 'ajay-kashyap', name: 'Ajay Kashyap', course: 'B.Com (P)', year: 'I' },
+  { id: 'nitin', name: 'Nitin', course: 'B.Sc. (H) Electronics', year: 'I' },
+  { id: 'shivam-kumar', name: 'Shivam Kumar', course: 'B.Sc. (H) Electronics', year: 'II' },
+  { id: 'nivanshi-bansal', name: 'Nivanshi Bansal', course: 'B.Sc. (H) Biochemistry', year: 'I' },
+  { id: 'kimaya-mathur', name: 'Kimaya Mathur', course: 'B.A. (H) English', year: 'I' },
+  { id: 'rishav-raj', name: 'Rishav Raj', course: 'B.A. (H) English', year: 'I' },
+  { id: 'ashu-choudhary', name: 'Ashu Choudhary', course: 'B.A. (H) English', year: 'I' },
+  { id: 'tushti', name: 'Tushti', course: 'B.Sc. (H) Mathematics', year: 'II' },
+  { id: 'pragati-takkar', name: 'Pragati Takkar', course: 'B.Sc. (H) Mathematics', year: 'II' },
+  { id: 'manya-jain', name: 'Manya Jain', course: 'B.A. (H) Political Science', year: 'I' },
+  { id: 'dhruv-bajaj', name: 'Dhruv Bajaj', course: 'B.Sc. (H) Statistics', year: 'I' },
+  { id: 'rati-sharma', name: 'Rati Sharma', course: 'B.Sc. (H) Statistics', year: 'I' },
+  { id: 'bhavika-julka', name: 'Bhavika Julka', course: 'B.Sc. (H) Statistics', year: 'I' },
+  { id: 'vanya-arora', name: 'Vanya Arora', course: 'B.Sc. (H) Statistics', year: 'I' },
+  { id: 'gaauresh-paul', name: 'Gaauresh Paul', course: 'B.Sc. (H) Statistics', year: 'I' },
+  { id: 'sidra-fathima-s', name: 'Sidra Fathima S', course: 'B.A. (P)', year: 'II' },
+  { id: 'gyananda-maheshwari', name: 'Gyananda Maheshwari', course: 'B.A. (P)', year: 'I' },
+  { id: 'sachi', name: 'Sachi', course: 'B.Sc. (H) Chemistry', year: 'I' },
+  { id: 'gunjan-aggarwal', name: 'Gunjan Aggarwal', course: 'B.Sc. (H) Chemistry', year: 'I' },
+  { id: 'bhumika-singh', name: 'Bhumika Singh', course: 'B.Sc. (P) Life Sciences', year: 'I' },
+  { id: 'maitry-verma', name: 'Maitry Verma', course: 'B.Sc. (P) Life Sciences', year: 'I' },
+  { id: 'pragya-agarwal', name: 'Pragya Agarwal', course: 'B.Sc. (P) Life Sciences', year: 'I' },
+  { id: 'vedant-gupta', name: 'Vedant Gupta', course: 'B.Sc. (P) Life Sciences', year: 'I' },
+  { id: 'ekansha-malkoti', name: 'Ekansha Malkoti', course: 'B.A. (H) Economics', year: 'I' },
+  { id: 'saloni-verma', name: 'Saloni Verma', course: 'B.A. (H) Economics', year: 'I' },
+  { id: 'kanishka-jindal', name: 'Kanishka Jindal', course: 'B.A. (H) English', year: 'II' },
+  { id: 'kratika-kaurani', name: 'Kratika Kaurani', course: 'B.A. (H) English', year: 'I' },
+  { id: 'ipsita', name: 'Ipsita', course: 'B.A. (P)', year: 'I' },
+  { id: 'rohan-langar', name: 'Rohan Langar', course: 'B.A. (P)', year: 'I' },
+  { id: 'chahat', name: 'Chahat', course: 'B.Com (H)', year: 'I' },
+  { id: 'kavya-jain', name: 'Kavya Jain', course: 'B.Com (P)', year: 'I' },
+  { id: 'lovnish-chawla', name: 'Lovnish Chawla', course: 'B.Sc. (H) Statistics', year: 'I' },
+];

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs><linearGradient id="gamallika-pung" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#faf6ee"/><stop offset="100%" stop-color="#efe9de"/></linearGradient></defs>
+  <rect width="400" height="500" fill="url(#gamallika-pung)"/>
+  <rect width="400" height="500" fill="none" stroke="#e0d8c8" stroke-width="2"/>
+  <text x="200" y="280" font-family="Georgia, serif" font-style="italic" font-size="130" fill="#9c7a3a" fill-opacity="0.45" text-anchor="middle">MP</text>
+</svg>

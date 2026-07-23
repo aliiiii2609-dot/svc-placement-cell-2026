@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <rect width="120" height="120" rx="10" fill="#ffffff" stroke="#e0d8c8"/>
+  <circle cx="60" cy="46" r="22" fill="#9c7a3a" fill-opacity="0.10" stroke="#9c7a3a" stroke-width="1.5"/>
+  <text x="60" y="54" font-family="Georgia, serif" font-style="italic" font-size="16" fill="#9c7a3a" text-anchor="middle">SG</text>
+  <text x="60" y="88" font-family="system-ui, sans-serif" font-size="9" fill="#4a4238" text-anchor="middle">Stanford Gsb</text>
+  <text x="60" y="105" font-family="JetBrains Mono, monospace" font-size="6" fill="#8a8275" text-anchor="middle">LOGO PENDING</text>
+</svg>

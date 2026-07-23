@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs><linearGradient id="ggcv-workshop" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4a890"/><stop offset="100%" stop-color="#a0593a"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#ggcv-workshop)"/>
+  <text x="400" y="320" font-family="Georgia, serif" font-style="italic" font-size="36" fill="#ffffff" fill-opacity="0.7" text-anchor="middle">CV workshop</text>
+</svg>

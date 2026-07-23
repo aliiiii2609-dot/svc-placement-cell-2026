@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f8fb" />
+    <meta name="description" content="The Placement Cell, Sri Venkateswara College, University of Delhi." />
+
+    <!--
+      Fonts: display sans + editorial serif accent + mono kicker.
+
+      Trimmed from 4 families / 13 weights to 3 families / 8 weights:
+        - "Inter Tight" was dropped entirely. It was loaded at 4 weights purely
+          to serve `font-display`, while Inter was separately loaded at 5. The
+          two are near-identical faces from the same designer; at display sizes
+          the difference is a slightly tighter default tracking, which the
+          `tracking-tightest` token in tailwind.config.ts already applies by
+          hand anyway. That is ~4 font files for an effect the CSS was
+          re-creating regardless.
+        - Inter dropped w300 (unused, grep-verified) and w700 is retained.
+
+      The stylesheet is loaded non-render-blocking: the browser fetches it at
+      low priority and applies it on load, so first paint is not gated on a
+      third-party round trip. `display=swap` means text draws immediately in
+      the fallback and swaps when the webfont lands.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+
+    <!-- The hero image is the LCP element on the home page. Preloading it here
+         starts the fetch during HTML parse instead of after React hydrates. -->
+    <link rel="preload" as="image" href="/images/campus/svc-building.jpg" fetchpriority="high" />
+
+    <title>The Placement Cell · Sri Venkateswara College, University of Delhi</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

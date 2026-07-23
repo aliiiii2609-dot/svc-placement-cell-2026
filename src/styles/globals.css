@@ -1,0 +1,245 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    /* Default hairline color; theme-aware via the --line token (tokens.css). */
+    border-color: var(--line);
+  }
+
+  html {
+    /* NOTE: `scroll-behavior: smooth` was removed here on purpose.
+       Lenis (src/lib/animations/lenis.ts) already owns smooth scrolling and
+       runs its own rAF loop. Having the native CSS smooth-scroll active at the
+       same time meant two independent systems animating scrollTop against each
+       other on every anchor jump, which is a direct cause of scroll stutter.
+       Lenis handles reduced-motion itself by not mounting at all, and the
+       media query below restores native smooth scroll for that case. */
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    /* Both themes flow from the --bg / --ink tokens (tokens.css). */
+    background: rgb(var(--bg));
+    color: rgb(var(--ink));
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color 320ms ease, color 320ms ease;
+  }
+
+  /* Display: Inter at tightest tracking. See the font note in index.html. */
+  h1, h2, h3, h4, h5 {
+    font-family: Inter, system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.04;
+    color: rgb(var(--ink));
+    letter-spacing: -0.022em;
+    transition: color 320ms ease;
+  }
+  h1 { font-weight: 700; letter-spacing: -0.035em; }
+  h2 { font-weight: 600; letter-spacing: -0.028em; }
+  h3 { font-weight: 600; letter-spacing: -0.022em; }
+
+  /* The Stripe two-tone heading: ink for the lead sentence, ink-3 for the continuation */
+  .heading-stripe .lead { color: rgb(var(--ink)); }
+  .heading-stripe .body { color: rgb(var(--ink-3)); }
+
+  /* Kept the display-italic class name for compatibility with existing components,
+     but here it just colors the emphasis word in the accent. No italic. */
+  .display-italic em {
+    font-style: normal;
+    color: rgb(var(--accent));
+    font-weight: inherit;
+  }
+
+  ::selection {
+    background: rgb(var(--accent));
+    color: rgb(var(--surface));
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 8px;
+    background: rgb(var(--accent));
+    color: rgb(var(--surface));
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    z-index: 9999;
+    transition: top 0.2s var(--ease);
+  }
+  .skip-link:focus { top: 8px; }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .container-svc {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .container-svc { padding-left: 2.5rem; padding-right: 2.5rem; }
+  }
+
+  /* Stripe uppercase kicker label */
+  .eyebrow, .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(var(--accent));
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  .section-spacing { @apply py-16 md:py-24 lg:py-32; }
+
+  /* Cursor-follow card glow */
+  .card-glow {
+    position: relative;
+    background: rgb(var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color 0.4s var(--ease), transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--accent) / 0.08),
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .card-glow:hover {
+    border-color: rgb(var(--accent) / 0.28);
+    box-shadow: var(--shadow-soft-lg);
+    transform: translateY(-2px);
+  }
+  .card-glow:hover::before { opacity: 1; }
+
+  .card-elevated {
+    background: rgb(var(--surface));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    transition: all 0.4s var(--ease);
+    box-shadow: var(--shadow-soft);
+  }
+  .card-elevated:hover {
+    border-color: rgb(var(--accent) / 0.28);
+    box-shadow: var(--shadow-soft-lg);
+    transform: translateY(-2px);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .mask-image {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+
+  .reduced-motion *,
+  .reduced-motion *::before,
+  .reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+.data-\[state\=open\]\:animate-accordion-down[data-state="open"] {
+  animation: accordion-down 0.3s var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.data-\[state\=closed\]\:animate-accordion-up[data-state="closed"] {
+  animation: accordion-up 0.2s var(--ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+[data-magnetic] {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+/* Hero glass-photo layering */
+.hero-glass-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) saturate(1.1);
+  opacity: 0.20;
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+/* The signature Stripe gradient ribbon */
+.gradient-ribbon {
+  position: absolute;
+  inset: -10% -10% -10% -10%;
+  z-index: 1;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 176, 136, 0.45) 25%,
+    rgba(255, 107, 157, 0.55) 40%,
+    rgba(162, 107, 255, 0.50) 55%,
+    rgba(107, 166, 255, 0.45) 70%,
+    transparent 90%
+  );
+  filter: blur(60px) saturate(1.2);
+  opacity: 0.85;
+  pointer-events: none;
+}
+

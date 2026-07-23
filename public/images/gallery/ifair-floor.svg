@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs><linearGradient id="ggifair-floor" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4b988"/><stop offset="100%" stop-color="#9c7a3a"/></linearGradient></defs>
+  <rect width="800" height="600" fill="url(#ggifair-floor)"/>
+  <text x="400" y="320" font-family="Georgia, serif" font-style="italic" font-size="36" fill="#ffffff" fill-opacity="0.7" text-anchor="middle">IFair 2026 floor</text>
+</svg>
