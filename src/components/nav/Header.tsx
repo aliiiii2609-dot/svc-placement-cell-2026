@@ -268,13 +268,13 @@ export function Header({ onSearchOpen }: Props) {
               alt="Sri Venkateswara College crest"
               className="w-9 h-9 transition-transform duration-700 group-hover:rotate-[8deg]"
             />
-            <div className="leading-tight hidden sm:block">
+            <div className="leading-tight hidden xl:block">
               <div className="font-display text-[15px] text-ink whitespace-nowrap">Sri Venkateswara</div>
-              <div className="font-mono text-[0.58rem] tracking-[0.18em] uppercase text-accent whitespace-nowrap">Placement Cell, DU</div>
+              <div className="font-mono text-[0.58rem] tracking-[0.18em] uppercase text-gold whitespace-nowrap">Placement Cell, DU</div>
             </div>
           </Link>
 
-          <nav className="hidden xl:flex items-center gap-5">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-5">
             {navItems.map((it) => (
               <NavDesktopItem key={it.label} item={it} />
             ))}
@@ -298,7 +298,7 @@ export function Header({ onSearchOpen }: Props) {
             </Link>
             <button
               onClick={() => setOpen((v) => !v)}
-              className={cn(iconBtn, 'w-10 h-10 xl:hidden')}
+              className={cn(iconBtn, 'w-10 h-10 lg:hidden')}
               aria-label="Toggle menu"
               aria-expanded={open}
             >
@@ -309,7 +309,7 @@ export function Header({ onSearchOpen }: Props) {
       </div>
 
       {open && (
-        <div className="pointer-events-auto mx-auto max-w-7xl mt-2 xl:hidden">
+        <div className="pointer-events-auto mx-auto max-w-7xl mt-2 lg:hidden">
           <div className="rounded-2xl border border-line bg-surface/90 backdrop-blur-2xl shadow-soft-lg overflow-hidden">
             <nav className="max-h-[calc(100vh-96px)] overflow-y-auto px-3 py-2 flex flex-col">
               {/* Groups render expanded rather than as accordions. There are only
