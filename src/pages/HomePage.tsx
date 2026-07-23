@@ -57,12 +57,16 @@ import { AudienceCards } from '@/components/sections/AudienceCards';
  */
 
 const CycleDashboard = lazyWithRetry(() => import('@/components/charts/CycleDashboard').then((m) => ({ default: m.CycleDashboard })));
+const LeadershipDesks = lazyWithRetry(() => import('@/components/sections/LeadershipDesks').then((m) => ({ default: m.LeadershipDesks })));
 const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStrip').then((m) => ({ default: m.HomeTeamStrip })));
+const GallerySlideshow = lazyWithRetry(() => import('@/components/gallery/GallerySlideshow').then((m) => ({ default: m.GallerySlideshow })));
 
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
   { id: 'proof', label: 'The Numbers' },
+  { id: 'leadership', label: 'Leadership' },
   { id: 'team', label: 'The Team' },
+  { id: 'gallery', label: 'Gallery' },
   { id: 'where', label: 'Where Next' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -84,9 +88,21 @@ export function HomePage() {
         </DeferLazy>
       </section>
 
+      <section id="leadership" className="scroll-mt-[120px] border-t border-line">
+        <DeferLazy minHeight={500}>
+          <LeadershipDesks />
+        </DeferLazy>
+      </section>
+
       <section id="team" className="scroll-mt-[120px] border-t border-line">
-        <DeferLazy minHeight={700}>
+        <DeferLazy minHeight={500}>
           <HomeTeamStrip />
+        </DeferLazy>
+      </section>
+
+      <section id="gallery" className="scroll-mt-[120px] border-t border-line">
+        <DeferLazy minHeight={500}>
+          <GallerySlideshow />
         </DeferLazy>
       </section>
 

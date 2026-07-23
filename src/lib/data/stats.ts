@@ -21,17 +21,18 @@ import type { PlacementStats } from '@/types';
  * real numbers with year-on-year context rather than smoothing them.
  */
 
+// 2025-26 figures per the official college placements page (svc.ac.in/placements).
 export const currentCycleStats: PlacementStats = {
   cycle: '2025-26',
   status: 'in-progress',
-  totalPlacementOffers: 114,
-  totalInternshipOffers: 174,
+  totalPlacementOffers: 130,
+  totalInternshipOffers: 245,
   peakCtcLPA: 15.98,
-  averageCtcLPA: 7.3,
+  averageCtcLPA: 7.19,
   medianCtcLPA: 7.0,
   topDecileAverageLPA: 14.35,
-  grossOfferValueCr: 8.32,
-  recruitersEngaged: 60,
+  grossOfferValueCr: 9.13,
+  recruitersEngaged: 100,
   convertingRecruiters: 18,
   highestStipendLPM: 1.75,
   streamSplit: {

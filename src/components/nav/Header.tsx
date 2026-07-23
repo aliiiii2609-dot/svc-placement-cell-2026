@@ -155,7 +155,7 @@ function NavDesktopItem({ item }: { item: NavGroup }) {
       end={item.end}
       className={({ isActive }) =>
         cn(
-          'text-sm transition-colors duration-300 hover:text-accent relative py-1 group inline-flex items-center gap-1.5',
+          'text-sm whitespace-nowrap transition-colors duration-300 hover:text-accent relative py-1 group inline-flex items-center gap-1.5',
           isActive || item.prominent ? 'text-accent font-medium' : 'text-ink-2',
         )
       }
@@ -254,7 +254,7 @@ export function Header({ onSearchOpen }: Props) {
     <header className="fixed top-0 inset-x-0 z-50 pointer-events-none px-3 pt-2.5 sm:px-4">
       <div
         className={cn(
-          'pointer-events-auto mx-auto max-w-6xl rounded-2xl border transition-all duration-500',
+          'pointer-events-auto mx-auto max-w-7xl rounded-2xl border transition-all duration-500',
           'bg-surface/70 backdrop-blur-xl',
           scrolled
             ? 'border-line-2 bg-surface/85 shadow-soft-lg'
@@ -274,7 +274,7 @@ export function Header({ onSearchOpen }: Props) {
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6">
+          <nav className="hidden xl:flex items-center gap-5">
             {navItems.map((it) => (
               <NavDesktopItem key={it.label} item={it} />
             ))}
@@ -288,7 +288,7 @@ export function Header({ onSearchOpen }: Props) {
             <a
               href={BROCHURE_HREF}
               download={BROCHURE_FILE}
-              className={cn(secondaryBtn, 'hidden md:inline-flex')}
+              className={cn(secondaryBtn, 'hidden xl:inline-flex')}
             >
               <Download size={14} aria-hidden="true" />
               Brochure
@@ -298,7 +298,7 @@ export function Header({ onSearchOpen }: Props) {
             </Link>
             <button
               onClick={() => setOpen((v) => !v)}
-              className={cn(iconBtn, 'w-10 h-10 lg:hidden')}
+              className={cn(iconBtn, 'w-10 h-10 xl:hidden')}
               aria-label="Toggle menu"
               aria-expanded={open}
             >
@@ -309,7 +309,7 @@ export function Header({ onSearchOpen }: Props) {
       </div>
 
       {open && (
-        <div className="pointer-events-auto mx-auto max-w-6xl mt-2 lg:hidden">
+        <div className="pointer-events-auto mx-auto max-w-7xl mt-2 xl:hidden">
           <div className="rounded-2xl border border-line bg-surface/90 backdrop-blur-2xl shadow-soft-lg overflow-hidden">
             <nav className="max-h-[calc(100vh-96px)] overflow-y-auto px-3 py-2 flex flex-col">
               {/* Groups render expanded rather than as accordions. There are only
