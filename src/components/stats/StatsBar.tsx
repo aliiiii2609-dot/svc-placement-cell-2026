@@ -71,7 +71,7 @@ function DottedPattern() {
     >
       <defs>
         <pattern id="stats-dots" width="22" height="22" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1" fill="rgba(99, 91, 255, 0.18)" />
+          <circle cx="2" cy="2" r="1" fill="rgba(30, 78, 140, 0.18)" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#stats-dots)" />
@@ -133,7 +133,7 @@ function StatsCell({
 
   const emit = (origin: { x: number; y: number }, count = 12) => {
     if (reduced) return;
-    const colors = ['#635bff', '#a26bff', '#ff6b9d', '#ffb088'];
+    const colors = ['#1e4e8c', '#b8893b', '#b8893b', '#d4a857'];
     const newSparks = Array.from({ length: count }).map((_, i) => ({
       id: ++idRef.current,
       x: origin.x,
@@ -155,7 +155,7 @@ function StatsCell({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.6, delay: index * 0.07, ease: EASE }}
-      className="relative overflow-hidden bg-surface/95 backdrop-blur-sm p-8 md:p-10 hover:bg-surface-2 transition-colors duration-500 group cursor-default"
+      className="glass relative overflow-hidden rounded-2xl p-7 md:p-9 hover:border-accent/30 transition-colors duration-500 group cursor-default"
       onPointerEnter={(e) => {
         const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
         emit({ x: e.clientX - rect.left, y: e.clientY - rect.top }, 10);
@@ -167,13 +167,13 @@ function StatsCell({
     >
       <HoverBurst sparks={sparks} />
       <div className="relative">
-        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3 mb-3 group-hover:text-accent transition-colors">
+        <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3 mb-3 group-hover:text-accent transition-colors">
           {cell.label}
         </div>
-        <div className="font-display font-bold text-4xl md:text-5xl text-ink mb-2 tracking-[-0.025em]">
+        <div className="font-display font-bold text-4xl md:text-5xl text-ink mb-2 tracking-[-0.025em] tabular-nums">
           <SplitFlapCounter value={cell.value} decimals={cell.decimals} suffix={cell.suffix} />
         </div>
-        <div className="text-sm text-ink-3">{cell.cap}</div>
+        <div className="text-[13px] leading-snug text-ink-3 max-w-[22ch] text-pretty">{cell.cap}</div>
       </div>
     </motion.div>
   );
@@ -189,7 +189,7 @@ export function StatsBar() {
       {/* Background layers, far back to near */}
       <DottedPattern />
       <div className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none opacity-[0.14]">
-        <Sunburst count={120} color="#635bff" />
+        <Sunburst count={120} color="#1e4e8c" />
       </div>
       {!reduced && <DustLayer count={70} />}
 
@@ -199,18 +199,27 @@ export function StatsBar() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mb-14"
+          className="max-w-2xl mb-12 md:mb-14"
         >
-          <div className="font-mono text-[12px] uppercase tracking-[0.12em] text-accent mb-4">
-            Cycle {currentCycleStats.cycle} / Aggregate
+          <div className="font-mono text-[12px] uppercase tracking-[0.18em] text-accent mb-5">
+            Cycle {currentCycleStats.cycle}
           </div>
-          <h2 className="font-display font-bold text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.05] tracking-[-0.028em]">
-            <span className="text-ink">Cycle data at a glance.</span>{' '}
-            <span className="text-ink-3">Numbers for the running cycle.</span>
+          <h2
+            className="font-display font-bold text-ink leading-[1.04] tracking-[-0.03em]"
+            style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4rem)' }}
+          >
+            The numbers,{' '}
+            <span className="font-serif italic font-normal text-ink-2" style={{ letterSpacing: '-0.01em' }}>
+              plainly.
+            </span>
           </h2>
+          <p className="mt-5 text-ink-2 text-[15px] md:text-base leading-relaxed max-w-[46ch] text-balance">
+            Aggregate placement and internship figures for the running cycle. Every
+            value below is cell data, never paired with student names or specific firms.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-line rounded-2xl overflow-hidden border border-line shadow-soft-lg">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
           {cells.map((c, i) => (
             <StatsCell key={c.label} cell={c} index={i} reduced={reduced} />
           ))}

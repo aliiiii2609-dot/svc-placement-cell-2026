@@ -46,13 +46,15 @@ const config: Config = {
           DEFAULT: 'var(--line)',
           2: 'var(--line-2)',
         },
-        // Gradient ribbon stops (used in hero animation)
+        // Danger / validation errors (text-red, border-red, hover:text-red)
+        red: 'rgb(var(--red) / <alpha-value>)',
+        // Gradient ribbon stops — navy/gold, no pastels
         ribbon: {
-          peach: '#ffb088',
-          rose: '#ff6b9d',
-          violet: '#a26bff',
-          azure: '#6ba6ff',
-          mint: '#7fd9c1',
+          gold: '#d4a857',
+          'gold-deep': '#b8893b',
+          navy: '#1e4e8c',
+          ink: '#0a2540',
+          sand: '#e8d5a8',
         },
       },
       fontFamily: {

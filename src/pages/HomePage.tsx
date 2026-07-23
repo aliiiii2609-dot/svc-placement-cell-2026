@@ -58,11 +58,13 @@ import { AudienceCards } from '@/components/sections/AudienceCards';
  */
 
 const CycleDashboard = lazyWithRetry(() => import('@/components/charts/CycleDashboard').then((m) => ({ default: m.CycleDashboard })));
+const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStrip').then((m) => ({ default: m.HomeTeamStrip })));
 
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
   { id: 'proof', label: 'The Numbers' },
   { id: 'voices', label: 'Student Voices' },
+  { id: 'team', label: 'The Team' },
   { id: 'where', label: 'Where Next' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -86,6 +88,12 @@ export function HomePage() {
 
       <section id="voices" className="scroll-mt-[120px]">
         <StudentVoices />
+      </section>
+
+      <section id="team" className="scroll-mt-[120px] border-t border-line">
+        <DeferLazy minHeight={700}>
+          <HomeTeamStrip />
+        </DeferLazy>
       </section>
 
       <section id="where" className="scroll-mt-[120px]">

@@ -266,7 +266,7 @@ export function CampusBlock() {
                 <motion.div
                   aria-hidden="true"
                   className="absolute -bottom-px left-0 right-0 h-[2px] origin-left opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-                  style={{ background: '#635bff' }}
+                  style={{ background: '#1e4e8c' }}
                 />
               </motion.div>
             </a>

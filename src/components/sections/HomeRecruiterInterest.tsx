@@ -26,7 +26,7 @@ function ParticleField() {
     size: 2 + (i % 4),
     delay: (i * 0.42) % 8,
     duration: 8 + (i % 5),
-    color: ['#635bff', '#a26bff', '#ff6b9d', '#6ba6ff', '#7fd9c1'][i % 5],
+    color: ['#1e4e8c', '#b8893b', '#b8893b', '#1e4e8c', '#7fd9c1'][i % 5],
   }));
 
   return (
@@ -99,7 +99,7 @@ function GlassFormPanel({ reduced }: { reduced: boolean }) {
         className="absolute -inset-8 rounded-3xl pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 30% 0%, rgba(99, 91, 255, 0.22), transparent 60%), radial-gradient(ellipse at 70% 100%, rgba(255, 107, 157, 0.18), transparent 60%)',
+            'radial-gradient(ellipse at 30% 0%, rgba(30, 78, 140, 0.22), transparent 60%), radial-gradient(ellipse at 70% 100%, rgba(255, 107, 157, 0.18), transparent 60%)',
           filter: 'blur(32px)',
         }}
         aria-hidden="true"
@@ -116,7 +116,7 @@ function GlassFormPanel({ reduced }: { reduced: boolean }) {
           className="absolute top-0 left-0 right-0 h-[3px] pointer-events-none"
           style={{
             background:
-              'linear-gradient(90deg, transparent, #635bff, #a26bff, #ff6b9d, transparent)',
+              'linear-gradient(90deg, transparent, #1e4e8c, #b8893b, #b8893b, transparent)',
           }}
           initial={{ x: '-100%' }}
           animate={{ x: '100%' }}
@@ -134,7 +134,7 @@ function GlassFormPanel({ reduced }: { reduced: boolean }) {
               width: 320,
               height: 320,
               background:
-                'radial-gradient(circle, rgba(99, 91, 255, 0.18), transparent 70%)',
+                'radial-gradient(circle, rgba(30, 78, 140, 0.18), transparent 70%)',
               filter: 'blur(24px)',
             }}
           />
@@ -180,7 +180,7 @@ export function HomeRecruiterInterest() {
           left: '-15%',
           width: '50%',
           height: '70%',
-          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.10), transparent 60%)',
+          background: 'radial-gradient(circle, rgba(30, 78, 140, 0.10), transparent 60%)',
           filter: 'blur(80px)',
         }}
         aria-hidden="true"
@@ -230,7 +230,7 @@ export function HomeRecruiterInterest() {
                 <li key={line} className="flex gap-3">
                   <span
                     className="block flex-shrink-0 mt-2 h-px"
-                    style={{ width: 16, background: '#635bff' }}
+                    style={{ width: 16, background: '#1e4e8c' }}
                     aria-hidden="true"
                   />
                   {line}

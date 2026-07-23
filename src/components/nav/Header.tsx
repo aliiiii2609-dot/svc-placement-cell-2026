@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Search, FileText, ChevronDown } from 'lucide-react';
+import { Menu, X, Search, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
@@ -9,7 +9,7 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
  * Navigation.
  *
  * The site has 20 routes. The old flat bar exposed 7 of them, so /partnerships,
- * /resources, /rankings-press, /students/cv-builder, /students/cv-review and
+ * /resources, /rankings-press, /students/cv-review and
  * /students/mock-interviews were reachable only by luck or by a stray inline
  * link. Meanwhile the home page tried to compensate by putting everything on
  * itself, which is how it ended up 22 sections long.
@@ -49,7 +49,6 @@ const navItems: NavGroup[] = [
     label: 'Students',
     children: [
       { to: '/students/portal', label: 'Student portal', hint: 'Start here' },
-      { to: '/students/cv-builder', label: 'CV builder', hint: 'Guided form, exports to PDF or Word' },
       { to: '/students/cv-review', label: 'CV review queue', hint: 'Submit for coordinator review' },
       { to: '/students/mock-interviews', label: 'Mock interviews', hint: 'Book a slot with alumni' },
       { to: '/resources', label: 'Resources', hint: 'Guides, formats, prep material' },
@@ -216,8 +215,8 @@ export function Header({ onSearchOpen }: Props) {
             className="w-11 h-11 transition-transform duration-700 group-hover:rotate-[8deg]"
           />
           <div className="leading-tight">
-            <div className="font-display text-base text-ink">Sri Venkateswara</div>
-            <div className="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-accent">Placement Cell, DU</div>
+            <div className="font-display text-base text-ink whitespace-nowrap">Sri Venkateswara</div>
+            <div className="font-mono text-[0.6rem] tracking-[0.18em] uppercase text-accent whitespace-nowrap">Placement Cell, DU</div>
           </div>
         </Link>
 
@@ -259,13 +258,6 @@ export function Header({ onSearchOpen }: Props) {
           >
             <Search size={15} />
           </button>
-          <Link
-            to="/students/cv-builder"
-            className="hidden md:inline-flex items-center gap-1.5 px-4 h-10 rounded-full border border-accent/30 bg-accent/8 text-accent text-[13px] font-medium hover:bg-accent hover:text-white hover:border-accent transition-all duration-300"
-          >
-            <FileText size={13} strokeWidth={2} />
-            CV Builder
-          </Link>
           <Button
             as="a"
             href="/SVC_Brochure_2025-26.pdf"
@@ -328,14 +320,6 @@ export function Header({ onSearchOpen }: Props) {
                 )}
               </div>
             ))}
-            <NavLink
-              to="/students/cv-builder"
-              onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-accent text-white text-base font-medium self-start"
-            >
-              <FileText size={14} strokeWidth={2} />
-              CV Builder
-            </NavLink>
             <a
               href={SVC_OFFICIAL_URL}
               target="_blank"

@@ -4,7 +4,6 @@ import { MotionConfig } from 'framer-motion';
 import { Header } from '@/components/nav/Header';
 import { ScrollToTop } from '@/components/utils/ScrollToTop';
 import { Footer } from '@/components/footer/Footer';
-import { CustomCursor } from '@/components/ui/CustomCursor';
 import { CinematicLoader } from '@/components/ui/CinematicLoader';
 import { ToastProvider } from '@/components/ui/ToastProvider';
 import { ThemeProvider } from '@/lib/theme/ThemeContext';
@@ -28,9 +27,6 @@ const RecruitersPage = lazyWithRetry(() => import('@/pages/RecruitersPage').then
 const RecruiterDashboardPage = lazyWithRetry(() => import('@/pages/RecruiterDashboardPage').then((m) => ({ default: m.RecruiterDashboardPage })));
 const StudentPortalPage = lazyWithRetry(() => import('@/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
 const CvReviewPage = lazyWithRetry(() => import('@/pages/CvReviewPage').then((m) => ({ default: m.CvReviewPage })));
-// CVBuilderPage alone pulls jspdf + html2canvas + docx + file-saver, roughly
-// 240 kB gzipped. Splitting it out is the single biggest home-page saving.
-const CVBuilderPage = lazyWithRetry(() => import('@/pages/CVBuilderPage').then((m) => ({ default: m.CVBuilderPage })));
 const MockInterviewsPage = lazyWithRetry(() => import('@/pages/MockInterviewsPage').then((m) => ({ default: m.MockInterviewsPage })));
 const EventsPage = lazyWithRetry(() => import('@/pages/EventsPage').then((m) => ({ default: m.EventsPage })));
 const NewsPage = lazyWithRetry(() => import('@/pages/NewsPage').then((m) => ({ default: m.NewsPage })));
@@ -157,7 +153,6 @@ export default function App() {
       <ToastProvider>
       <a href="#main" className="skip-link">Skip to main content</a>
       <CinematicLoader />
-      <CustomCursor />
 
       <Header
         onSearchOpen={() => {
@@ -181,7 +176,6 @@ export default function App() {
               <Route path="/recruiters/dashboard" element={<RecruiterDashboardPage />} />
               <Route path="/students/portal" element={<StudentPortalPage />} />
               <Route path="/students/cv-review" element={<CvReviewPage />} />
-              <Route path="/students/cv-builder" element={<CVBuilderPage />} />
               <Route path="/students/mock-interviews" element={<MockInterviewsPage />} />
               <Route path="/events" element={<EventsPage />} />
               <Route path="/news" element={<NewsPage />} />

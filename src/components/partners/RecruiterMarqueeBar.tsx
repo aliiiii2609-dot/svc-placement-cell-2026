@@ -74,7 +74,7 @@ export function RecruiterMarqueeBar() {
           width: '60%',
           height: '160%',
           background:
-            'radial-gradient(ellipse at center, rgba(255, 176, 136, 0.20) 0%, rgba(255, 107, 157, 0.16) 30%, rgba(162, 107, 255, 0.12) 60%, transparent 80%)',
+            'radial-gradient(ellipse at center, rgba(255, 176, 136, 0.20) 0%, rgba(255, 107, 157, 0.16) 30%, rgba(184, 137, 59, 0.12) 60%, transparent 80%)',
           filter: 'blur(60px)',
           animation: 'strip-bleed-drift 24s ease-in-out infinite',
         }}

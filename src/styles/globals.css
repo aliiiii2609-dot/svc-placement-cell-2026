@@ -64,7 +64,9 @@
      but here it just colors the emphasis word in the accent. No italic. */
   .display-italic em {
     font-style: normal;
-    color: rgb(var(--accent));
+    /* Gold emphasis word — the editorial "pop" that stays legible against ink,
+       which a navy accent would not. */
+    color: rgb(var(--gold));
     font-weight: inherit;
   }
 
@@ -107,18 +109,37 @@
     .container-svc { padding-left: 2.5rem; padding-right: 2.5rem; }
   }
 
-  /* Stripe uppercase kicker label */
+  /* Gold uppercase kicker label (institution identity) */
   .eyebrow, .kicker {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgb(var(--accent));
+    color: rgb(var(--gold));
     display: inline-block;
     font-weight: 500;
   }
 
   .section-spacing { @apply py-16 md:py-24 lg:py-32; }
+
+  /* Frosted glass panel. Sits over paper or imagery, never flat color.
+     Consumed by the numbers, team, and audience cards for the glass look. */
+  .glass {
+    background: var(--glass);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft);
+  }
+  .glass-strong {
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: var(--shadow-soft-lg);
+  }
 
   /* Cursor-follow card glow */
   .card-glow {
@@ -224,7 +245,7 @@
   z-index: 0;
 }
 
-/* The signature Stripe gradient ribbon */
+/* Signature gradient ribbon — navy-to-gold, on brand (no pastels). */
 .gradient-ribbon {
   position: absolute;
   inset: -10% -10% -10% -10%;
@@ -232,14 +253,14 @@
   background: linear-gradient(
     115deg,
     transparent 0%,
-    rgba(255, 176, 136, 0.45) 25%,
-    rgba(255, 107, 157, 0.55) 40%,
-    rgba(162, 107, 255, 0.50) 55%,
-    rgba(107, 166, 255, 0.45) 70%,
+    rgba(212, 168, 87, 0.34) 25%,
+    rgba(184, 137, 59, 0.40) 42%,
+    rgba(30, 78, 140, 0.34) 60%,
+    rgba(10, 37, 64, 0.28) 74%,
     transparent 90%
   );
-  filter: blur(60px) saturate(1.2);
-  opacity: 0.85;
+  filter: blur(60px) saturate(1.15);
+  opacity: 0.8;
   pointer-events: none;
 }
 

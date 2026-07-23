@@ -11,10 +11,14 @@ import { sound } from '@/lib/audio/sound-controller';
  * already in the bundle for every page transition, so the same choreography is
  * expressed in it and GSAP drops out of package.json entirely.
  *
- * Behaviour is unchanged: particles converge on the crest, the crest springs
- * in, the title cascades letter by letter, and the whole thing dismisses on
- * timer, click, Escape, or Space. Repeat visits in the same session get the
- * short 0.9s version.
+ * Behaviour: particles converge on the crest, the crest springs in, the title
+ * cascades letter by letter, the tagline fades up, and the whole thing dismisses
+ * on timer, click, Escape, or Space.
+ *
+ * Timing: a first visit gets the full ~1.6s cinematic play-through so every beat
+ * is legible; repeat visits in the same session run the same choreography scaled
+ * down to ~0.7s so it still reads as intentional rather than a flash. The `speed`
+ * multiplier below keeps the two in proportion from a single set of numbers.
  */
 
 const PARTICLE_COUNT = 32;
@@ -47,10 +51,12 @@ export function CinematicLoader() {
 
   const dismiss = useCallback(() => setDismissed(true), []);
 
-  // First paint is not blocked for long: ~800ms on a first visit, ~400ms on
-  // repeat within the session, and a quick fade for reduced motion. The
-  // choreography below is compressed to play out inside that window.
-  const totalDuration = reduced ? 0.4 : visited ? 0.4 : 0.8;
+  // First paint is held just long enough for the intro to land: ~1.6s on a
+  // first visit, ~0.7s on repeat within the session, and a quick fade for
+  // reduced motion. `speed` scales the whole choreography so the repeat visit
+  // plays the same beats, only faster, instead of getting chopped off.
+  const totalDuration = reduced ? 0.3 : visited ? 0.7 : 1.6;
+  const speed = reduced ? 1 : visited ? 0.45 : 1;
 
   useEffect(() => {
     if (dismissed) return;
@@ -88,8 +94,8 @@ export function CinematicLoader() {
                 initial={{ x: p.x, y: p.y, scale: 2, opacity: 1 }}
                 animate={{ x: 0, y: 0, scale: 0, opacity: 0 }}
                 transition={{
-                  duration: 0.5,
-                  delay: i * 0.008,
+                  duration: 0.7 * speed,
+                  delay: i * 0.012 * speed,
                   ease: [0.65, 0, 0.35, 1],
                 }}
               />
@@ -109,7 +115,7 @@ export function CinematicLoader() {
               transition={
                 reduced
                   ? { duration: 0.2 }
-                  : { delay: 0.15, duration: 0.5, type: 'spring', bounce: 0.4 }
+                  : { delay: 0.35 * speed, duration: 0.7 * speed, type: 'spring', bounce: 0.4 }
               }
               onAnimationStart={() => !reduced && sound.play('title-card')}
             />
@@ -125,7 +131,7 @@ export function CinematicLoader() {
                 transition={
                   reduced
                     ? { duration: 0.2 }
-                    : { delay: 0.28 + i * 0.02, duration: 0.32, ease: [0.33, 1, 0.68, 1] }
+                    : { delay: (0.6 + i * 0.035) * speed, duration: 0.45 * speed, ease: [0.33, 1, 0.68, 1] }
                 }
                 style={{ willChange: 'transform, opacity' }}
               >
@@ -138,7 +144,7 @@ export function CinematicLoader() {
             className="absolute bottom-[20%] left-1/2 -translate-x-1/2 font-mono text-xs uppercase tracking-[0.4em] text-ink-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: reduced ? 0 : 0.5, duration: 0.3 }}
+            transition={{ delay: reduced ? 0 : 1.05 * speed, duration: 0.4 * speed }}
           >
             Sri Venkateswara College · University of Delhi
           </motion.div>
@@ -150,7 +156,7 @@ export function CinematicLoader() {
             aria-label="Skip intro"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.8 }}
-            transition={{ delay: reduced ? 0 : 0.3, duration: 0.3 }}
+            transition={{ delay: reduced ? 0 : 0.5 * speed, duration: 0.3 * speed }}
           >
             Skip intro
           </motion.button>

@@ -121,7 +121,7 @@ const bubbles: Bubble[] = LAYOUT
       ...cfg,
       name: data?.name ?? cfg.slug,
       domain: data?.domain,
-      brandColor: data?.brandColor ?? '#635bff',
+      brandColor: data?.brandColor ?? '#1e4e8c',
       size: TIER_SIZE[cfg.tier],
       delay: (i * 0.31) % 4,
     };
@@ -289,7 +289,7 @@ export function RecruiterGalaxy() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 70% 80%, rgba(255, 176, 136, 0.18), transparent 55%), radial-gradient(ellipse at 20% 30%, rgba(99, 91, 255, 0.10), transparent 55%)',
+            'radial-gradient(ellipse at 70% 80%, rgba(255, 176, 136, 0.18), transparent 55%), radial-gradient(ellipse at 20% 30%, rgba(30, 78, 140, 0.10), transparent 55%)',
         }}
       />
 
@@ -337,7 +337,7 @@ export function RecruiterGalaxy() {
               </div>
               <div className="flex flex-wrap gap-x-5 gap-y-2 text-[12px]">
                 <div className="flex items-center gap-2">
-                  <span aria-hidden="true" className="inline-block w-3.5 h-3.5 rounded-[4px] border-2" style={{ borderColor: '#635bff' }} />
+                  <span aria-hidden="true" className="inline-block w-3.5 h-3.5 rounded-[4px] border-2" style={{ borderColor: '#1e4e8c' }} />
                   <span className="text-ink-2 font-mono uppercase tracking-[0.12em]">Premium tier</span>
                 </div>
                 <div className="flex items-center gap-2">

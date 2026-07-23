@@ -22,7 +22,7 @@ function CursorGlow({ x, y }: { x: number; y: number }) {
         top: y - 90,
         width: 180,
         height: 180,
-        background: 'radial-gradient(circle, rgba(99, 91, 255, 0.18), transparent 70%)',
+        background: 'radial-gradient(circle, rgba(30, 78, 140, 0.18), transparent 70%)',
         filter: 'blur(14px)',
         zIndex: 5,
       }}
@@ -162,7 +162,7 @@ function InstitutionFrame({
           className="block h-px"
           animate={
             isHovered
-              ? { marginLeft: -10, marginRight: -10, backgroundColor: 'rgba(99, 91, 255, 0.55)' }
+              ? { marginLeft: -10, marginRight: -10, backgroundColor: 'rgba(30, 78, 140, 0.55)' }
               : { marginLeft: 0, marginRight: 0, backgroundColor: 'rgba(10, 37, 64, 0.12)' }
           }
           transition={{ duration: 0.4, ease: EASE }}
@@ -296,7 +296,7 @@ export function HigherEducationSection() {
                 <div className="mb-5 flex items-baseline gap-3">
                   <span
                     className="block h-px shrink-0"
-                    style={{ width: 24, background: 'rgba(99, 91, 255, 0.6)' }}
+                    style={{ width: 24, background: 'rgba(30, 78, 140, 0.6)' }}
                     aria-hidden="true"
                   />
                   <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight">

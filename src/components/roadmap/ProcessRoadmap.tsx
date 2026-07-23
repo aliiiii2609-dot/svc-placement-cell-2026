@@ -69,13 +69,13 @@ function WordReveal({
 // ---------------------------------------------------------------------------
 const STAGE_COLORS = [
   '#7fd9c1', // mint
-  '#6ba6ff', // azure
-  '#a26bff', // violet
-  '#ff6b9d', // rose
-  '#ffb088', // peach
+  '#1e4e8c', // azure
+  '#b8893b', // violet
+  '#b8893b', // rose
+  '#d4a857', // peach
   '#7fd9c1',
-  '#6ba6ff',
-  '#a26bff',
+  '#1e4e8c',
+  '#b8893b',
 ];
 
 // ---------------------------------------------------------------------------
@@ -292,7 +292,7 @@ export function ProcessRoadmap() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 15% 25%, rgba(127, 217, 193, 0.18), transparent 55%), radial-gradient(ellipse at 85% 75%, rgba(162, 107, 255, 0.18), transparent 55%)',
+            'radial-gradient(ellipse at 15% 25%, rgba(127, 217, 193, 0.18), transparent 55%), radial-gradient(ellipse at 85% 75%, rgba(184, 137, 59, 0.18), transparent 55%)',
         }}
       />
       <div
@@ -311,7 +311,7 @@ export function ProcessRoadmap() {
           top: '20%',
           width: 480,
           height: 480,
-          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.20), transparent 65%)',
+          background: 'radial-gradient(circle, rgba(30, 78, 140, 0.20), transparent 65%)',
           filter: 'blur(80px)',
         }}
         animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
@@ -395,7 +395,7 @@ export function ProcessRoadmap() {
               style={{
                 left: 20,
                 background:
-                  'linear-gradient(to bottom, transparent 0%, rgba(127, 217, 193, 0.4) 8%, rgba(99, 91, 255, 0.4) 50%, rgba(255, 107, 157, 0.4) 92%, transparent 100%)',
+                  'linear-gradient(to bottom, transparent 0%, rgba(127, 217, 193, 0.4) 8%, rgba(30, 78, 140, 0.4) 50%, rgba(255, 107, 157, 0.4) 92%, transparent 100%)',
               }}
             />
 

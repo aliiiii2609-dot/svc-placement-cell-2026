@@ -42,13 +42,13 @@ function avatarInitials(name: string): string {
  */
 function avatarGradient(id: string): string {
   const palettes = [
-    'linear-gradient(135deg, #635bff 0%, #a26bff 100%)', // purple
-    'linear-gradient(135deg, #a26bff 0%, #ff6b9d 100%)', // violet → rose
-    'linear-gradient(135deg, #ff6b9d 0%, #ffb088 100%)', // rose → peach
-    'linear-gradient(135deg, #6ba6ff 0%, #635bff 100%)', // azure → purple
-    'linear-gradient(135deg, #7fd9c1 0%, #6ba6ff 100%)', // mint → azure
-    'linear-gradient(135deg, #ffb088 0%, #ff6b9d 100%)', // peach → rose
-    'linear-gradient(135deg, #3b1b6f 0%, #635bff 100%)', // deep violet → purple
+    'linear-gradient(135deg, #1e4e8c 0%, #b8893b 100%)', // purple
+    'linear-gradient(135deg, #b8893b 0%, #b8893b 100%)', // violet → rose
+    'linear-gradient(135deg, #b8893b 0%, #d4a857 100%)', // rose → peach
+    'linear-gradient(135deg, #1e4e8c 0%, #1e4e8c 100%)', // azure → purple
+    'linear-gradient(135deg, #7fd9c1 0%, #1e4e8c 100%)', // mint → azure
+    'linear-gradient(135deg, #d4a857 0%, #b8893b 100%)', // peach → rose
+    'linear-gradient(135deg, #3b1b6f 0%, #1e4e8c 100%)', // deep violet → purple
     'linear-gradient(135deg, #1f4e3d 0%, #7fd9c1 100%)', // forest → mint
   ];
   let hash = 0;
@@ -286,12 +286,12 @@ function CouncilParticles({ count = 28 }: { count?: number }) {
     size: 2 + ((i * 7) % 5),
     delay: (i * 0.45) % 9,
     duration: 9 + ((i * 3) % 6),
-    color: ['#635bff', '#a26bff', '#ff6b9d', '#ffb088', '#6ba6ff'][i % 5],
+    color: ['#1e4e8c', '#b8893b', '#b8893b', '#d4a857', '#1e4e8c'][i % 5],
   }));
 
   const blobs = [
-    { x: 8, y: 22, size: 220, color: 'rgba(99, 91, 255, 0.18)', dur: 22 },
-    { x: 72, y: 18, size: 260, color: 'rgba(162, 107, 255, 0.16)', dur: 26 },
+    { x: 8, y: 22, size: 220, color: 'rgba(30, 78, 140, 0.18)', dur: 22 },
+    { x: 72, y: 18, size: 260, color: 'rgba(184, 137, 59, 0.16)', dur: 26 },
     { x: 40, y: 60, size: 240, color: 'rgba(255, 107, 157, 0.14)', dur: 30 },
     { x: 86, y: 70, size: 200, color: 'rgba(107, 166, 255, 0.16)', dur: 28 },
     { x: 18, y: 82, size: 180, color: 'rgba(127, 217, 193, 0.14)', dur: 24 },
@@ -383,7 +383,7 @@ export function CouncilOrbit() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 20%, rgba(99, 91, 255, 0.12), transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(255, 107, 157, 0.08), transparent 60%)',
+              'radial-gradient(ellipse at 30% 20%, rgba(30, 78, 140, 0.12), transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(255, 107, 157, 0.08), transparent 60%)',
           }}
           aria-hidden="true"
         />
@@ -428,7 +428,7 @@ export function CouncilOrbit() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse at 80% 20%, rgba(162, 107, 255, 0.12), transparent 60%), radial-gradient(ellipse at 20% 70%, rgba(99, 91, 255, 0.10), transparent 60%)',
+              'radial-gradient(ellipse at 80% 20%, rgba(184, 137, 59, 0.12), transparent 60%), radial-gradient(ellipse at 20% 70%, rgba(30, 78, 140, 0.10), transparent 60%)',
           }}
           aria-hidden="true"
         />

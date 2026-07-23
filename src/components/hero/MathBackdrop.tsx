@@ -126,7 +126,7 @@ export function MathBackdrop({ className }: { className?: string }) {
       >
         {/* Subtle protractor arc, top-right */}
         <g
-          stroke="rgba(99, 91, 255, 0.08)"
+          stroke="rgba(30, 78, 140, 0.08)"
           strokeWidth="1"
           fill="none"
           style={{

@@ -185,7 +185,7 @@ export function CoursesOffered() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 15% 25%, rgba(99, 91, 255, 0.10), transparent 55%), radial-gradient(ellipse at 85% 75%, rgba(255, 107, 157, 0.08), transparent 55%)',
+            'radial-gradient(ellipse at 15% 25%, rgba(30, 78, 140, 0.10), transparent 55%), radial-gradient(ellipse at 85% 75%, rgba(255, 107, 157, 0.08), transparent 55%)',
         }}
       />
 

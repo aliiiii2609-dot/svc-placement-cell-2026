@@ -34,14 +34,23 @@
   --gold-deep: 107 83 38;   /* #6b5326 */
   --gold-soft: rgba(156, 122, 58, 0.08);
 
-  /* ---- Accent (Stripe-style hyperlink / CTA) ---- */
-  --accent: 99 91 255;      /* #635bff */
-  --accent-deep: 79 72 213; /* #4f48d5 */
-  --accent-soft: rgba(99, 91, 255, 0.08);
+  /* ---- Accent (navy blue — hyperlinks / CTAs). No purple anywhere. ---- */
+  --accent: 30 78 140;      /* #1e4e8c navy blue */
+  --accent-deep: 18 52 96;  /* #123460 deep navy */
+  --accent-soft: rgba(30, 78, 140, 0.08);
+
+  /* ---- Danger / validation errors ---- */
+  --red: 200 42 42;         /* #c82a2a */
 
   /* ---- Structure / hairlines (baked alpha) ---- */
-  --line: rgba(10, 37, 64, 0.08);
-  --line-2: rgba(10, 37, 64, 0.14);
+  --line: rgba(10, 37, 64, 0.10);
+  --line-2: rgba(10, 37, 64, 0.16);
+
+  /* ---- Glass surfaces (frosted panels over paper) ---- */
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-strong: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-blur: blur(20px) saturate(140%);
 
   /* ---- Motion (kept in sync with src/lib/animations/easing.ts) ---- */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -80,14 +89,22 @@ html.dark {
   --gold-deep: 156 122 58;  /* #9c7a3a */
   --gold-soft: rgba(200, 165, 105, 0.12);
 
-  /* ---- Accent (brightened for dark) ---- */
-  --accent: 124 118 255;    /* #7c76ff */
-  --accent-deep: 99 91 255; /* #635bff */
-  --accent-soft: rgba(124, 118, 255, 0.14);
+  /* ---- Accent (steel blue, brightened for dark) ---- */
+  --accent: 128 170 226;    /* #80aae2 */
+  --accent-deep: 92 138 202; /* #5c8aca */
+  --accent-soft: rgba(128, 170, 226, 0.16);
+
+  /* ---- Danger (lightened for dark) ---- */
+  --red: 248 113 113;       /* #f87171 */
 
   /* ---- Structure / hairlines (light on dark) ---- */
-  --line: rgba(255, 255, 255, 0.08);
-  --line-2: rgba(255, 255, 255, 0.14);
+  --line: rgba(255, 255, 255, 0.10);
+  --line-2: rgba(255, 255, 255, 0.16);
+
+  /* ---- Glass surfaces (frosted panels on dark) ---- */
+  --glass: rgba(24, 31, 58, 0.55);
+  --glass-strong: rgba(24, 31, 58, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.10);
 
   /* ---- Shadows (deeper on dark) ---- */
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.30), 0 8px 24px rgba(0, 0, 0, 0.40);

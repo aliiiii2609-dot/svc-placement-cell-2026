@@ -301,7 +301,7 @@ export function HeadlineRecruitersReel() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 25% 30%, rgba(99, 91, 255, 0.28), transparent 55%), radial-gradient(ellipse at 75% 70%, rgba(255, 107, 157, 0.16), transparent 55%)',
+            'radial-gradient(ellipse at 25% 30%, rgba(30, 78, 140, 0.28), transparent 55%), radial-gradient(ellipse at 75% 70%, rgba(255, 107, 157, 0.16), transparent 55%)',
         }}
       />
       <div
@@ -407,7 +407,7 @@ export function HeadlineRecruitersReel() {
                 <span
                   aria-hidden="true"
                   className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{ background: '#635bff' }}
+                  style={{ background: '#1e4e8c' }}
                 />
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 tabular-nums">
                   {sortedRecruiters.length} firms · this cycle

@@ -43,7 +43,7 @@ const CARDS: AudienceCard[] = [
       'Track shortlists in dashboard',
     ],
     to: '/recruiters',
-    brandColor: '#635bff',
+    brandColor: '#1e4e8c',
     Icon: Building2,
   },
   {
@@ -57,7 +57,7 @@ const CARDS: AudienceCard[] = [
       'Book a mock interview',
     ],
     to: '/students/portal',
-    brandColor: '#a26bff',
+    brandColor: '#b8893b',
     Icon: GraduationCap,
   },
   {
@@ -71,7 +71,7 @@ const CARDS: AudienceCard[] = [
       'Attend the Internship Fair',
     ],
     to: '/alumni',
-    brandColor: '#ff6b9d',
+    brandColor: '#b8893b',
     Icon: Users,
   },
 ];

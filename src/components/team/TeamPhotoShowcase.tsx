@@ -42,7 +42,7 @@ export function TeamPhotoShowcase() {
           left: '-5%',
           width: '40%',
           height: '60%',
-          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.10), transparent 60%)',
+          background: 'radial-gradient(circle, rgba(30, 78, 140, 0.10), transparent 60%)',
           filter: 'blur(80px)',
         }}
         aria-hidden="true"
@@ -95,7 +95,7 @@ export function TeamPhotoShowcase() {
             className="absolute -inset-12 pointer-events-none"
             style={{
               background:
-                'radial-gradient(ellipse at center, rgba(99, 91, 255, 0.20), rgba(255, 107, 157, 0.08), transparent 70%)',
+                'radial-gradient(ellipse at center, rgba(30, 78, 140, 0.20), rgba(255, 107, 157, 0.08), transparent 70%)',
               filter: 'blur(60px)',
             }}
             aria-hidden="true"
@@ -106,7 +106,7 @@ export function TeamPhotoShowcase() {
             className="absolute -top-3 left-0 right-0 h-px pointer-events-none"
             style={{
               background:
-                'linear-gradient(90deg, transparent, rgba(99, 91, 255, 0.8) 30%, rgba(255, 107, 157, 0.8) 70%, transparent)',
+                'linear-gradient(90deg, transparent, rgba(30, 78, 140, 0.8) 30%, rgba(255, 107, 157, 0.8) 70%, transparent)',
             }}
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
@@ -133,7 +133,7 @@ export function TeamPhotoShowcase() {
                 className="absolute top-0 left-0 right-0 h-px"
                 style={{
                   background:
-                    'linear-gradient(90deg, transparent, rgba(99, 91, 255, 0.7) 25%, rgba(255, 107, 157, 0.7) 75%, transparent)',
+                    'linear-gradient(90deg, transparent, rgba(30, 78, 140, 0.7) 25%, rgba(255, 107, 157, 0.7) 75%, transparent)',
                 }}
                 aria-hidden="true"
               />

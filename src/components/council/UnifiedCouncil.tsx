@@ -176,8 +176,8 @@ function MemberFrame({
         style={{
           inset: -14,
           background: focused
-            ? 'radial-gradient(ellipse at center, rgba(99, 91, 255, 0.22), transparent 70%)'
-            : 'radial-gradient(ellipse at center, rgba(99, 91, 255, 0.08), transparent 70%)',
+            ? 'radial-gradient(ellipse at center, rgba(30, 78, 140, 0.22), transparent 70%)'
+            : 'radial-gradient(ellipse at center, rgba(30, 78, 140, 0.08), transparent 70%)',
           filter: 'blur(20px)',
           opacity: focused ? 1 : 0.45,
           zIndex: -1,
@@ -199,7 +199,7 @@ function MemberFrame({
         transition={{ duration: isLarge ? 0.55 : 0.38, ease: EASE, delay: staggerDelay }}
         style={{
           boxShadow: focused && !reduced
-            ? '0 32px 60px -32px rgba(10, 37, 64, 0.40), 0 8px 16px -6px rgba(99, 91, 255, 0.18)'
+            ? '0 32px 60px -32px rgba(10, 37, 64, 0.40), 0 8px 16px -6px rgba(30, 78, 140, 0.18)'
             : '0 16px 40px -28px rgba(10, 37, 64, 0.30), 0 4px 8px -4px rgba(10, 37, 64, 0.10)',
           transition: 'box-shadow 600ms ease',
         }}
@@ -233,7 +233,7 @@ function MemberFrame({
             transition={{ duration: 0.4 }}
             style={{
               background:
-                'radial-gradient(ellipse at center, rgba(99, 91, 255, 0.15), transparent 65%)',
+                'radial-gradient(ellipse at center, rgba(30, 78, 140, 0.15), transparent 65%)',
             }}
             aria-hidden="true"
           />
@@ -251,7 +251,7 @@ function MemberFrame({
       <div className="relative h-3.5 mt-2.5">
         <motion.div
           className="absolute top-1/2 -translate-y-1/2 h-px"
-          style={{ background: focused && !reduced ? '#635bff' : 'rgba(10, 37, 64, 0.18)' }}
+          style={{ background: focused && !reduced ? '#1e4e8c' : 'rgba(10, 37, 64, 0.18)' }}
           initial={reduced ? false : { scaleX: 0 }}
           animate={
             reduced
@@ -441,7 +441,7 @@ function DetailOverlay({
           layoutId={`member-photo-${member.id}`}
           className="relative aspect-[4/5] bg-bg-2 overflow-hidden"
           style={{
-            boxShadow: '0 40px 80px -32px rgba(0, 0, 0, 0.6), 0 12px 24px -8px rgba(99, 91, 255, 0.30)',
+            boxShadow: '0 40px 80px -32px rgba(0, 0, 0, 0.6), 0 12px 24px -8px rgba(30, 78, 140, 0.30)',
           }}
         >
           {member.photoPath ? (
@@ -596,7 +596,7 @@ export function UnifiedCouncil() {
           className="absolute pointer-events-none inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at 25% 30%, rgba(99, 91, 255, 0.06), transparent 55%), radial-gradient(ellipse at 75% 75%, rgba(255, 176, 136, 0.07), transparent 55%)',
+              'radial-gradient(ellipse at 25% 30%, rgba(30, 78, 140, 0.06), transparent 55%), radial-gradient(ellipse at 75% 75%, rgba(255, 176, 136, 0.07), transparent 55%)',
           }}
           animate={
             reduced
@@ -612,7 +612,7 @@ export function UnifiedCouncil() {
           className="absolute left-6 md:left-10 top-[var(--top, 0)] bottom-12 w-px hidden md:block"
           style={{
             background:
-              'linear-gradient(to bottom, transparent, rgba(99, 91, 255, 0.22) 12%, rgba(99, 91, 255, 0.22) 88%, transparent)',
+              'linear-gradient(to bottom, transparent, rgba(30, 78, 140, 0.22) 12%, rgba(30, 78, 140, 0.22) 88%, transparent)',
             top: 110,
           }}
           aria-hidden="true"
@@ -655,7 +655,7 @@ export function UnifiedCouncil() {
                 top: -30,
                 width: 480,
                 height: 480,
-                background: 'radial-gradient(ellipse, rgba(99, 91, 255, 0.18), transparent 65%)',
+                background: 'radial-gradient(ellipse, rgba(30, 78, 140, 0.18), transparent 65%)',
                 filter: 'blur(70px)',
                 zIndex: 0,
               }}
@@ -780,7 +780,7 @@ export function UnifiedCouncil() {
               className="h-px origin-left"
               style={{
                 background:
-                  'linear-gradient(to right, transparent, rgba(99, 91, 255, 0.4) 12%, rgba(99, 91, 255, 0.4) 88%, transparent)',
+                  'linear-gradient(to right, transparent, rgba(30, 78, 140, 0.4) 12%, rgba(30, 78, 140, 0.4) 88%, transparent)',
               }}
               initial={reduced ? false : { scaleX: 0 }}
               animate={

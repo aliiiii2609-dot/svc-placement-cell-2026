@@ -54,9 +54,9 @@ export const courses: CourseProgram[] = [
 // dashboard (68 / 19 / 13 over 114 placement offers).
 // ---------------------------------------------------------------------------
 export const streamApplicantShare: Array<{ stream: CourseStream; sharePct: number; programCount: number; brandColor: string }> = [
-  { stream: 'Commerce', sharePct: 68, programCount: 2,  brandColor: '#635bff' },
-  { stream: 'Arts',     sharePct: 19, programCount: 8,  brandColor: '#a26bff' },
-  { stream: 'Science',  sharePct: 13, programCount: 10, brandColor: '#ff6b9d' },
+  { stream: 'Commerce', sharePct: 68, programCount: 2,  brandColor: '#1e4e8c' },
+  { stream: 'Arts',     sharePct: 19, programCount: 8,  brandColor: '#b8893b' },
+  { stream: 'Science',  sharePct: 13, programCount: 10, brandColor: '#b8893b' },
 ];
 
 // ---------------------------------------------------------------------------

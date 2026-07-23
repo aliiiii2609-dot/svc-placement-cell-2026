@@ -148,7 +148,7 @@ export function RecruiterInterestForm() {
         <div
           aria-hidden="true"
           className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: 'linear-gradient(to right, #7fd9c1, #635bff, #ff6b9d)' }}
+          style={{ background: 'linear-gradient(to right, #7fd9c1, #1e4e8c, #b8893b)' }}
         />
 
         <motion.div
@@ -347,7 +347,7 @@ export function RecruiterInterestForm() {
           <button
             type="submit"
             disabled={submitState === 'submitting'}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-surface text-sm font-medium hover:bg-[#5048e0] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px] shadow-[0_4px_14px_-4px_rgba(99,91,255,0.4)] hover:shadow-[0_8px_20px_-6px_rgba(99,91,255,0.55)]"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-surface text-sm font-medium hover:bg-[#5048e0] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px] shadow-[0_4px_14px_-4px_rgba(30, 78, 140,0.4)] hover:shadow-[0_8px_20px_-6px_rgba(30, 78, 140,0.55)]"
           >
             <AnimatePresence mode="wait" initial={false}>
               {submitState === 'submitting' ? (

@@ -55,7 +55,7 @@ function WordReveal({
 }
 
 const PILLAR_ICONS = [ShieldCheck, BadgeCheck, RefreshCcw, ListChecks] as const;
-const PILLAR_COLORS = ['#635bff', '#a26bff', '#6ba6ff', '#ff6b9d'];
+const PILLAR_COLORS = ['#1e4e8c', '#b8893b', '#1e4e8c', '#b8893b'];
 
 // Editorial offset positions per pillar — alternating high/low for visual
 // rhythm rather than a flat 2x2 grid.
@@ -109,7 +109,7 @@ export function InitiativesByCell() {
           top: '15%',
           width: 580,
           height: 580,
-          background: 'radial-gradient(circle, rgba(99, 91, 255, 0.16), transparent 65%)',
+          background: 'radial-gradient(circle, rgba(30, 78, 140, 0.16), transparent 65%)',
           filter: 'blur(80px)',
         }}
         animate={{ x: [0, 30, 0], y: [0, -25, 0] }}
@@ -292,7 +292,7 @@ export function InitiativesByCell() {
               aria-hidden="true"
               className="absolute hidden md:block top-7 left-7 right-7 h-px"
               style={{
-                background: 'linear-gradient(to right, transparent, rgba(99, 91, 255, 0.3), transparent)',
+                background: 'linear-gradient(to right, transparent, rgba(30, 78, 140, 0.3), transparent)',
               }}
             />
 
@@ -311,9 +311,9 @@ export function InitiativesByCell() {
                       className="relative w-14 h-14 rounded-full flex items-center justify-center font-display font-bold text-lg"
                       style={{
                         background: '#fff',
-                        border: '2px solid #635bff',
-                        color: '#635bff',
-                        boxShadow: '0 6px 16px -6px rgba(99, 91, 255, 0.4)',
+                        border: '2px solid #1e4e8c',
+                        color: '#1e4e8c',
+                        boxShadow: '0 6px 16px -6px rgba(30, 78, 140, 0.4)',
                         zIndex: 1,
                       }}
                     >

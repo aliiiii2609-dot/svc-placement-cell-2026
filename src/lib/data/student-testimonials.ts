@@ -70,7 +70,7 @@ export const studentTestimonials: StudentTestimonial[] = [
     classYear: 'Class of 2024',
     pathTag: 'Placed through the campus process',
     sector: 'Finance & Markets',
-    accent: '#635bff',
+    accent: '#1e4e8c',
     // Inherited from rankings.ts. Provenance unknown. Verify before publishing.
     consented: false,
   },

@@ -130,19 +130,19 @@ function SocietyChip({
 const CATEGORY_META: Record<SocietyCategory, { kicker: string; brandColor: string; description: string }> = {
   'Academic': {
     kicker: 'Academic societies',
-    brandColor: '#635bff',
+    brandColor: '#1e4e8c',
     description:
       'Classroom learning extended through hands-on practice. Consulting projects, equity research desks, debating circuits, model finance.',
   },
   'Cultural': {
     kicker: 'Cultural societies',
-    brandColor: '#a26bff',
+    brandColor: '#b8893b',
     description:
       'A platform for creative practice. Dramatics in English and Hindi, fine arts, choreography, music. The campus stays loud and curious.',
   },
   'Social Service & Entrepreneurship': {
     kicker: 'Service and enterprise',
-    brandColor: '#ff6b9d',
+    brandColor: '#b8893b',
     description:
       'Community impact and student ventures, side by side. Enactus, Connecting Dreams, the NSS wing, and the cell-incubated impact projects.',
   },
@@ -269,7 +269,7 @@ export function ExtracurricularExposure() {
           width: 580,
           height: 580,
           background:
-            'radial-gradient(circle, rgba(99, 91, 255, 0.18), transparent 65%)',
+            'radial-gradient(circle, rgba(30, 78, 140, 0.18), transparent 65%)',
           filter: 'blur(80px)',
           animation: 'orb-drift-a 26s ease-in-out infinite',
         }}

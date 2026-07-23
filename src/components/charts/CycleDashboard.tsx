@@ -5,62 +5,28 @@ import { currentCycleStats, previousCycleStats, trendCycles } from '@/lib/data/s
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Cycle dashboard — the unified Numbers story.
+ * Cycle dashboard — the SUPPORTING DETAIL that flows beneath StatsBar.
  *
- * Replaces the three separate confusing charts (donut, trend line, comp
- * distribution) with one editorial panel that reads like a one-page
- * executive summary:
+ * StatsBar owns the single titled "The numbers, plainly." headline plus the
+ * KPI grid (offers, CTC, gross value, recruiters). This section deliberately
+ * carries NO section header, NO cycle eyebrow, NO hero total and NO repeated
+ * KPI tiles. It reads as a continuation and leads straight into the charts:
  *
- *   1. Leading sentence — what this is, in plain English.
- *   2. Five KPI tiles — the headline numbers with captions.
- *   3. Stream split — bar form (not donut), clear percentages.
- *   4. Five-year trend — sparkline + numbers, peak CTC per cycle.
- *   5. This cycle vs last — twin bars per metric with both numbers.
+ *   1. Stream split — where the offers landed (segmented arc + callouts).
+ *   2. Eight-cycle trajectory — peak CTC step-line + offer-volume bars.
+ *   3. This cycle vs last — twin bars per compensation metric.
  *
- * No chart-junk. No axes that require math. Every number is labelled with
- * a unit (LPA / Cr / offers) and a one-line caption explaining context.
+ * No chart-junk. Every number carries a unit (LPA / Cr / offers) and a
+ * one-line caption. Navy + gold only.
  */
 
 const cur = currentCycleStats;
 const prev = previousCycleStats;
 
-const kpiTiles = [
-  {
-    label: 'Placement offers',
-    value: String(cur.totalPlacementOffers),
-    unit: '',
-    caption: `Final accepted offers across streams in cycle ${cur.cycle}`,
-  },
-  {
-    label: 'Internship offers',
-    value: String(cur.totalInternshipOffers),
-    unit: '',
-    caption: 'Summer plus PPO-track this cycle',
-  },
-  {
-    label: 'Peak CTC',
-    value: cur.peakCtcLPA.toFixed(2),
-    unit: 'LPA',
-    caption: 'Highest fixed-pay offer this cycle',
-  },
-  {
-    label: 'Average CTC',
-    value: cur.averageCtcLPA.toFixed(2),
-    unit: 'LPA',
-    caption: 'Mean across accepted offers',
-  },
-  {
-    label: 'Gross offer value',
-    value: cur.grossOfferValueCr.toFixed(2),
-    unit: 'Cr',
-    caption: 'Cumulative cash compensation across all offers',
-  },
-];
-
 // ---------------------------------------------------------------------------
 // Editorial step-line chart for the eight-cycle trend.
 // SVG-based, no chart library. Peak CTC as step-line + dots; offer volume as
-// bars beneath. Brand-color gradient under the line.
+// bars beneath. Navy-to-gold gradient under the line.
 // ---------------------------------------------------------------------------
 function TrendChart({ inView }: { inView: boolean }) {
   const W = 880;
@@ -100,17 +66,17 @@ function TrendChart({ inView }: { inView: boolean }) {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label="Peak CTC trend across eight cycles">
       <defs>
         <linearGradient id="trend-area" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#635bff" stopOpacity="0.20" />
-          <stop offset="100%" stopColor="#635bff" stopOpacity="0" />
+          <stop offset="0%"   stopColor="#1e4e8c" stopOpacity="0.20" />
+          <stop offset="100%" stopColor="#1e4e8c" stopOpacity="0" />
         </linearGradient>
         <linearGradient id="trend-line" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%"   stopColor="#635bff" />
-          <stop offset="50%"  stopColor="#a26bff" />
-          <stop offset="100%" stopColor="#ff6b9d" />
+          <stop offset="0%"   stopColor="#1e4e8c" />
+          <stop offset="50%"  stopColor="#b8893b" />
+          <stop offset="100%" stopColor="#b8893b" />
         </linearGradient>
         <linearGradient id="trend-bar-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%"   stopColor="#635bff" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#a26bff" stopOpacity="0.55" />
+          <stop offset="0%"   stopColor="#1e4e8c" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#b8893b" stopOpacity="0.55" />
         </linearGradient>
       </defs>
 
@@ -157,7 +123,7 @@ function TrendChart({ inView }: { inView: boolean }) {
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.4, delay: 0.4 + i * 0.08, ease: EASE }}
         >
-          <circle cx={p.x} cy={p.y} r={6} fill="#fff" stroke="#635bff" strokeWidth={2.5} />
+          <circle cx={p.x} cy={p.y} r={6} fill="#fff" stroke="#1e4e8c" strokeWidth={2.5} />
           {/* Value label above the point */}
           <text
             x={p.x}
@@ -313,16 +279,12 @@ function SegmentedArc({
 export function CycleDashboard() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.15 });
 
-  // Stream split as horizontal bars
+  // Stream split — navy + two golds so each arc segment stays distinct
   const streams = [
-    { label: 'Commerce', pct: cur.streamSplit.commerce, color: '#635bff' },
-    { label: 'Arts', pct: cur.streamSplit.arts, color: '#a26bff' },
-    { label: 'Science', pct: cur.streamSplit.science, color: '#ff6b9d' },
+    { label: 'Commerce', pct: cur.streamSplit.commerce, color: '#1e4e8c' },
+    { label: 'Arts', pct: cur.streamSplit.arts, color: '#b8893b' },
+    { label: 'Science', pct: cur.streamSplit.science, color: '#d4a857' },
   ];
-
-  // Trend cycles — for the sparkline peak line
-  const trendMaxPeak = Math.max(...trendCycles.map((c) => c.peak));
-  const trendMaxOffers = Math.max(...trendCycles.map((c) => c.offers));
 
   // Cycle vs previous comparison rows
   const compareRows = [
@@ -355,149 +317,30 @@ export function CycleDashboard() {
   return (
     <section
       ref={ref}
-      className="relative section-spacing bg-bg border-t border-line"
+      className="relative pb-16 md:pb-24 lg:pb-32 bg-bg"
       id="numbers"
     >
-      <div className="container-svc">
-        {/* Header — designer treatment */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.7, ease: EASE }}
-          className="mb-14 md:mb-16"
-        >
-          {/* Live cycle ribbon */}
-          <div className="flex items-center gap-3 mb-5">
-            <span className="relative inline-flex w-2 h-2">
-              <span
-                className="absolute inset-0 rounded-full opacity-70 animate-ping"
-                style={{ background: '#7fd9c1' }}
-              />
-              <span
-                className="relative w-2 h-2 rounded-full"
-                style={{ background: '#7fd9c1' }}
-              />
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-              Cycle {cur.cycle}
-            </span>
-            <span aria-hidden="true" className="block h-px w-12 bg-line" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-ink-3">
-              {cur.totalPlacementOffers + cur.totalInternshipOffers} total offers
-            </span>
-          </div>
-
-          {/* Two-column header: heading + supporting copy */}
-          <div className="grid lg:grid-cols-[1.6fr_1fr] gap-8 lg:gap-16 items-start">
-            <h2
-              className="font-display font-bold text-ink leading-[1.02] tracking-[-0.032em]"
-              style={{ fontSize: 'clamp(2.2rem, 5.4vw, 4.2rem)' }}
-            >
-              The numbers,
-              <br />
-              <span className="font-serif italic font-normal text-ink-2" style={{ letterSpacing: '-0.01em' }}>
-                plainly.
-              </span>
-            </h2>
-            <div className="lg:pt-3">
-              <p className="text-ink-2 text-[15px] md:text-base leading-relaxed mb-4">
-                Aggregate placement and internship data for the running cycle,
-                with year-on-year context.
-              </p>
-              <p className="text-xs text-ink-3 leading-relaxed">
-                Values aggregate only, never paired with student names or
-                specific firms. CTC is total fixed compensation in LPA. Gross
-                value is cumulative annual compensation across all offers, in
-                Crores. Pre-2024 figures computed from the cell&apos;s annual
-                placement reports.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* KPI tiles — editorial, no heavy box */}
-        <div className="relative mb-16">
-          {/* Brand-color halo behind the row */}
-          <div
-            aria-hidden="true"
-            className="absolute pointer-events-none"
-            style={{
-              inset: -20,
-              background: 'radial-gradient(ellipse at center, rgba(99, 91, 255, 0.10), transparent 65%)',
-              filter: 'blur(60px)',
-              zIndex: 0,
-            }}
-          />
-          <div className="relative grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-8 md:gap-y-0 md:divide-x md:divide-line">
-            {kpiTiles.map((t, i) => {
-              const accents = ['#635bff', '#a26bff', '#ff6b9d', '#7fd9c1', '#ffb088'];
-              const accent = accents[i % accents.length];
-              return (
-                <motion.div
-                  key={t.label}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-                  transition={{ duration: 0.55, delay: i * 0.08, ease: EASE }}
-                  className="relative px-5 md:px-6 first:pl-0"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span aria-hidden="true" className="block w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
-                    <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
-                      {t.label}
-                    </div>
-                  </div>
-                  <div className="flex items-baseline gap-1.5 mb-2">
-                    <span
-                      className="font-display font-bold leading-[0.95] text-ink tracking-[-0.035em] tabular-nums"
-                      style={{ fontSize: 'clamp(2.4rem, 4vw, 3.2rem)' }}
-                    >
-                      {t.value}
-                    </span>
-                    {t.unit && (
-                      <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-3">
-                        {t.unit}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-[12px] text-ink-3 leading-snug max-w-[180px]">
-                    {t.caption}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Stream split — segmented arc + callout cards (different from donut and from horizontal bars) */}
+      <div className="container-svc space-y-6 md:space-y-8">
+        {/* Stream split — segmented arc + callouts. First sub-heading, no full section header. */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="py-10 md:py-14 border-t border-line mb-4"
+          className="glass rounded-2xl p-6 md:p-10"
         >
           <div className="grid lg:grid-cols-[320px_1fr] gap-10 lg:gap-16 items-start">
             <div>
               <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent mb-2">
                 Stream split
               </div>
-              <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight">
+              <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight text-balance">
                 Where the offers landed.
               </h3>
-              <p className="text-sm text-ink-3 mb-5">
+              <p className="text-sm text-ink-3 leading-relaxed max-w-[36ch]">
                 Share of {cur.totalPlacementOffers} placement offers by faculty
                 stream, cycle {cur.cycle}.
               </p>
-              {/* Bottom-of-funnel summary */}
-              <div className="pt-4 border-t border-line">
-                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 mb-1">
-                  Total placement offers
-                </div>
-                <div className="font-display font-bold text-3xl md:text-4xl text-ink tabular-nums tracking-[-0.03em]">
-                  {cur.totalPlacementOffers}
-                </div>
-              </div>
             </div>
 
             {/* Segmented arc — half-circle, three colored arcs proportional to share */}
@@ -538,24 +381,24 @@ export function CycleDashboard() {
           </div>
         </motion.div>
 
-        {/* Five-year trend — editorial step-line chart */}
+        {/* Eight-cycle trajectory — editorial step-line chart */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="py-10 md:py-12 border-t border-line"
+          className="glass rounded-2xl p-6 md:p-10"
         >
           <div className="mb-7">
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent mb-2">
               Eight-cycle trajectory
             </div>
-            <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight">
+            <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight text-balance">
               Peak compensation and offer volume, by cycle.
             </h3>
-            <p className="text-sm text-ink-3 max-w-2xl">
-              Step-line shows peak CTC. Bars below show offer volume. Click
-              points are hand-computed from the cell&apos;s annual reports.
+            <p className="text-sm text-ink-3 leading-relaxed max-w-2xl text-pretty">
+              The step-line tracks peak CTC. Bars below show offer volume. Every
+              point is hand-computed from the cell&apos;s annual reports.
             </p>
           </div>
 
@@ -571,16 +414,16 @@ export function CycleDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="py-10 md:py-12 border-t border-line"
+          className="glass rounded-2xl p-6 md:p-10"
         >
           <div className="mb-7">
             <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent mb-2">
               Year on year
             </div>
-            <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight">
+            <h3 className="font-display font-bold text-xl md:text-2xl text-ink tracking-tight mb-2 leading-tight text-balance">
               Cycle {cur.cycle} compared to cycle {prev.cycle}.
             </h3>
-            <p className="text-sm text-ink-3 max-w-2xl">
+            <p className="text-sm text-ink-3 leading-relaxed max-w-2xl text-pretty">
               Per-cycle compensation rows. Top decile is the average of the top 10%
               of accepted offers. Median is the middle offer. Average is the mean.
             </p>
@@ -590,7 +433,7 @@ export function CycleDashboard() {
             {compareRows.map((row, i) => {
               const delta = row.prev > 0 ? ((row.cur - row.prev) / row.prev) * 100 : 0;
               const isPositive = delta >= 0;
-              const accents = ['#635bff', '#a26bff', '#7fd9c1', '#ff6b9d'];
+              const accents = ['#1e4e8c', '#b8893b', '#d4a857', '#123460'];
               const accent = accents[i % accents.length];
               return (
                 <motion.div
@@ -608,7 +451,7 @@ export function CycleDashboard() {
                   />
 
                   {/* Metric label */}
-                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 mb-3">
+                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 mb-3 max-w-[18ch]">
                     {row.label}
                   </div>
 

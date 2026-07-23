@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FileText, MessageSquare, BookOpen, Calendar, ArrowRight, Sparkles } from 'lucide-react';
+import { FileText, MessageSquare, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { resources } from '@/lib/data/resources';
 import { events } from '@/lib/data/events';
 import { news } from '@/lib/data/news';
@@ -29,9 +29,8 @@ export function StudentPortalPage() {
       </section>
 
       <section className="section-spacing border-b border-line">
-        <div className="container-svc grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="container-svc grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { to: '/students/cv-builder', icon: Sparkles, title: 'CV Builder', body: 'Write your CV in a guided form. Export to PDF or Word. Auto-saved as you type.' },
             { to: '/students/cv-review', icon: FileText, title: 'CV Review Queue', body: 'Upload your draft. Get coordinator feedback within 48 hours.' },
             { to: '/students/mock-interviews', icon: MessageSquare, title: 'Mock Interviews', body: 'Book a slot with an alumni mentor in your target sector.' },
             { to: '/resources', icon: BookOpen, title: 'Resources', body: 'Templates, prep guides, and the recruitment brochure.' },
