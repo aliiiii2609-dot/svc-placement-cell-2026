@@ -1,5 +1,6 @@
 import { Component, Suspense, type ErrorInfo, type ReactNode, useEffect, useRef, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useRevealStuck } from '@/lib/hooks/useRevealStuck';
 import { MotionConfig } from 'framer-motion';
 import { Header } from '@/components/nav/Header';
 import { ScrollToTop } from '@/components/utils/ScrollToTop';
@@ -119,6 +120,10 @@ export default function App() {
   const searchTriggerRef = useRef<HTMLElement | null>(null);
 
   useLenis();
+
+  const { pathname } = useLocation();
+  // Safety net: never let a scroll-reveal section stay stuck invisible.
+  useRevealStuck(pathname);
 
   useEffect(() => {
     sound.loadFromStorage();

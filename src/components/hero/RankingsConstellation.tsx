@@ -279,12 +279,42 @@ function RankCard({ card, index, triggered }: { card: Card; index: number; trigg
 
 export function RankingsConstellation() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(sectionRef, { once: true, amount: 0.25 });
+  const inView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const [triggered, setTriggered] = useState(false);
+
+  // Reliability net. The cards start at opacity 0 and only reveal once
+  // `triggered` flips true. If framer's useInView ever fails to fire — which
+  // happened on mobile where the stacked grid is very tall, and occasionally
+  // on desktop when this hero sub-section mounts mid-scroll — the cards would
+  // sit permanently blank. So we flip `triggered` on ANY of: useInView firing,
+  // a manual in-viewport check on mount + scroll, or a short grace timeout.
+  // Content is therefore guaranteed to appear.
+  useEffect(() => {
+    if (triggered) return;
+    if (inView) {
+      setTriggered(true);
+      return;
+    }
+    const check = () => {
+      const el = sectionRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      if (r.top < vh * 0.9 && r.bottom > 0) setTriggered(true);
+    };
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    const t = window.setTimeout(() => setTriggered(true), 2200);
+    return () => {
+      window.removeEventListener('scroll', check);
+      window.clearTimeout(t);
+    };
+  }, [inView, triggered]);
 
   return (
     <div ref={sectionRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((c, i) => (
-        <RankCard key={c.authority} card={c} index={i} triggered={inView} />
+        <RankCard key={c.authority} card={c} index={i} triggered={triggered} />
       ))}
     </div>
   );

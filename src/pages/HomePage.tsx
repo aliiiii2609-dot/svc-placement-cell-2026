@@ -59,14 +59,12 @@ import { AudienceCards } from '@/components/sections/AudienceCards';
 const CycleDashboard = lazyWithRetry(() => import('@/components/charts/CycleDashboard').then((m) => ({ default: m.CycleDashboard })));
 const LeadershipDesks = lazyWithRetry(() => import('@/components/sections/LeadershipDesks').then((m) => ({ default: m.LeadershipDesks })));
 const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStrip').then((m) => ({ default: m.HomeTeamStrip })));
-const GallerySlideshow = lazyWithRetry(() => import('@/components/gallery/GallerySlideshow').then((m) => ({ default: m.GallerySlideshow })));
 
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
   { id: 'proof', label: 'The Numbers' },
   { id: 'leadership', label: 'Leadership' },
   { id: 'team', label: 'The Team' },
-  { id: 'gallery', label: 'Gallery' },
   { id: 'where', label: 'Where Next' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -75,6 +73,26 @@ export function HomePage() {
   return (
     <>
       <Hero />
+
+      {/* Official rankings banner. Muted, looping video (hardware-decoded, smooth)
+          so it never janks the way a heavy gif would. */}
+      <section className="border-b border-line bg-bg-2/60">
+        <div className="container-svc py-6 md:py-8">
+          <div className="glass overflow-hidden rounded-2xl">
+            <video
+              className="w-full h-auto block"
+              src="/rankings-banner.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Sri Venkateswara College rankings banner"
+            />
+          </div>
+        </div>
+      </section>
+
       <RecruiterMarqueeBar />
 
       {/* Sticky chapter nav. Pins under the header once the hero has passed, so
@@ -97,12 +115,6 @@ export function HomePage() {
       <section id="team" className="scroll-mt-[120px] border-t border-line">
         <DeferLazy minHeight={500}>
           <HomeTeamStrip />
-        </DeferLazy>
-      </section>
-
-      <section id="gallery" className="scroll-mt-[120px] border-t border-line">
-        <DeferLazy minHeight={500}>
-          <GallerySlideshow />
         </DeferLazy>
       </section>
 

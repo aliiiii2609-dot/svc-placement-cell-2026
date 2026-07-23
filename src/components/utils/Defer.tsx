@@ -51,7 +51,7 @@ function Skeleton({ minHeight }: { minHeight: number | string }) {
 export function Defer({
   children,
   minHeight = 320,
-  rootMargin = '400px',
+  rootMargin = '900px',
 }: {
   children: ReactNode;
   /** Approximate rendered height, used to reserve scroll space (capped). */
@@ -105,7 +105,7 @@ export function Defer({
 export function DeferLazy({
   children,
   minHeight = 320,
-  rootMargin = '400px',
+  rootMargin = '900px',
 }: {
   children: ReactNode;
   minHeight?: number | string;

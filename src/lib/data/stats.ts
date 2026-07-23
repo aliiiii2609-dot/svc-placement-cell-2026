@@ -30,7 +30,7 @@ export const currentCycleStats: PlacementStats = {
   peakCtcLPA: 15.98,
   averageCtcLPA: 7.19,
   medianCtcLPA: 7.0,
-  topDecileAverageLPA: 14.35,
+  topDecileAverageLPA: 14.19,
   grossOfferValueCr: 9.13,
   recruitersEngaged: 100,
   convertingRecruiters: 18,
@@ -104,7 +104,7 @@ export const trendCycles: Array<{
   { cycle: '22-23', offers: 242, peak: 21.50, avg: 6.81, median: 5.10, topDecile: 16.35, grossCr: 11.71, recruiters: 21 },
   { cycle: '23-24', offers: 175, peak: 12.88, avg: 5.66, median: 5.48, topDecile: 9.83, grossCr: 9.85, recruiters: 28 },
   { cycle: '24-25', offers: 114, peak: 13.40, avg: 6.43, median: 6.05, topDecile: 10.10, grossCr: 6.80, recruiters: 70 },
-  { cycle: '25-26', offers: 114, peak: 15.98, avg: 7.30, median: 7.00, topDecile: 14.35, grossCr: 8.32, recruiters: 60 },
+  { cycle: '25-26', offers: 130, peak: 15.98, avg: 7.19, median: 7.00, topDecile: 14.19, grossCr: 9.13, recruiters: 100 },
 ];
 
 /**
