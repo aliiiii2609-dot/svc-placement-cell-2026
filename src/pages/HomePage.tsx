@@ -56,15 +56,16 @@ import { AudienceCards } from '@/components/sections/AudienceCards';
  * at it.
  */
 
-const CycleDashboard = lazyWithRetry(() => import('@/components/charts/CycleDashboard').then((m) => ({ default: m.CycleDashboard })));
 const LeadershipDesks = lazyWithRetry(() => import('@/components/sections/LeadershipDesks').then((m) => ({ default: m.LeadershipDesks })));
 const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStrip').then((m) => ({ default: m.HomeTeamStrip })));
+const CouncilCoordinators = lazyWithRetry(() => import('@/components/team/CouncilCoordinators').then((m) => ({ default: m.CouncilCoordinators })));
 
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
-  { id: 'proof', label: 'The Numbers' },
+  { id: 'proof', label: 'Highlights' },
   { id: 'leadership', label: 'Leadership' },
   { id: 'team', label: 'The Team' },
+  { id: 'council', label: 'Council' },
   { id: 'where', label: 'Where Next' },
   { id: 'contact', label: 'Contact' },
 ];
@@ -74,20 +75,17 @@ export function HomePage() {
     <>
       <Hero />
 
-      {/* Official rankings banner. Muted, looping video (hardware-decoded, smooth)
-          so it never janks the way a heavy gif would. */}
+      {/* Official rankings banner. A GIF loops continuously on its own with no
+          play control, which is what the cell wants here. */}
       <section className="border-b border-line bg-bg-2/60">
         <div className="container-svc py-6 md:py-8">
           <div className="glass overflow-hidden rounded-2xl">
-            <video
+            <img
               className="w-full h-auto block"
-              src="/rankings-banner.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="Sri Venkateswara College rankings banner"
+              src="/rankings-banner.gif"
+              alt="Sri Venkateswara College rankings banner"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -101,9 +99,15 @@ export function HomePage() {
 
       <section id="proof" className="scroll-mt-[120px]">
         <StatsBar />
-        <DeferLazy minHeight={900}>
-          <CycleDashboard />
-        </DeferLazy>
+        <div className="container-svc pb-4 md:pb-8 -mt-2">
+          <Link
+            to="/rankings-press"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:text-accent-deep transition-colors"
+          >
+            See the full placement breakdown
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </section>
 
       <section id="leadership" className="scroll-mt-[120px] border-t border-line">
@@ -115,6 +119,12 @@ export function HomePage() {
       <section id="team" className="scroll-mt-[120px] border-t border-line">
         <DeferLazy minHeight={500}>
           <HomeTeamStrip />
+        </DeferLazy>
+      </section>
+
+      <section id="council" className="scroll-mt-[120px] border-t border-line">
+        <DeferLazy minHeight={500}>
+          <CouncilCoordinators />
         </DeferLazy>
       </section>
 

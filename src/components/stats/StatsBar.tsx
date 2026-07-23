@@ -201,22 +201,18 @@ export function StatsBar() {
           transition={{ duration: 0.7 }}
           className="max-w-2xl mb-12 md:mb-14"
         >
-          <div className="font-mono text-[12px] uppercase tracking-[0.18em] text-accent mb-5">
-            Cycle {currentCycleStats.cycle}
+          <div className="font-mono text-[12px] uppercase tracking-[0.18em] text-gold mb-5">
+            Sri Venkateswara College
           </div>
           <h2
             className="font-display font-bold text-ink leading-[1.04] tracking-[-0.03em]"
             style={{ fontSize: 'clamp(2.2rem, 5.2vw, 4rem)' }}
           >
-            The numbers,{' '}
-            <span className="font-serif italic font-normal text-ink-2" style={{ letterSpacing: '-0.01em' }}>
-              plainly.
+            Recruitment Highlights{' '}
+            <span className="font-serif italic font-normal text-gold" style={{ letterSpacing: '-0.01em' }}>
+              {currentCycleStats.cycle.replace('20', '')}
             </span>
           </h2>
-          <p className="mt-5 text-ink-2 text-[15px] md:text-base leading-relaxed max-w-[46ch] text-balance">
-            Aggregate placement and internship figures for the running cycle. Every
-            value below is cell data, never paired with student names or specific firms.
-          </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">

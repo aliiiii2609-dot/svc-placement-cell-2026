@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { rankings, achievements } from '@/lib/data/rankings';
+import { CycleDashboard } from '@/components/charts/CycleDashboard';
 
 export function RankingsPressPage() {
   return (
@@ -7,15 +8,12 @@ export function RankingsPressPage() {
       <section className="pt-6 md:pt-8">
         <div className="container-svc">
           <div className="glass overflow-hidden rounded-2xl">
-            <video
+            <img
               className="w-full h-auto block"
-              src="/rankings-banner.mp4"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="Sri Venkateswara College rankings banner"
+              src="/rankings-banner.gif"
+              alt="Sri Venkateswara College rankings banner"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
@@ -47,6 +45,16 @@ export function RankingsPressPage() {
             </motion.div>
           ))}
         </div>
+      </section>
+
+      <section id="placements" className="section-spacing border-b border-line scroll-mt-[96px]">
+        <div className="container-svc mb-8">
+          <span className="eyebrow">Placements in detail</span>
+          <h2 className="font-display text-3xl md:text-4xl mt-3 display-italic">
+            The cycle, <em>by the numbers.</em>
+          </h2>
+        </div>
+        <CycleDashboard />
       </section>
 
       <section className="section-spacing border-b border-line">

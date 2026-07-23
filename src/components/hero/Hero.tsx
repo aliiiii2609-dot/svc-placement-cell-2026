@@ -59,8 +59,12 @@ export function Hero() {
       className="relative overflow-hidden bg-bg"
       aria-label="Hero"
     >
-      {/* The actual photo region — covers the upper portion of the hero, no crop */}
-      <div className="relative w-full" style={{ aspectRatio: '770 / 434' }}>
+      {/* The actual photo region — covers the upper portion of the hero. The
+          aspect ratio drives its height on wide screens; on narrow screens that
+          ratio is far too short for the overlaid content (crest, headline,
+          lede, buttons, live pill), so a min-height keeps the content from
+          spilling over the section below it. */}
+      <div className="relative w-full min-h-[640px] sm:min-h-[600px] lg:min-h-0" style={{ aspectRatio: '770 / 434' }}>
         {/* Real building photo, contained not cropped. Static: no scroll-linked
             parallax — the useScroll/useTransform version re-rendered this image
             on every scroll frame, which was a primary source of scroll jank. */}

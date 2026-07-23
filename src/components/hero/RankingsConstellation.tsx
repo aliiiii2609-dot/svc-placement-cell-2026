@@ -226,14 +226,6 @@ function RankCard({ card, index, triggered }: { card: Card; index: number; trigg
             <span
               key={i}
               className="font-display font-bold text-[clamp(4rem,8vw,7rem)] leading-[0.9] text-ink tracking-[-0.04em]"
-              style={{
-                background: triggered
-                  ? `linear-gradient(180deg, #0a2540 0%, #0a2540 60%, ${card.accent} 130%)`
-                  : '#0a2540',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
             >
               <CinematicDigit value={ch} trigger={triggered} delay={baseDelay + i * 80} />
             </span>
