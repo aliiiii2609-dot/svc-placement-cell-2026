@@ -5,7 +5,7 @@ import type { CoreTeamMember, ConvenerProfile } from '@/types';
  * Sourced from Placement_Cell_2026-67_Team_Members.xlsx
  * supplied by the cell's Documentation department.
  *
- * Mohammed Ali (correct spelling, not Muhammad).
+ * Member names per the cell's Documentation department.
  */
 export const coreTeam: CoreTeamMember[] = [
   {
@@ -15,7 +15,7 @@ export const coreTeam: CoreTeamMember[] = [
     course: 'B.A. (H) Economics',
     year: 'III',
     bio:
-      'Builds the outcome-oriented ecosystem that equips students with the skills, exposure, and confidence required in today\'s competitive professional landscape. Strengthens industry engagement and ensures structured functioning across every vertical of the Cell.',
+      'Leading the Placement Cell with a vision to ensure every student of SVC has access to meaningful career opportunities and professional growth.',
     email: 'nishtha.svcpcell@gmail.com',
     phone: '+91 98180 43273',
     photoPath: '/images/team/nishtha-khatri.jpg',
@@ -23,12 +23,12 @@ export const coreTeam: CoreTeamMember[] = [
   },
   {
     id: 'mohammed-ali',
-    name: 'Mohammed Ali',
+    name: 'Muhammad Ali',
     role: 'Vice President, Placements',
     course: 'B.A. (H) English',
     year: 'III',
     bio:
-      'Builds a Placement Cell that is transparent, student-centric, and continuously evolving with industry needs. Fosters strong industry relationships and creates equal opportunities for every student.',
+      'Overseeing all placement-related engagement, ensuring smooth coordination between students and recruiting organisations.',
     email: 'ali.svcpcell@gmail.com',
     phone: '+91 90273 89597',
     photoPath: '/images/team/mohammed-ali.jpg',
@@ -41,7 +41,7 @@ export const coreTeam: CoreTeamMember[] = [
     course: 'B.Sc. (H) Mathematics',
     year: 'III',
     bio:
-      'Internships are a collective journey built through teamwork, effort, and shared responsibility. Creates opportunities that help students gain real-world exposure, learn beyond classrooms, and grow with confidence.',
+      'Managing internship opportunities and ensuring students gain valuable pre-placement experiences that strengthen their professional profiles.',
     email: 'gurbani.svcpcell@gmail.com',
     phone: '+91 95822 25700',
     photoPath: '/images/team/gurbani-chandok.jpg',
@@ -54,7 +54,7 @@ export const coreTeam: CoreTeamMember[] = [
     course: 'B.Sc. (H) Botany',
     year: 'III',
     bio:
-      'Excellence in execution transforms vision into reality. Oversees overall operations of the Cell, ensuring every process, every drive, and every initiative runs with precision, purpose, and efficiency.',
+      'Coordinating operations across all divisions of the Placement Cell to ensure seamless execution of drives and events.',
     email: 'anishatanwar.svcpcell@gmail.com',
     phone: '+91 98705 12006',
     photoPath: '/images/team/anisha-tanwar.jpg',
@@ -67,7 +67,7 @@ export const coreTeam: CoreTeamMember[] = [
     course: 'B.Com (H)',
     year: 'III',
     bio:
-      'The backbone of any well-functioning team is seamless coordination, clear communication, and disciplined execution. Bridges every vertical of the Cell from documentation and internal coordination to industry outreach and event operations.',
+      'Handling documentation, correspondence, and administrative matters to keep the Placement Cell running with precision and efficiency.',
     email: 'sukhmansvc.pcell@gmail.com',
     phone: '+91 90564 82808',
     photoPath: '/images/team/sukhmanpreet-kaur-sandhu.jpg',
@@ -80,7 +80,7 @@ export const coreTeam: CoreTeamMember[] = [
     course: 'B.Com (H)',
     year: 'III',
     bio:
-      'Great teams are made by those who hold things together behind the scenes. Strengthens the Cell from within by being reliable, responsive, and resourceful for the team, the volunteers, and the students.',
+      'Supporting secretarial functions and assisting in cross-divisional coordination to maintain operational excellence across all activities.',
     email: 'shiv.svcpcell@gmail.com',
     phone: '+91 98118 17950',
     photoPath: '/images/team/shiv-chopra.jpg',

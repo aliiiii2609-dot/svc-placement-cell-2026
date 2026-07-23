@@ -59,10 +59,10 @@ export function Footer() {
               <li className="text-ink-3">10:00 to 17:00 IST</li>
             </ul>
             <div className="flex gap-2 mt-5">
-              <a href="https://www.instagram.com/placementcell_svc" target="_blank" rel="noopener" aria-label="Instagram" className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-line hover:border-accent hover:text-accent hover:bg-accent-soft transition-all duration-300">
+              <a href="https://www.instagram.com/placement_svc" target="_blank" rel="noopener" aria-label="Instagram" className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-line hover:border-accent hover:text-accent hover:bg-accent-soft transition-all duration-300">
                 <Instagram size={15} />
               </a>
-              <a href="https://www.linkedin.com/company/the-placement-cell-sri-venkateswara-college-delhi-university/" target="_blank" rel="noopener" aria-label="LinkedIn" className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-line hover:border-accent hover:text-accent hover:bg-accent-soft transition-all duration-300">
+              <a href="https://www.linkedin.com/company/42827275/" target="_blank" rel="noopener" aria-label="LinkedIn" className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-line hover:border-accent hover:text-accent hover:bg-accent-soft transition-all duration-300">
                 <Linkedin size={15} />
               </a>
               <a href="https://m.facebook.com/TTDSVCPLACEMENTCELL/" target="_blank" rel="noopener" aria-label="Facebook" className="w-10 h-10 inline-flex items-center justify-center rounded-full border border-line hover:border-accent hover:text-accent hover:bg-accent-soft transition-all duration-300">

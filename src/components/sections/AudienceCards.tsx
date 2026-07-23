@@ -130,21 +130,6 @@ function AudienceCardTile({ card, index }: { card: AudienceCard; index: number }
         />
 
         {/* Oversized numeral backdrop */}
-        <div
-          aria-hidden="true"
-          className="absolute pointer-events-none select-none font-display font-bold leading-none transition-opacity duration-500 group-hover:opacity-100"
-          style={{
-            top: -12,
-            right: -8,
-            fontSize: 'clamp(7rem, 14vw, 11rem)',
-            color: brandColor,
-            opacity: 0.06,
-            letterSpacing: '-0.06em',
-          }}
-        >
-          {num}
-        </div>
-
         <div className="relative p-7 md:p-8 lg:p-9 h-full flex flex-col">
           {/* Icon + kicker row */}
           <div className="flex items-center justify-between mb-6 md:mb-7">

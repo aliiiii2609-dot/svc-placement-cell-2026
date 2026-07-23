@@ -10,34 +10,25 @@ interface ThemeCtx {
 
 const ThemeContext = createContext<ThemeCtx | null>(null);
 
-const STORAGE_KEY = 'svc-theme';
-
-function readInitial(): Theme {
-  if (typeof window === 'undefined') return 'light';
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (saved === 'light' || saved === 'dark') return saved;
-    // System preference fallback
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
-  } catch { /* non-fatal */ }
-  return 'light';
-}
-
+/**
+ * The site is a light / warm-paper design end to end (the brand deliberately
+ * avoids dark backgrounds). Dark mode was only ever a partial theme and left
+ * several sections with dark-on-dark, unreadable content on phones whose system
+ * preference is dark. So the theme is now pinned to light: the `.dark` class is
+ * never applied, and the toggle is a no-op kept only so existing callers of
+ * useTheme() keep compiling.
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(readInitial);
+  const [theme] = useState<Theme>('light');
 
-  // Apply class to <html> on theme change
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') root.classList.add('dark');
-    else root.classList.remove('dark');
-    try { localStorage.setItem(STORAGE_KEY, theme); } catch { /* non-fatal */ }
-  }, [theme]);
+    document.documentElement.classList.remove('dark');
+  }, []);
 
-  const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+  const noop = () => {};
 
   return (
-    <ThemeContext.Provider value={{ theme, toggle, setTheme }}>
+    <ThemeContext.Provider value={{ theme, toggle: noop, setTheme: noop }}>
       {children}
     </ThemeContext.Provider>
   );

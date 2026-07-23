@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, Search, ChevronDown, Download, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 /**
  * Floating glass navigation.
@@ -281,7 +280,6 @@ export function Header({ onSearchOpen }: Props) {
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <ThemeToggle className="hidden sm:inline-flex" />
             <button onClick={onSearchOpen} className={cn(iconBtn, 'hidden sm:inline-flex')} aria-label="Open search">
               <Search size={15} />
             </button>
@@ -380,7 +378,6 @@ export function Header({ onSearchOpen }: Props) {
                   <button onClick={onSearchOpen} className={cn(iconBtn, 'w-11 h-11')} aria-label="Open search">
                     <Search size={16} />
                   </button>
-                  <ThemeToggle className="w-11 h-11" />
                 </div>
               </div>
             </nav>

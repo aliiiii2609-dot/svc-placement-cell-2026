@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import type { CouncilDepartment, CouncilMember, Coordinator } from '@/types';
 import { councilHeads } from '@/lib/data/council';
@@ -83,6 +84,23 @@ function Monogram({
   name: string;
   size: number;
 }) {
+  // Prefer the member's real headshot (public/images/people/<id>.jpg). Falls
+  // back to a monogram disc if the photo is missing or fails to load, so the
+  // grid always looks complete.
+  const [failed, setFailed] = useState(false);
+  if (!failed) {
+    return (
+      <img
+        src={`/images/people/${id}.jpg`}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+        className="shrink-0 rounded-full object-cover shadow-soft ring-1 ring-line"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
   return (
     <span
       aria-hidden="true"
