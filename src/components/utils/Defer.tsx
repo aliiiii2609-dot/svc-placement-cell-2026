@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react';
 
 /**
  * Defer
@@ -6,31 +6,55 @@ import { Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
  * Renders `children` only once the placeholder is within `rootMargin` of the
  * viewport, then keeps them mounted forever after.
  *
- * Why the home page needs this: it composes 28 sections, several of which are
+ * Why the home page needs this: it composes many sections, several of which are
  * 400-800 line components that build SVG charts, seed particle systems, start
- * rAF loops and register Framer Motion scroll listeners on mount. React mounts
- * all of them during the first commit, so a visitor who never scrolls past the
- * hero still pays for the council orbit, the recruiter galaxy, the cycle
- * dashboard and everything else. That first commit is the long task that makes
- * the page feel stuck for the first second on a mid-range phone.
+ * rAF loops and register scroll listeners on mount. Deferring keeps a visitor
+ * who never scrolls past the hero from paying for all of them up front.
  *
- * Deferring is preferred over CSS `content-visibility: auto` here. The CSS
- * approach skips *painting* off-screen content but still mounts the component,
- * runs its effects, and starts its timers, so the rAF loops would all still be
- * live. It also interacts badly with the sticky and scroll-linked elements
- * already on this page.
- *
- * `minHeight` reserves space so deferred content does not cause layout shift
- * or let the scrollbar jump as sections resolve. Pass a rough height for the
- * section; it only has to be close.
+ * Reserved height: the placeholder reserves scroll space so resolving sections
+ * do not shift layout. It used to reserve the caller's full estimate (up to
+ * 900px), which meant large BLANK bands sat below the fold and read as "empty
+ * screens" before content streamed in. We now (a) cap the reserved height to a
+ * modest maximum so the gap is never huge, and (b) fill it with a faint
+ * pulsing skeleton instead of nothing, so an approaching section reads as
+ * "loading" rather than "broken". The IntersectionObserver defer behavior is
+ * unchanged.
  */
+
+/** Largest space we will reserve for a not-yet-mounted section. */
+const MAX_RESERVED_PX = 420;
+
+function reservedHeight(minHeight: number | string): string {
+  if (typeof minHeight === 'number') {
+    return `${Math.min(minHeight, MAX_RESERVED_PX)}px`;
+  }
+  return minHeight;
+}
+
+/** Faint, low-cost skeleton so deferred space never reads as a dead blank gap. */
+function Skeleton({ minHeight }: { minHeight: number | string }) {
+  const style: CSSProperties = {
+    minHeight: reservedHeight(minHeight),
+    background:
+      'linear-gradient(180deg, rgba(11,31,68,0.03) 0%, rgba(11,31,68,0.015) 100%)',
+    borderRadius: 16,
+  };
+  return (
+    <div
+      style={style}
+      className="animate-pulse mx-auto w-[92%] max-w-6xl my-6"
+      aria-hidden="true"
+    />
+  );
+}
+
 export function Defer({
   children,
-  minHeight = 480,
+  minHeight = 320,
   rootMargin = '400px',
 }: {
   children: ReactNode;
-  /** Approximate rendered height, used to reserve scroll space. */
+  /** Approximate rendered height, used to reserve scroll space (capped). */
   minHeight?: number | string;
   /** How far ahead of the viewport to start mounting. */
   rootMargin?: string;
@@ -67,11 +91,9 @@ export function Defer({
   if (show) return <>{children}</>;
 
   return (
-    <div
-      ref={ref}
-      style={{ minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }}
-      aria-hidden="true"
-    />
+    <div ref={ref} aria-hidden="true">
+      <Skeleton minHeight={minHeight} />
+    </div>
   );
 }
 
@@ -82,7 +104,7 @@ export function Defer({
  */
 export function DeferLazy({
   children,
-  minHeight = 480,
+  minHeight = 320,
   rootMargin = '400px',
 }: {
   children: ReactNode;
@@ -91,16 +113,7 @@ export function DeferLazy({
 }) {
   return (
     <Defer minHeight={minHeight} rootMargin={rootMargin}>
-      <Suspense
-        fallback={
-          <div
-            style={{ minHeight: typeof minHeight === 'number' ? `${minHeight}px` : minHeight }}
-            aria-hidden="true"
-          />
-        }
-      >
-        {children}
-      </Suspense>
+      <Suspense fallback={<Skeleton minHeight={minHeight} />}>{children}</Suspense>
     </Defer>
   );
 }

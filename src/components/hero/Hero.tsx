@@ -1,6 +1,5 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useRef } from 'react';
 import { Button } from '@/components/ui/Button';
 import { ParticleField } from '@/components/animations/ParticleField';
 import { MathBackdrop } from '@/components/hero/MathBackdrop';
@@ -54,28 +53,21 @@ function WordsCascade({ text, className }: { text: string; className?: string })
 }
 
 export function Hero() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 1.04]);
-  const photoY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const contentY = useTransform(scrollYProgress, [0, 1], [0, -40]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0]);
-
   return (
     <section
-      ref={ref}
       id="hero"
       className="relative overflow-hidden bg-bg"
       aria-label="Hero"
     >
       {/* The actual photo region — covers the upper portion of the hero, no crop */}
       <div className="relative w-full" style={{ aspectRatio: '770 / 434' }}>
-        {/* Real building photo, contained not cropped */}
-        <motion.img
+        {/* Real building photo, contained not cropped. Static: no scroll-linked
+            parallax — the useScroll/useTransform version re-rendered this image
+            on every scroll frame, which was a primary source of scroll jank. */}
+        <img
           src="/images/campus/svc-building.jpg"
           alt="Sri Venkateswara College main building"
           className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ scale: photoScale, y: photoY }}
           loading="eager"
         />
 
@@ -94,13 +86,15 @@ export function Hero() {
           <MathBackdrop />
         </div>
 
-        {/* Floating particles on top of the photo */}
-        <ParticleField className="z-[4]" count={40} />
+        {/* Floating particles on top of the photo. Count kept low; the field
+            self-disables on mobile / reduced-motion and pauses off-screen. */}
+        <ParticleField className="z-[4]" count={22} />
 
-        {/* Content overlaid on the photo */}
+        {/* Content overlaid on the photo. No scroll-linked transform — the
+            entrance animations below run once, then nothing runs per frame. */}
         <div className="absolute inset-0 z-10 flex items-center">
           <div className="container-svc w-full">
-            <motion.div style={{ y: contentY, opacity: contentOpacity }} className="max-w-3xl">
+            <div className="max-w-3xl">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -155,7 +149,7 @@ export function Hero() {
                 transition={{ delay: 1.15, duration: 0.7 }}
                 className="flex flex-wrap gap-3 mb-6"
               >
-                <Button as="a" href="/SVC_Brochure_2025-26.pdf" target="_blank" rel="noopener" size="lg">
+                <Button as="a" href="/Recruitment-Brochure-SVC-2026-27.pdf" target="_blank" rel="noopener" size="lg">
                   Download brochure
                 </Button>
                 <Button as={Link as never} to="/recruiters" size="lg" variant="secondary">
@@ -181,7 +175,7 @@ export function Hero() {
                   {currentCycleStats.totalInternshipOffers} internships
                 </span>
               </motion.div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

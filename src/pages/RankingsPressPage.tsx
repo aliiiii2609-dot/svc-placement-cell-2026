@@ -4,6 +4,23 @@ import { rankings, achievements } from '@/lib/data/rankings';
 export function RankingsPressPage() {
   return (
     <>
+      <section className="pt-6 md:pt-8">
+        <div className="container-svc">
+          <div className="glass overflow-hidden rounded-2xl">
+            <video
+              className="w-full h-auto block"
+              src="/rankings-banner.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Sri Venkateswara College rankings banner"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="section-spacing border-b border-line">
         <div className="container-svc">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>

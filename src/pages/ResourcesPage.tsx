@@ -51,7 +51,7 @@ export function ResourcesPage() {
                   <div className="font-mono text-[0.65rem] uppercase tracking-widest text-accent mb-1">{r.category}</div>
                   <div className="font-display text-xl mb-2">{r.title}</div>
                   <p className="text-sm text-ink-2 mb-2">{r.description}</p>
-                  <div className="text-xs text-ink-3 font-mono">{r.downloadCount.toLocaleString()} downloads</div>
+                  <div className="text-xs text-gold font-mono uppercase tracking-widest">Download →</div>
                 </div>
               </motion.a>
             );

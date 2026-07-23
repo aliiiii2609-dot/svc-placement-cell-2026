@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FileText, MessageSquare, BookOpen, Calendar, ArrowRight } from 'lucide-react';
+import { MessageSquare, BookOpen, Calendar, ArrowRight } from 'lucide-react';
 import { resources } from '@/lib/data/resources';
 import { events } from '@/lib/data/events';
 import { news } from '@/lib/data/news';
@@ -31,9 +31,9 @@ export function StudentPortalPage() {
       <section className="section-spacing border-b border-line">
         <div className="container-svc grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { to: '/students/cv-review', icon: FileText, title: 'CV Review Queue', body: 'Upload your draft. Get coordinator feedback within 48 hours.' },
-            { to: '/students/mock-interviews', icon: MessageSquare, title: 'Mock Interviews', body: 'Book a slot with an alumni mentor in your target sector.' },
             { to: '/resources', icon: BookOpen, title: 'Resources', body: 'Templates, prep guides, and the recruitment brochure.' },
+            { to: '/events', icon: Calendar, title: 'Events & IFair', body: 'Drives, workshops, and the flagship Internship Fair.' },
+            { to: '/alumni', icon: MessageSquare, title: 'Alumni network', body: 'Browse alumni by course, sector, and graduating year.' },
           ].map((c, i) => (
             <motion.div key={c.to} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.5, delay: i * 0.08 }}>
               <Link to={c.to} className="block bg-surface border border-line rounded-2xl p-6 h-full hover:border-accent transition-colors group">
@@ -98,7 +98,7 @@ export function StudentPortalPage() {
                   <div className="font-mono text-[0.65rem] uppercase tracking-widest text-accent mb-2">{r.category}</div>
                   <div className="font-display text-lg mb-1">{r.title}</div>
                   <p className="text-xs text-ink-2 mb-2">{r.description}</p>
-                  <div className="text-xs text-ink-3 font-mono">{r.downloadCount.toLocaleString()} downloads</div>
+                  <div className="text-xs text-gold font-mono uppercase tracking-widest">Download →</div>
                 </a>
               ) : (
                 <div key={r.id} aria-disabled="true" className="bg-surface border border-line rounded-xl p-5 block opacity-60 cursor-not-allowed">

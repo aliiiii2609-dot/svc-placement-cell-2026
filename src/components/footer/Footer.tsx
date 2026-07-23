@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, Facebook, Volume2, VolumeX } from 'lucide-react';
+import { Instagram, Linkedin, Facebook, Volume2, VolumeX, Download } from 'lucide-react';
 import { sound } from '@/lib/audio/sound-controller';
 import { cn } from '@/lib/utils/cn';
 
@@ -101,6 +101,30 @@ export function Footer() {
               <li><Link className="hover:text-accent transition-colors" to="/resources">Resources</Link></li>
               <li><Link className="hover:text-accent transition-colors" to="/privacy">Privacy</Link></li>
               <li><Link className="hover:text-accent transition-colors" to="/terms">Terms</Link></li>
+            </ul>
+
+            <h4 className="font-mono text-xs uppercase tracking-widest text-accent mt-8 mb-4">Downloads</h4>
+            <ul className="space-y-2 text-sm text-ink-2">
+              <li>
+                <a
+                  className="hover:text-accent transition-colors inline-flex items-center gap-1.5"
+                  href="/Recruitment-Brochure-SVC-2026-27.pdf"
+                  download="Recruitment Brochure SVC 2026-27.pdf"
+                >
+                  Recruitment Brochure
+                  <Download size={13} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-accent transition-colors inline-flex items-center gap-1.5"
+                  href="/Placement-Policy-SVC-2026-27.pdf"
+                  download="Placement Policy SVC 2026-27.pdf"
+                >
+                  Placement Policy
+                  <Download size={13} aria-hidden="true" />
+                </a>
+              </li>
             </ul>
           </div>
         </div>

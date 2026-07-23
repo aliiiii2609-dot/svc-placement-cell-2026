@@ -6,6 +6,20 @@ import { CheckCircle2, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/ToastProvider';
 import { cn } from '@/lib/utils/cn';
 import { openMailto, submitForm, type SubmitChannel } from './submit';
+import {
+  glassPanel,
+  fieldBase,
+  selectBase,
+  labelBase,
+  submitBtn,
+  ghostBtn,
+  helperText,
+  consentRow,
+  checkboxBase,
+  fieldAria,
+  FieldError,
+  SelectShell,
+} from './fields';
 
 const schema = z.object({
   fullName: z.string().min(2, 'Full name required'),
@@ -95,10 +109,6 @@ export function AlumniRegistrationForm() {
     reset({ openToMentoring: 'open', consent: false });
   };
 
-  const field = 'w-full bg-bg-2 border border-line rounded-lg px-4 py-2.5 text-ink placeholder-ink-3 focus:border-accent focus:outline-none transition-colors';
-  const label = 'block text-xs font-mono uppercase tracking-widest text-ink-3 mb-1.5';
-  const error = 'text-xs text-red mt-1';
-
   // SUCCESS STATE
   if (submitState === 'success' && submittedData) {
     return (
@@ -106,25 +116,24 @@ export function AlumniRegistrationForm() {
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-surface border border-line rounded-2xl p-6 md:p-8"
+        className={cn(glassPanel, 'relative overflow-hidden')}
         role="status"
         aria-live="polite"
       >
         <div
-          className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
-          style={{
-            background: 'rgba(127, 217, 193, 0.14)',
-            border: '1px solid rgba(127, 217, 193, 0.4)',
-            color: '#0a8159',
-          }}
-        >
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-[2px]"
+          style={{ background: 'linear-gradient(to right, rgb(var(--accent)), rgb(var(--gold)))' }}
+        />
+
+        <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold">
           <CheckCircle2 size={28} strokeWidth={1.75} />
         </div>
 
-        <h3 className="font-display font-bold text-ink text-2xl md:text-3xl tracking-tight mb-2">
+        <h3 className="mb-2 font-display text-2xl font-bold tracking-tight text-ink md:text-3xl">
           {channel === 'endpoint' ? 'Registration received.' : 'Opening your email client.'}
         </h3>
-        <p className="text-ink-2 text-sm md:text-base mb-5 max-w-md">
+        <p className="mb-6 max-w-md text-sm text-ink-2 md:text-base">
           {channel === 'endpoint' ? (
             <>
               Thanks, {submittedData.fullName.split(' ')[0]}. Your profile enters the verification
@@ -141,11 +150,7 @@ export function AlumniRegistrationForm() {
         </p>
 
         <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={startAnother}
-            className="inline-flex items-center justify-center px-7 py-3 rounded-full bg-accent text-bg font-medium hover:bg-[#e8b85d] transition-colors"
-          >
+          <button type="button" onClick={startAnother} className={submitBtn}>
             Register another profile
           </button>
           {channel === 'mailto' && (
@@ -155,7 +160,7 @@ export function AlumniRegistrationForm() {
                 const { subject, body } = buildRegistration(submittedData);
                 openMailto(subject, body);
               }}
-              className="inline-flex items-center justify-center px-7 py-3 rounded-full border border-line text-ink-2 hover:border-accent hover:text-accent transition-colors"
+              className={ghostBtn}
             >
               Open in mail client
             </button>
@@ -172,95 +177,134 @@ export function AlumniRegistrationForm() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6 }}
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-surface border border-line rounded-2xl p-6 md:p-8 space-y-5"
+      className={cn(glassPanel, 'space-y-5')}
       noValidate
     >
       {/* Honeypot: visually hidden, off-screen, skipped by keyboard/AT. */}
-      <div aria-hidden="true" className="absolute w-px h-px -left-[9999px] overflow-hidden">
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label>
           Leave this field empty
-          <input type="text" tabIndex={-1} autoComplete="off" {...register('_hp')} />
+          <input type="text" tabIndex={-1} autoComplete="off" className={fieldBase} {...register('_hp')} />
         </label>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
         <div>
-          <label className={label} htmlFor="a-name">Full name</label>
-          <input id="a-name" className={field} placeholder="As it appears in your degree" {...register('fullName')} />
-          {errors.fullName && <p className={error}>{errors.fullName.message}</p>}
+          <label className={labelBase} htmlFor="a-name">Full name</label>
+          <input
+            id="a-name"
+            className={fieldBase}
+            placeholder="As it appears in your degree"
+            {...fieldAria('a-name', !!errors.fullName)}
+            {...register('fullName')}
+          />
+          <FieldError id="a-name" message={errors.fullName?.message} />
         </div>
         <div>
-          <label className={label} htmlFor="a-email">Email</label>
-          <input id="a-email" type="email" className={field} placeholder="your@email.com" {...register('email')} />
-          {errors.email && <p className={error}>{errors.email.message}</p>}
-        </div>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label className={label} htmlFor="a-course">SVC course</label>
-          <input id="a-course" className={field} placeholder="B.Com (H), B.A. (H) Economics, etc." {...register('course')} />
-          {errors.course && <p className={error}>{errors.course.message}</p>}
-        </div>
-        <div>
-          <label className={label} htmlFor="a-year">Graduating year</label>
-          <input id="a-year" type="number" className={field} placeholder="e.g. 2015" {...register('graduatingYear')} />
-          {errors.graduatingYear && <p className={error}>{errors.graduatingYear.message}</p>}
-        </div>
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-5">
-        <div>
-          <label className={label} htmlFor="a-role">Current role</label>
-          <input id="a-role" className={field} placeholder="Title at your current organization" {...register('currentRole')} />
-          {errors.currentRole && <p className={error}>{errors.currentRole.message}</p>}
-        </div>
-        <div>
-          <label className={label} htmlFor="a-company">Current organization</label>
-          <input id="a-company" className={field} placeholder="Where you work now" {...register('currentCompany')} />
-          {errors.currentCompany && <p className={error}>{errors.currentCompany.message}</p>}
+          <label className={labelBase} htmlFor="a-email">Email</label>
+          <input
+            id="a-email"
+            type="email"
+            className={fieldBase}
+            placeholder="name@email.com"
+            {...fieldAria('a-email', !!errors.email)}
+            {...register('email')}
+          />
+          <FieldError id="a-email" message={errors.email?.message} />
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
         <div>
-          <label className={label} htmlFor="a-city">City (optional)</label>
-          <input id="a-city" className={field} placeholder="Where you are based" {...register('city')} />
+          <label className={labelBase} htmlFor="a-course">SVC course</label>
+          <input
+            id="a-course"
+            className={fieldBase}
+            placeholder="B.Com (H), B.A. (H) Economics, etc."
+            {...fieldAria('a-course', !!errors.course)}
+            {...register('course')}
+          />
+          <FieldError id="a-course" message={errors.course?.message} />
         </div>
         <div>
-          <label className={label} htmlFor="a-mentor">Mentoring availability</label>
-          <select id="a-mentor" className={cn(field, 'appearance-none')} {...register('openToMentoring')}>
-            <option value="open">Open (multiple students per cycle)</option>
-            <option value="limited">Limited (one or two per cycle)</option>
-            <option value="paused">Paused (not available now)</option>
-          </select>
+          <label className={labelBase} htmlFor="a-year">Graduating year</label>
+          <input
+            id="a-year"
+            type="number"
+            inputMode="numeric"
+            className={fieldBase}
+            placeholder="e.g. 2015"
+            {...fieldAria('a-year', !!errors.graduatingYear)}
+            {...register('graduatingYear')}
+          />
+          <FieldError id="a-year" message={errors.graduatingYear?.message} />
         </div>
       </div>
 
-      <label className="flex items-start gap-3 text-sm text-ink-2">
-        <input type="checkbox" {...register('consent')} className="mt-1 accent-gold" />
-        <span>
-          I consent to my profile being publicly listed in the alumni directory after verification. I understand that no SVC-era placement record will be paired with my profile.
-        </span>
-      </label>
-      {errors.consent && <p className={error}>{errors.consent.message}</p>}
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+        <div>
+          <label className={labelBase} htmlFor="a-role">Current role</label>
+          <input
+            id="a-role"
+            className={fieldBase}
+            placeholder="Title at your current organization"
+            {...fieldAria('a-role', !!errors.currentRole)}
+            {...register('currentRole')}
+          />
+          <FieldError id="a-role" message={errors.currentRole?.message} />
+        </div>
+        <div>
+          <label className={labelBase} htmlFor="a-company">Current organization</label>
+          <input
+            id="a-company"
+            className={fieldBase}
+            placeholder="Where you work now"
+            {...fieldAria('a-company', !!errors.currentCompany)}
+            {...register('currentCompany')}
+          />
+          <FieldError id="a-company" message={errors.currentCompany?.message} />
+        </div>
+      </div>
 
-      <div className="flex flex-wrap items-center gap-3 pt-2">
-        <button
-          type="submit"
-          disabled={submitState === 'submitting'}
-          className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-accent text-bg font-medium hover:bg-[#e8b85d] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-        >
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+        <div>
+          <label className={labelBase} htmlFor="a-city">City (optional)</label>
+          <input id="a-city" className={fieldBase} placeholder="Where you are based" {...register('city')} />
+        </div>
+        <div>
+          <label className={labelBase} htmlFor="a-mentor">Mentoring availability</label>
+          <SelectShell>
+            <select id="a-mentor" className={selectBase} {...register('openToMentoring')}>
+              <option value="open">Open (multiple students per cycle)</option>
+              <option value="limited">Limited (one or two per cycle)</option>
+              <option value="paused">Paused (not available now)</option>
+            </select>
+          </SelectShell>
+        </div>
+      </div>
+
+      <div>
+        <label className={consentRow}>
+          <input type="checkbox" className={checkboxBase} {...fieldAria('a-consent', !!errors.consent)} {...register('consent')} />
+          <span>
+            I consent to my profile being publicly listed in the alumni directory after verification. I understand that no SVC-era placement record will be paired with my profile.
+          </span>
+        </label>
+        <FieldError id="a-consent" message={errors.consent?.message} />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 pt-1">
+        <button type="submit" disabled={submitState === 'submitting'} className={submitBtn}>
           {submitState === 'submitting' ? (
             <>
-              <Loader2 size={14} className="animate-spin" />
+              <Loader2 size={15} className="animate-spin" />
               Submitting...
             </>
           ) : (
             'Submit for verification'
           )}
         </button>
-        <span className="text-xs text-ink-3 font-mono">
+        <span className={helperText}>
           Draft auto-saves. The cell will confirm publication within 5 working days.
         </span>
       </div>

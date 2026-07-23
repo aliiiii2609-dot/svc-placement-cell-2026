@@ -7,6 +7,19 @@ import { useToast } from '@/components/ui/ToastProvider';
 import { cn } from '@/lib/utils/cn';
 import type { RecruiterSector } from '@/types';
 import { openMailto, submitForm, type SubmitChannel } from './submit';
+import {
+  glassPanel,
+  fieldBase,
+  labelBase,
+  submitBtn,
+  ghostBtn,
+  helperText,
+  chipBase,
+  consentRow,
+  checkboxBase,
+  fieldAria,
+  FieldError,
+} from './fields';
 
 /**
  * Recruiter interest form.
@@ -130,10 +143,6 @@ export function RecruiterInterestForm() {
     reset({ consent: false });
   };
 
-  const field = 'w-full bg-bg-2 border border-line rounded-lg px-4 py-2.5 text-ink placeholder-ink-3 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-200';
-  const label = 'block text-xs font-mono uppercase tracking-widest text-ink-3 mb-1.5';
-  const error = 'text-xs text-red mt-1';
-
   // SUCCESS STATE
   if (submitState === 'success' && submittedData) {
     return (
@@ -141,34 +150,29 @@ export function RecruiterInterestForm() {
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-surface border border-line rounded-2xl p-6 md:p-8 relative overflow-hidden"
+        className={cn(glassPanel, 'relative overflow-hidden')}
         role="status"
         aria-live="polite"
       >
         <div
           aria-hidden="true"
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: 'linear-gradient(to right, #7fd9c1, #1e4e8c, #b8893b)' }}
+          className="absolute inset-x-0 top-0 h-[2px]"
+          style={{ background: 'linear-gradient(to right, rgb(var(--accent)), rgb(var(--gold)))' }}
         />
 
         <motion.div
           initial={{ scale: 0, rotate: -90 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
-          style={{
-            background: 'rgba(127, 217, 193, 0.14)',
-            border: '1px solid rgba(127, 217, 193, 0.4)',
-            color: '#0a8159',
-          }}
+          className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-gold/30 bg-gold/10 text-gold"
         >
           <CheckCircle2 size={28} strokeWidth={1.75} />
         </motion.div>
 
-        <h3 className="font-display font-bold text-ink text-2xl md:text-3xl tracking-tight mb-2">
+        <h3 className="mb-2 font-display text-2xl font-bold tracking-tight text-ink md:text-3xl">
           {channel === 'endpoint' ? 'Brief received.' : 'Opening your email client.'}
         </h3>
-        <p className="text-ink-2 text-sm md:text-base mb-5 max-w-md">
+        <p className="mb-5 max-w-md text-sm text-ink-2 md:text-base">
           {channel === 'endpoint' ? (
             <>
               Thanks, {submittedData.name.split(' ')[0]}. The cell has your enquiry for{' '}
@@ -187,13 +191,13 @@ export function RecruiterInterestForm() {
           )}
         </p>
 
-        <div className="bg-bg-2 rounded-lg p-4 mb-5 space-y-1.5 text-sm">
-          <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 mb-2">
+        <div className="mb-6 space-y-1.5 rounded-xl border border-line bg-surface/50 p-4 text-sm backdrop-blur-sm">
+          <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3">
             {channel === 'endpoint' ? 'What we have on file' : 'In this brief'}
           </div>
           <div className="flex justify-between gap-3">
             <span className="text-ink-3">Contact</span>
-            <span className="text-ink truncate">{submittedData.email}</span>
+            <span className="truncate text-ink">{submittedData.email}</span>
           </div>
           {submittedData.phone && (
             <div className="flex justify-between gap-3">
@@ -203,26 +207,18 @@ export function RecruiterInterestForm() {
           )}
           {submittedData.preferredSectors && submittedData.preferredSectors.length > 0 && (
             <div className="flex justify-between gap-3">
-              <span className="text-ink-3 flex-shrink-0">Sectors</span>
-              <span className="text-ink text-right">{submittedData.preferredSectors.join(', ')}</span>
+              <span className="flex-shrink-0 text-ink-3">Sectors</span>
+              <span className="text-right text-ink">{submittedData.preferredSectors.join(', ')}</span>
             </div>
           )}
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={startAnother}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-surface text-sm font-medium hover:bg-[#5048e0] transition-colors"
-          >
+          <button type="button" onClick={startAnother} className={submitBtn}>
             Submit another brief
           </button>
-          <button
-            type="button"
-            onClick={openInMailClient}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-line text-ink-2 text-sm hover:border-accent hover:text-accent transition-colors"
-          >
-            <Mail size={14} strokeWidth={2} />
+          <button type="button" onClick={openInMailClient} className={ghostBtn}>
+            <Mail size={15} strokeWidth={2} />
             Open in mail client
           </button>
         </div>
@@ -232,156 +228,148 @@ export function RecruiterInterestForm() {
 
   // FORM STATE
   return (
-    <>
-      <motion.form
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-surface border border-line rounded-2xl p-5 md:p-8 space-y-5"
-        noValidate
-      >
-        {/* Honeypot: visually hidden, off-screen, and skipped by keyboard/AT.
-            Real users leave it empty; a filled value marks a bot. */}
-        <div aria-hidden="true" className="absolute w-px h-px -left-[9999px] overflow-hidden">
-          <label>
-            Leave this field empty
-            <input type="text" tabIndex={-1} autoComplete="off" {...register('_hp')} />
-          </label>
-        </div>
+    <motion.form
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      onSubmit={handleSubmit(onSubmit)}
+      className={cn(glassPanel, 'space-y-5')}
+      noValidate
+    >
+      {/* Honeypot: visually hidden, off-screen, and skipped by keyboard/AT.
+          Real users leave it empty; a filled value marks a bot. */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label>
+          Leave this field empty
+          <input type="text" tabIndex={-1} autoComplete="off" className={fieldBase} {...register('_hp')} />
+        </label>
+      </div>
 
-        <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
-          <div>
-            <label className={label} htmlFor="r-name">Your name</label>
-            <input
-              id="r-name"
-              autoComplete="name"
-              className={field}
-              placeholder="Jane Doe"
-              {...register('name')}
-            />
-            {errors.name && <p className={error}>{errors.name.message}</p>}
-          </div>
-          <div>
-            <label className={label} htmlFor="r-org">Organization</label>
-            <input
-              id="r-org"
-              autoComplete="organization"
-              className={field}
-              placeholder="Acme Inc."
-              {...register('organization')}
-            />
-            {errors.organization && <p className={error}>{errors.organization.message}</p>}
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
-          <div>
-            <label className={label} htmlFor="r-email">Work email</label>
-            <input
-              id="r-email"
-              type="email"
-              autoComplete="email"
-              inputMode="email"
-              className={field}
-              placeholder="you@company.com"
-              {...register('email')}
-            />
-            {errors.email && <p className={error}>{errors.email.message}</p>}
-          </div>
-          <div>
-            <label className={label} htmlFor="r-phone">Phone (optional)</label>
-            <input
-              id="r-phone"
-              type="tel"
-              autoComplete="tel"
-              inputMode="tel"
-              className={field}
-              placeholder="+91 ..."
-              {...register('phone')}
-            />
-          </div>
-        </div>
-
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
         <div>
-          <label className={label}>Preferred sectors (optional)</label>
-          <div className="flex flex-wrap gap-2">
-            {SECTORS.map((s) => (
-              <label
-                key={s}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bg-2 border border-line text-xs text-ink-2 cursor-pointer hover:border-accent hover:text-ink transition-colors has-[:checked]:bg-accent has-[:checked]:border-accent has-[:checked]:text-surface"
-              >
-                <input
-                  type="checkbox"
-                  value={s}
-                  {...register('preferredSectors')}
-                  className="sr-only"
-                />
-                {s}
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className={label} htmlFor="r-brief">Hiring brief</label>
-          <textarea
-            id="r-brief"
-            className={cn(field, 'min-h-[120px] md:min-h-[140px] resize-y')}
-            placeholder="Role, eligibility, location, headcount, target timeline..."
-            {...register('hiringBrief')}
+          <label className={labelBase} htmlFor="r-name">Your name</label>
+          <input
+            id="r-name"
+            autoComplete="name"
+            className={fieldBase}
+            placeholder="Full name"
+            {...fieldAria('r-name', !!errors.name)}
+            {...register('name')}
           />
-          {errors.hiringBrief && <p className={error}>{errors.hiringBrief.message}</p>}
+          <FieldError id="r-name" message={errors.name?.message} />
         </div>
+        <div>
+          <label className={labelBase} htmlFor="r-org">Organization</label>
+          <input
+            id="r-org"
+            autoComplete="organization"
+            className={fieldBase}
+            placeholder="Company or firm"
+            {...fieldAria('r-org', !!errors.organization)}
+            {...register('organization')}
+          />
+          <FieldError id="r-org" message={errors.organization?.message} />
+        </div>
+      </div>
 
-        <label className="flex items-start gap-3 text-sm text-ink-2">
-          <input type="checkbox" {...register('consent')} className="mt-1 accent-accent" />
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+        <div>
+          <label className={labelBase} htmlFor="r-email">Work email</label>
+          <input
+            id="r-email"
+            type="email"
+            autoComplete="email"
+            inputMode="email"
+            className={fieldBase}
+            placeholder="name@company.com"
+            {...fieldAria('r-email', !!errors.email)}
+            {...register('email')}
+          />
+          <FieldError id="r-email" message={errors.email?.message} />
+        </div>
+        <div>
+          <label className={labelBase} htmlFor="r-phone">Phone (optional)</label>
+          <input
+            id="r-phone"
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            className={fieldBase}
+            placeholder="+91"
+            {...register('phone')}
+          />
+        </div>
+      </div>
+
+      <fieldset>
+        <legend className={labelBase}>Preferred sectors (optional)</legend>
+        <div className="flex flex-wrap gap-2">
+          {SECTORS.map((s) => (
+            <label key={s} className={chipBase}>
+              <input type="checkbox" value={s} {...register('preferredSectors')} className="sr-only" />
+              {s}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div>
+        <label className={labelBase} htmlFor="r-brief">Hiring brief</label>
+        <textarea
+          id="r-brief"
+          className={cn(fieldBase, 'min-h-[120px] resize-y md:min-h-[140px]')}
+          placeholder="Role, eligibility, location, headcount, target timeline..."
+          {...fieldAria('r-brief', !!errors.hiringBrief)}
+          {...register('hiringBrief')}
+        />
+        <FieldError id="r-brief" message={errors.hiringBrief?.message} />
+      </div>
+
+      <div>
+        <label className={consentRow}>
+          <input type="checkbox" className={checkboxBase} {...fieldAria('r-consent', !!errors.consent)} {...register('consent')} />
           <span>
             I agree to the cell&apos;s recruiter privacy notice and consent to being contacted regarding this brief.
           </span>
         </label>
-        {errors.consent && <p className={error}>{errors.consent.message}</p>}
+        <FieldError id="r-consent" message={errors.consent?.message} />
+      </div>
 
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <button
-            type="submit"
-            disabled={submitState === 'submitting'}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-surface text-sm font-medium hover:bg-[#5048e0] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed min-h-[44px] shadow-[0_4px_14px_-4px_rgba(30, 78, 140,0.4)] hover:shadow-[0_8px_20px_-6px_rgba(30, 78, 140,0.55)]"
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {submitState === 'submitting' ? (
-                <motion.span
-                  key="loading"
-                  className="inline-flex items-center gap-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <Loader2 size={14} className="animate-spin" />
-                  Sending...
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="idle"
-                  className="inline-flex items-center gap-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  Send to the cell
-                  <Send size={14} strokeWidth={2.25} />
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-          <span className="text-xs text-ink-3 font-mono">
-            Draft auto-saves. Reply within one working day.
-          </span>
-        </div>
-      </motion.form>
-    </>
+      <div className="flex flex-wrap items-center gap-3 pt-1">
+        <button type="submit" disabled={submitState === 'submitting'} className={submitBtn}>
+          <AnimatePresence mode="wait" initial={false}>
+            {submitState === 'submitting' ? (
+              <motion.span
+                key="loading"
+                className="inline-flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                <Loader2 size={15} className="animate-spin" />
+                Sending...
+              </motion.span>
+            ) : (
+              <motion.span
+                key="idle"
+                className="inline-flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                Send to the cell
+                <Send size={15} strokeWidth={2.25} />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+        <span className={helperText}>
+          Draft auto-saves. Reply within one working day.
+        </span>
+      </div>
+    </motion.form>
   );
 }

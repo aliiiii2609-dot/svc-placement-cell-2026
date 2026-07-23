@@ -1,37 +1,17 @@
-import Lenis from 'lenis';
-import { useEffect } from 'react';
-
 /**
- * Mount Lenis smooth scrolling for the whole app. Respects reduced motion.
- * Call once from the root layout component.
+ * Smooth-scroll hook — intentionally a no-op.
+ *
+ * We previously mounted Lenis, which hijacks the wheel/trackpad and drives the
+ * whole page from its own requestAnimationFrame loop. On trackpads and
+ * mid-range laptops that continuous loop is a classic source of scroll stutter
+ * and input latency: every wheel tick is intercepted, eased, and re-applied a
+ * frame late. Native browser scrolling is smoother and costs zero main-thread
+ * work when the user is idle.
+ *
+ * The hook name and signature are kept so callers (App.tsx) keep compiling; it
+ * simply does nothing now. Global smoothness, when wanted, is handled with the
+ * CSS `scroll-behavior` property instead of a JS loop.
  */
 export function useLenis() {
-  useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const lenis = new Lenis({
-      duration: 1.05,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.4,
-    });
-
-    let raf = 0;
-    function frame(time: number) {
-      lenis.raf(time);
-      raf = requestAnimationFrame(frame);
-    }
-    raf = requestAnimationFrame(frame);
-
-    // Expose globally for GSAP ScrollTrigger if used
-    (window as unknown as { lenis: Lenis }).lenis = lenis;
-
-    return () => {
-      cancelAnimationFrame(raf);
-      lenis.destroy();
-      delete (window as unknown as { lenis?: Lenis }).lenis;
-    };
-  }, []);
+  // No Lenis instance, no rAF loop, no wheel hijacking. Native scroll only.
 }

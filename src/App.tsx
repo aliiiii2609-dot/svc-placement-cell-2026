@@ -26,8 +26,6 @@ const TeamPage = lazyWithRetry(() => import('@/pages/TeamPage').then((m) => ({ d
 const RecruitersPage = lazyWithRetry(() => import('@/pages/RecruitersPage').then((m) => ({ default: m.RecruitersPage })));
 const RecruiterDashboardPage = lazyWithRetry(() => import('@/pages/RecruiterDashboardPage').then((m) => ({ default: m.RecruiterDashboardPage })));
 const StudentPortalPage = lazyWithRetry(() => import('@/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
-const CvReviewPage = lazyWithRetry(() => import('@/pages/CvReviewPage').then((m) => ({ default: m.CvReviewPage })));
-const MockInterviewsPage = lazyWithRetry(() => import('@/pages/MockInterviewsPage').then((m) => ({ default: m.MockInterviewsPage })));
 const EventsPage = lazyWithRetry(() => import('@/pages/EventsPage').then((m) => ({ default: m.EventsPage })));
 const NewsPage = lazyWithRetry(() => import('@/pages/NewsPage').then((m) => ({ default: m.NewsPage })));
 const ResourcesPage = lazyWithRetry(() => import('@/pages/ResourcesPage').then((m) => ({ default: m.ResourcesPage })));
@@ -175,8 +173,6 @@ export default function App() {
               <Route path="/recruiters" element={<RecruitersPage />} />
               <Route path="/recruiters/dashboard" element={<RecruiterDashboardPage />} />
               <Route path="/students/portal" element={<StudentPortalPage />} />
-              <Route path="/students/cv-review" element={<CvReviewPage />} />
-              <Route path="/students/mock-interviews" element={<MockInterviewsPage />} />
               <Route path="/events" element={<EventsPage />} />
               <Route path="/news" element={<NewsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />

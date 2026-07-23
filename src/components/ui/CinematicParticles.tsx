@@ -97,9 +97,11 @@ interface Particle {
 export function CinematicParticles({
   tint = 'cream',
   orbAnchor = 'top-right',
-  density = 80,
+  density = 40,
   intensity = 1,
 }: CinematicParticlesProps) {
+  // Hard cap so an over-eager caller can never seed a heavy particle count.
+  const particleCount = Math.min(density, 48);
   const reduced = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [lowCap, setLowCap] = useState(false);
@@ -155,7 +157,7 @@ export function CinematicParticles({
     };
 
     const build = () => {
-      particles = Array.from({ length: density }, () => {
+      particles = Array.from({ length: particleCount }, () => {
         const angle = Math.random() * Math.PI * 2;
         const speed = 0.03 + Math.random() * 0.1; // under 8 px/s at 60fps
         return {
@@ -221,7 +223,7 @@ export function CinematicParticles({
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [reduced, lowCap, inView, density, intensity, tint]);
+  }, [reduced, lowCap, inView, particleCount, intensity, tint]);
 
   if (reduced || lowCap) {
     return (
@@ -235,28 +237,26 @@ export function CinematicParticles({
 
   return (
     <>
+      {/* Static soft bloom. Previously this ran a 30s infinite drift animation
+          on a 600px element with a 100px blur, forcing a full-frame recomposite
+          of an enormous blurred surface for the life of the page — one of the
+          heaviest continuous costs on the section. It is now painted once and
+          never re-composited; a smaller blur keeps the same look for cheaper. */}
       <div
         aria-hidden="true"
         className="absolute pointer-events-none"
         style={{
-          width: 600,
-          height: 600,
+          width: 520,
+          height: 520,
           background: TINT_CSS[tint],
-          filter: 'blur(100px)',
-          opacity: 0.85 * intensity,
-          animation: 'cinematic-orb-drift 30s ease-in-out infinite',
+          filter: 'blur(80px)',
+          opacity: 0.8 * intensity,
           ...ORB_ANCHOR_STYLES[orbAnchor],
         }}
       />
       <div ref={wrapRef} aria-hidden="true" className="absolute inset-0 pointer-events-none">
         <canvas ref={canvasRef} className="absolute inset-0" />
       </div>
-      <style>{`
-        @keyframes cinematic-orb-drift {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50%      { transform: translate(40px, 30px) scale(1.05); }
-        }
-      `}</style>
     </>
   );
 }

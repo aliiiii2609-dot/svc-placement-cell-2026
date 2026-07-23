@@ -8,7 +8,6 @@ import { SectionSlider, type SliderSection } from '@/components/nav/SectionSlide
 import { Hero } from '@/components/hero/Hero';
 import { RecruiterMarqueeBar } from '@/components/partners/RecruiterMarqueeBar';
 import { StatsBar } from '@/components/stats/StatsBar';
-import { StudentVoices } from '@/components/sections/StudentVoices';
 import { AudienceCards } from '@/components/sections/AudienceCards';
 
 /**
@@ -63,7 +62,6 @@ const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStri
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
   { id: 'proof', label: 'The Numbers' },
-  { id: 'voices', label: 'Student Voices' },
   { id: 'team', label: 'The Team' },
   { id: 'where', label: 'Where Next' },
   { id: 'contact', label: 'Contact' },
@@ -84,10 +82,6 @@ export function HomePage() {
         <DeferLazy minHeight={900}>
           <CycleDashboard />
         </DeferLazy>
-      </section>
-
-      <section id="voices" className="scroll-mt-[120px]">
-        <StudentVoices />
       </section>
 
       <section id="team" className="scroll-mt-[120px] border-t border-line">

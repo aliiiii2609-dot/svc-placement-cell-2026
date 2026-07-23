@@ -242,7 +242,6 @@ export interface Resource {
   title: string;
   description: string;
   category: ResourceCategory;
-  downloadCount: number;
   filePath?: string;
 }
 

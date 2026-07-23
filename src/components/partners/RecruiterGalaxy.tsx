@@ -1,383 +1,274 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { recruiters } from '@/lib/data/partners';
 import { brandIconUrl } from '@/lib/data/brand';
-import { cn } from '@/lib/utils/cn';
+import { previousCycleStats } from '@/lib/data/stats';
 
 /**
- * Recruiter Constellation.
+ * Recruit at Venky — the recruiters-page hero.
  *
- * Uniform rounded-square tile system (macOS app icon / Stripe customer grid
- * standard). Every tile shares the same template:
+ * Floating company logos are the centrepiece: a gentle constellation of the
+ * cell's real recruiter logos (from partners.ts) drifting over a navy glass
+ * backdrop. Every tile pulls its logo from the Brandfetch CDN via the domain
+ * field and falls back to a brand-colour initials disc when a logo is missing.
  *
- *   - White interior, hairline border, border-radius 22% (square that
- *     reads as a friendly app icon)
- *   - Brandfetch square icon at 64-68% width, centered
- *   - Float drift animation, very slow, randomized phase per tile
+ * Performance and motion:
+ *   - Drift is pure CSS transform (translate only), desynced per tile. No
+ *     per-frame JS, no physics, no layout thrash.
+ *   - prefers-reduced-motion is honoured globally (see globals.css, which
+ *     forces animation-duration to ~0), so the constellation renders static.
+ *   - Below 768px the constellation is display:none and a clean static logo
+ *     grid renders instead, so phones never run the drift or the absolute
+ *     layout.
  *
- * Tier hierarchy:
- *
- *   - Premium tier (MBB consulting, Goldman Sachs, D.E. Shaw, Big 4 audit,
- *     American Express, Nomura, ICICI Prudential, Arcesium, DSP BlackRock):
- *     larger tile size, 2px accent ring in the firm's brand color offset
- *     6px outside the tile, premium badge on hover
- *
- *   - Strong tier (Accenture, ZS, AON, WTW, Genpact, EXL, HCL, TresVista,
- *     Grant Thornton, BSR, Futures First, Oxane, ICICI Bank, HDFC Bank,
- *     Masters Union): medium size, brand-color dot indicator at top-right
- *
- *   - Standard tier: compact size, hairline border only
- *
- * Known wordmark-only logos (companies whose Brandfetch icon is a wide
- * wordmark, e.g. "D E Shaw & Co", "GLG", "BSR & Co"): rendered as a clean
- * display-font monogram in the firm's brand color, so the tile stays
- * visually consistent with every other tile in the cluster.
- *
- * No more colored bubble backgrounds. No more cropped wordmarks. Every tile
- * looks intentional.
+ * Data comes only from partners.ts (the featured set); positions are a fixed
+ * hand-tuned scatter so tiles never overlap. Export name/props are unchanged.
  */
 
-type Tier = 'premium' | 'strong' | 'standard';
+const featured = recruiters.filter((r) => r.featured);
 
-interface BubbleConfig {
-  slug: string;
-  tier: Tier;
-  /** Pre-selected pixel coordinates (relative to container, 0-100 percent). */
-  x: number;
-  y: number;
-}
-
-/**
- * Pre-defined positions, hand-tuned for premium tier centerpiece reading.
- * Premium tiles cluster slightly toward the center; strong tiles fan out;
- * standard tiles fill the perimeter. Sizes derive from tier in code.
- */
-const LAYOUT: BubbleConfig[] = [
-  // Premium tier — centerpiece reading, slightly larger
-  { slug: 'bcg',                  tier: 'premium',  x: 78, y: 14 },
-  { slug: 'bain',                 tier: 'premium',  x: 92, y: 30 },
-  { slug: 'goldman-sachs',        tier: 'premium',  x: 50, y: 38 },
-  { slug: 'de-shaw',              tier: 'premium',  x: 70, y: 52 },
-  { slug: 'deloitte',             tier: 'premium',  x: 26, y: 12 },
-  { slug: 'ey',                   tier: 'premium',  x: 88, y: 50 },
-  { slug: 'kpmg',                 tier: 'premium',  x: 38, y: 26 },
-  { slug: 'pwc',                  tier: 'premium',  x: 14, y: 32 },
-  { slug: 'icici-prudential',     tier: 'premium',  x: 60, y: 70 },
-
-  // Strong tier — medium, fanned out
-  { slug: 'accenture',            tier: 'strong',   x: 64, y: 24 },
-  { slug: 'icici-bank',           tier: 'strong',   x: 8,  y: 60 },
-  { slug: 'hdfc-bank',            tier: 'strong',   x: 40, y: 64 },
-  { slug: 'grant-thornton',       tier: 'strong',   x: 80, y: 76 },
-  { slug: 'hcl-technologies',     tier: 'strong',   x: 22, y: 76 },
-  { slug: 'aon',                  tier: 'strong',   x: 60, y: 8  },
-  { slug: 'wtw',                  tier: 'strong',   x: 26, y: 46 },
-  { slug: 'genpact',              tier: 'strong',   x: 96, y: 68 },
-
-  // Standard tier — compact, perimeter
-  { slug: 'masters-union',        tier: 'standard', x: 50, y: 14 },
-  { slug: 'exl',                  tier: 'standard', x: 52, y: 86 },
-  { slug: 'zomato',               tier: 'standard', x: 90, y: 88 },
-  { slug: 'glg',                  tier: 'standard', x: 70, y: 90 },
-  { slug: 'oxane-partners',       tier: 'standard', x: 6,  y: 78 },
-  { slug: 'futures-first',        tier: 'standard', x: 90, y: 6  },
-  { slug: 'hubspot',              tier: 'standard', x: 30, y: 94 },
+/** Hand-tuned scatter (percent coords + tile size in px). The two largest
+ *  slots fall on featured[5] and featured[10] — BCG and Goldman Sachs. */
+const SLOTS: Array<{ x: number; y: number; s: number }> = [
+  { x: 14, y: 12, s: 56 },
+  { x: 40, y: 10, s: 68 },
+  { x: 63, y: 14, s: 56 },
+  { x: 86, y: 12, s: 68 },
+  { x: 17, y: 32, s: 68 },
+  { x: 38, y: 30, s: 88 },
+  { x: 61, y: 34, s: 68 },
+  { x: 84, y: 32, s: 56 },
+  { x: 13, y: 52, s: 56 },
+  { x: 36, y: 52, s: 68 },
+  { x: 60, y: 50, s: 88 },
+  { x: 85, y: 54, s: 68 },
+  { x: 16, y: 72, s: 68 },
+  { x: 39, y: 74, s: 56 },
+  { x: 62, y: 72, s: 68 },
+  { x: 86, y: 72, s: 56 },
+  { x: 14, y: 90, s: 56 },
+  { x: 40, y: 90, s: 68 },
+  { x: 63, y: 88, s: 56 },
+  { x: 86, y: 90, s: 68 },
 ];
 
-const TIER_SIZE: Record<Tier, number> = {
-  premium: 92,
-  strong: 74,
-  standard: 60,
-};
-
-/**
- * Brands whose Brandfetch icon is a wordmark (not a square icon),
- * meaning the bitmap renders cropped or empty. For these we use a
- * designed monogram tile (display-font letters in brand color) which
- * reads consistently with the other tiles.
- */
-const FORCE_MONOGRAM: Record<string, { mono: string; color: string }> = {
-  'goldman-sachs':  { mono: 'GS',  color: '#7399c6' },
-  'de-shaw':        { mono: 'DE',  color: '#b91c2c' },
-  'masters-union':  { mono: 'MU',  color: '#0a2540' },
-  'glg':            { mono: 'GLG', color: '#0d2545' },
-  'futures-first':  { mono: 'FF',  color: '#1a3a52' },
-  'oxane-partners': { mono: 'OP',  color: '#1c4d7a' },
-  'bsr-co':         { mono: 'BSR', color: '#0070c0' },
-};
-
-interface Bubble extends BubbleConfig {
-  name: string;
-  domain?: string;
-  brandColor: string;
-  size: number;
-  delay: number;
+function initialsOf(name: string): string {
+  return name
+    .split(/[\s&.\-,]+/)
+    .filter(Boolean)
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 }
 
-const bubbles: Bubble[] = LAYOUT
-  .map((cfg, i) => {
-    const data = recruiters.find((r) => r.slug === cfg.slug);
-    return {
-      ...cfg,
-      name: data?.name ?? cfg.slug,
-      domain: data?.domain,
-      brandColor: data?.brandColor ?? '#1e4e8c',
-      size: TIER_SIZE[cfg.tier],
-      delay: (i * 0.31) % 4,
-    };
-  });
-
 // ---------------------------------------------------------------------------
-// Bubble node — uniform rounded-square tile
+// A single logo tile. Fills its parent; the parent controls the size.
 // ---------------------------------------------------------------------------
-function BubbleNode({ bubble, containerW, containerH }: { bubble: Bubble; containerW: number; containerH: number }) {
-  const [logoFailed, setLogoFailed] = useState(false);
-  const forceMono = FORCE_MONOGRAM[bubble.slug];
-  const logoSrc = !forceMono && bubble.domain ? brandIconUrl(bubble.domain) : '';
-  const useBitmap = !forceMono && !!logoSrc && !logoFailed;
-  const showRing = bubble.tier === 'premium';
-  const showDot = bubble.tier === 'strong';
-
-  // Monogram tile content
-  const monogramText = forceMono?.mono ?? bubble.name
-    .split(/[\s&-]+/).filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
-  const monogramColor = forceMono?.color ?? bubble.brandColor;
-
-  const left = (bubble.x / 100) * containerW - bubble.size / 2;
-  const top = (bubble.y / 100) * containerH - bubble.size / 2;
+function LogoTile({
+  slug,
+  name,
+  domain,
+  brandColor,
+}: {
+  slug: string;
+  name: string;
+  domain?: string;
+  brandColor?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  const src = domain ? brandIconUrl(domain) : '';
+  const showLogo = !!src && !failed;
 
   return (
     <Link
-      to={`/companies/${bubble.slug}`}
-      aria-label={bubble.name}
-      title={bubble.name}
-      style={{
-        left,
-        top,
-        width: bubble.size,
-        height: bubble.size,
-        animation: `bubble-float ${10 + (bubble.delay % 3) * 2.5}s ease-in-out ${bubble.delay}s infinite`,
-      }}
-      className={cn(
-        'absolute group block',
-        'transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        'hover:scale-[1.08] hover:z-10',
-      )}
+      to={`/companies/${slug}`}
+      title={name}
+      aria-label={name}
+      className="group block w-full h-full rounded-[22%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
     >
-      {/* Outer accent ring for premium tier */}
-      {showRing && (
-        <div
-          aria-hidden="true"
-          className="absolute pointer-events-none transition-opacity duration-400 group-hover:opacity-100"
-          style={{
-            top: -6,
-            left: -6,
-            right: -6,
-            bottom: -6,
-            border: `2px solid ${bubble.brandColor}`,
-            borderRadius: '26%',
-            opacity: 0.55,
-          }}
-        />
-      )}
-
-      {/* Tile body — uniform rounded square */}
       <div
-        className="relative w-full h-full bg-white"
+        className="relative w-full h-full rounded-[22%] bg-white overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
         style={{
-          borderRadius: '22%',
-          border: '1px solid rgba(10, 37, 64, 0.10)',
-          boxShadow: '0 6px 18px -8px rgba(10, 37, 64, 0.20), 0 2px 4px -2px rgba(10, 37, 64, 0.06)',
-          overflow: 'hidden',
+          border: '1px solid rgba(10,37,64,0.08)',
+          boxShadow:
+            '0 6px 18px -8px rgba(3,12,28,0.55), 0 2px 4px -2px rgba(3,12,28,0.35)',
         }}
       >
-        {/* Brand-color radial wash, very subtle */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at 30% 30%, ${bubble.brandColor}10, transparent 60%)`,
-          }}
-        />
-
-        {/* Logo or monogram */}
-        <div className="absolute inset-0 flex items-center justify-center" style={{ padding: '18%' }}>
-          {useBitmap ? (
+        <div className="absolute inset-0 flex items-center justify-center p-[20%]">
+          {showLogo ? (
             <img
-              src={logoSrc}
+              src={src}
               alt=""
-              className="max-w-full max-h-full object-contain"
               loading="lazy"
-              onError={() => setLogoFailed(true)}
+              className="max-w-full max-h-full object-contain"
+              onError={() => setFailed(true)}
             />
           ) : (
             <span
-              className="font-display font-bold tracking-tight"
-              style={{
-                color: monogramColor,
-                fontSize: bubble.size * (monogramText.length <= 2 ? 0.40 : 0.26),
-                letterSpacing: '-0.03em',
-              }}
+              className="font-display font-bold leading-none tracking-tight"
+              style={{ color: brandColor ?? '#1e4e8c', fontSize: 'clamp(0.7rem, 3.2vw, 1.05rem)' }}
             >
-              {monogramText}
+              {initialsOf(name)}
             </span>
           )}
         </div>
-
-        {/* Strong-tier dot indicator at top-right */}
-        {showDot && (
-          <div
-            aria-hidden="true"
-            className="absolute pointer-events-none"
-            style={{
-              top: 6,
-              right: 6,
-              width: 6,
-              height: 6,
-              borderRadius: '50%',
-              background: bubble.brandColor,
-              opacity: 0.85,
-            }}
-          />
-        )}
       </div>
-
-      {/* Hover glow */}
-      <div
-        aria-hidden="true"
-        className="absolute pointer-events-none opacity-0 group-hover:opacity-60 transition-opacity duration-500"
-        style={{
-          inset: -16,
-          background: `radial-gradient(circle, ${bubble.brandColor}55 0%, transparent 70%)`,
-          filter: 'blur(10px)',
-          borderRadius: '26%',
-          zIndex: -1,
-        }}
-      />
     </Link>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Galaxy section
+// Hero section
 // ---------------------------------------------------------------------------
 export function RecruiterGalaxy() {
-  const constellationRef = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ w: 0, h: 0 });
-
-  useEffect(() => {
-    const el = constellationRef.current;
-    if (!el) return;
-    const measure = () => {
-      const rect = el.getBoundingClientRect();
-      setSize({ w: rect.width, h: rect.height });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+  const stats = [
+    { value: String(previousCycleStats.totalPlacementOffers), label: 'Placement offers' },
+    { value: String(previousCycleStats.totalInternshipOffers), label: 'Internship offers' },
+    { value: String(previousCycleStats.recruitersEngaged), label: 'Recruiters engaged' },
+    { value: `${previousCycleStats.peakCtcLPA}`, label: 'Peak CTC · LPA' },
+  ];
 
   return (
     <section
-      className="relative section-spacing border-t border-line overflow-hidden bg-bg"
+      className="relative overflow-hidden"
       aria-label="Recruit at Venky"
+      style={{ background: 'linear-gradient(160deg, #0a2540 0%, #0c2c4e 45%, #0a2540 100%)' }}
     >
-      {/* Soft warm gradient background */}
+      {/* Colour blooms */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 70% 80%, rgba(255, 176, 136, 0.18), transparent 55%), radial-gradient(ellipse at 20% 30%, rgba(30, 78, 140, 0.10), transparent 55%)',
+            'radial-gradient(ellipse at 82% 18%, rgba(156,122,58,0.20), transparent 55%), radial-gradient(ellipse at 12% 82%, rgba(30,78,140,0.30), transparent 55%)',
+        }}
+      />
+      {/* Faint hairline grid */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-[0.05]"
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(0deg, #fff 0, #fff 1px, transparent 1px, transparent 44px), repeating-linear-gradient(90deg, #fff 0, #fff 1px, transparent 1px, transparent 44px)',
         }}
       />
 
-      <div className="container-svc relative">
-        <div className="grid lg:grid-cols-[420px_1fr] gap-10 lg:gap-16 items-center">
-          {/* Left column */}
+      <div className="container-svc relative section-spacing">
+        <div className="grid lg:grid-cols-[1fr_1.05fr] gap-12 lg:gap-16 items-center">
+          {/* Content */}
           <div>
-            <div className="font-mono text-[12px] uppercase tracking-[0.18em] text-accent mb-4">
-              Recruiters and partners
-            </div>
-            <h2
-              className="font-display font-bold text-ink leading-[1.04] tracking-[-0.028em] mb-3"
-              style={{ fontSize: 'clamp(2.2rem, 4.6vw, 3.6rem)' }}
+            <span className="font-mono text-[12px] uppercase tracking-[0.18em] text-gold">
+              For recruiters
+            </span>
+            <h1
+              className="font-display font-bold text-white leading-[1.03] tracking-[-0.03em] mt-4 mb-5 text-balance"
+              style={{ fontSize: 'clamp(2.4rem, 5.4vw, 4rem)' }}
             >
-              Recruit at Venky.
-              <span className="block text-ink-3">One desk for every drive.</span>
-            </h2>
-            <p className="text-ink-2 text-base md:text-lg leading-relaxed mt-5 max-w-md">
-              Write to the placement cell with role, eligibility, location,
-              headcount, and timeline. A coordinator confirms within three
-              working days and runs the drive on a published schedule.
+              Recruit at <span className="text-gold">Venky.</span>
+              <span className="block text-white/45">One desk, every drive.</span>
+            </h1>
+            <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-md text-pretty">
+              Write to the placement cell with the role, eligibility, headcount, and
+              timeline. A coordinator runs the drive end to end, on a schedule the cell
+              publishes.
             </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center">
-              <Link
-                to="/recruiters"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-ink text-white font-medium hover:bg-accent transition-colors shadow-soft"
-              >
-                Explore recruiter directory
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link
-                to="/recruiters#contact"
-                className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent-deep transition-colors px-3 py-2"
-              >
-                Contact our team
-                <span aria-hidden="true">→</span>
-              </Link>
+            {/* Aggregate stat chips */}
+            <div className="mt-8 max-w-lg">
+              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2.5">
+                {previousCycleStats.cycle} · last completed cycle
+              </div>
+              <dl className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="rounded-xl px-3.5 py-3 bg-white/[0.06] border border-white/10"
+                  >
+                    <dd className="font-display font-bold text-white text-xl leading-none tabular-nums">
+                      {s.value}
+                    </dd>
+                    <dt className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-white/55 mt-2 leading-tight">
+                      {s.label}
+                    </dt>
+                  </div>
+                ))}
+              </dl>
             </div>
 
-            {/* Tier legend */}
-            <div className="mt-10 pt-6 border-t border-line max-w-md">
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-3 mb-3">
-                Featured here
-              </div>
-              <div className="flex flex-wrap gap-x-5 gap-y-2 text-[12px]">
-                <div className="flex items-center gap-2">
-                  <span aria-hidden="true" className="inline-block w-3.5 h-3.5 rounded-[4px] border-2" style={{ borderColor: '#1e4e8c' }} />
-                  <span className="text-ink-2 font-mono uppercase tracking-[0.12em]">Premium tier</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span aria-hidden="true" className="inline-block w-3.5 h-3.5 rounded-[4px] border border-ink/15 relative">
-                    <span className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-accent" />
-                  </span>
-                  <span className="text-ink-2 font-mono uppercase tracking-[0.12em]">Strong tier</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span aria-hidden="true" className="inline-block w-3.5 h-3.5 rounded-[4px] border border-ink/15" />
-                  <span className="text-ink-2 font-mono uppercase tracking-[0.12em]">Standard</span>
-                </div>
-              </div>
+            {/* CTAs */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <a
+                href="#interest"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-ink font-medium min-h-[44px] hover:bg-gold hover:text-white transition-colors shadow-soft-lg"
+              >
+                Share a hiring brief
+                <span aria-hidden="true">→</span>
+              </a>
+              <Link
+                to="/recruiters/dashboard"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/25 text-white/85 font-medium min-h-[44px] hover:border-white/60 hover:text-white transition-colors"
+              >
+                Recruiter dashboard
+              </Link>
             </div>
           </div>
 
-          {/* Right column — the constellation */}
-          <div
-            ref={constellationRef}
-            className="relative w-full"
-            style={{ aspectRatio: '5 / 4', minHeight: 460 }}
-          >
-            {size.w > 0 &&
-              bubbles.map((b) => (
-                <BubbleNode
-                  key={b.slug}
-                  bubble={b}
-                  containerW={size.w}
-                  containerH={size.h}
-                />
+          {/* Floating logos */}
+          <div>
+            {/* Desktop constellation (drifts; hidden on phones) */}
+            <div
+              className="hidden md:block relative w-full mx-auto"
+              style={{ aspectRatio: '1 / 1', maxWidth: 560 }}
+            >
+              {SLOTS.map((slot, i) => {
+                const r = featured[i];
+                if (!r) return null;
+                const dur = 11 + (i % 5) * 1.4;
+                const delay = (i % 7) * 0.55;
+                return (
+                  <div
+                    key={r.slug}
+                    className="absolute"
+                    style={{
+                      left: `${slot.x}%`,
+                      top: `${slot.y}%`,
+                      width: slot.s,
+                      height: slot.s,
+                      transform: 'translate(-50%, -50%)',
+                    }}
+                  >
+                    <div
+                      className="w-full h-full will-change-transform"
+                      style={{ animation: `galaxy-drift-${i % 3} ${dur}s ease-in-out ${delay}s infinite` }}
+                    >
+                      <LogoTile slug={r.slug} name={r.name} domain={r.domain} brandColor={r.brandColor} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Mobile grid (static, clean) */}
+            <div className="grid md:hidden grid-cols-4 gap-2.5">
+              {featured.slice(0, 16).map((r) => (
+                <div key={r.slug} className="aspect-square">
+                  <LogoTile slug={r.slug} name={r.name} domain={r.domain} brandColor={r.brandColor} />
+                </div>
               ))}
+            </div>
           </div>
         </div>
+
+        <p className="mt-10 md:mt-12 font-mono text-[11px] uppercase tracking-[0.16em] text-white/40 max-w-2xl text-pretty">
+          A selection of firms that have hired at SVC. The full directory lives in the recruiter dashboard.
+        </p>
       </div>
 
       <style>{`
-        @keyframes bubble-float {
-          0%, 100% { transform: translate(0, 0); }
-          50%      { transform: translate(6px, -8px); }
-        }
+        @keyframes galaxy-drift-0 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(0,-10px,0); } }
+        @keyframes galaxy-drift-1 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(6px,-7px,0); } }
+        @keyframes galaxy-drift-2 { 0%, 100% { transform: translate3d(0,0,0); } 50% { transform: translate3d(-6px,-8px,0); } }
       `}</style>
     </section>
   );
