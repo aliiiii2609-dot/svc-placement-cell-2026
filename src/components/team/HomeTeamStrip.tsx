@@ -73,7 +73,7 @@ function Portrait({ src, alt, initials }: PortraitProps) {
         <img
           src={src}
           alt={alt}
-          loading="lazy"
+         
           onError={() => setFailed(true)}
           className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-[600ms] ease-out group-hover/card:scale-[1.04]"
         />

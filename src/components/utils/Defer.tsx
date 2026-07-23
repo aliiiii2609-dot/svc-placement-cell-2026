@@ -64,28 +64,43 @@ export function Defer({
 
   useEffect(() => {
     if (show) return;
+    const el = ref.current;
+    const reveal = () => setShow(true);
 
-    // No IntersectionObserver (very old browser, or a crawler that executes JS
-    // but stubs the API): render immediately rather than hiding content.
-    if (typeof IntersectionObserver === 'undefined') {
-      setShow(true);
+    // No IntersectionObserver, or no element: render immediately rather than
+    // hiding content.
+    if (typeof IntersectionObserver === 'undefined' || !el) {
+      reveal();
       return;
     }
 
-    const el = ref.current;
-    if (!el) return;
+    // Manual near-viewport check. This is the reliability net: the observer
+    // occasionally fails to fire (async mounts, some mobile browsers), which
+    // would leave a section stuck on its skeleton forever. The check runs on
+    // mount and on scroll, and a timeout guarantees the section mounts even if
+    // the visitor never scrolls to it.
+    const check = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      if (r.top < vh + 900 && r.bottom > -900) reveal();
+    };
 
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShow(true);
-          io.disconnect();
-        }
+        if (entries.some((e) => e.isIntersecting)) reveal();
       },
       { rootMargin },
     );
     io.observe(el);
-    return () => io.disconnect();
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    const timer = window.setTimeout(reveal, 1500);
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener('scroll', check);
+      window.clearTimeout(timer);
+    };
   }, [show, rootMargin]);
 
   if (show) return <>{children}</>;

@@ -67,7 +67,7 @@ function Portrait({ src, alt, monogram }: { src: string; alt: string; monogram: 
       alt={alt}
       width={96}
       height={96}
-      loading="lazy"
+     
       onError={() => setFailed(true)}
       className="h-20 w-20 flex-shrink-0 rounded-2xl object-cover object-top sm:h-24 sm:w-24"
       style={{ border: '1px solid rgb(var(--gold) / 0.30)' }}

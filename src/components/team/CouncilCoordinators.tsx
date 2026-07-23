@@ -93,7 +93,6 @@ function Monogram({
       <img
         src={`/images/people/${id}.jpg`}
         alt={name}
-        loading="lazy"
         decoding="async"
         onError={() => setFailed(true)}
         className="shrink-0 rounded-full object-cover shadow-soft ring-1 ring-line"
