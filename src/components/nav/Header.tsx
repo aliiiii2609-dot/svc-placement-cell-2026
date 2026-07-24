@@ -38,6 +38,8 @@ const BROCHURE_HREF = '/Recruitment-Brochure-SVC-2026-27.pdf';
 const BROCHURE_FILE = 'Recruitment Brochure SVC 2026-27.pdf';
 const POLICY_HREF = '/Placement-Policy-SVC-2026-27.pdf';
 const POLICY_FILE = 'Placement Policy SVC 2026-27.pdf';
+const CV_VETTING_HREF = '/CV-Vetting-Guidelines-SVC-2026-27.pdf';
+const CV_VETTING_FILE = 'CV Vetting Guidelines SVC 2026-27.pdf';
 
 const navItems: NavGroup[] = [
   { to: '/', label: 'Home', end: true },
@@ -53,6 +55,7 @@ const navItems: NavGroup[] = [
     children: [
       { to: '/students/portal', label: 'Student portal', hint: 'Start here' },
       { to: '/resources', label: 'Resources', hint: 'Guides, formats, prep material' },
+      { href: CV_VETTING_HREF, download: CV_VETTING_FILE, label: 'CV vetting guidelines', hint: 'The accepted CV format (PDF)' },
       { href: POLICY_HREF, download: POLICY_FILE, label: 'Placement policy', hint: 'Download the 2026-27 policy (PDF)' },
     ],
   },

@@ -16,11 +16,11 @@ export const resources: Resource[] = [
     filePath: '/Recruitment-Brochure-SVC-2026-27.pdf',
   },
   {
-    id: 'cv-vetting-guide',
-    title: 'CV Vetting Guide',
-    description: 'The cell\'s CV review checklist: what recruiters look for in the first 15 seconds, common mistakes, and how to rewrite weak lines.',
+    id: 'cv-vetting-guidelines',
+    title: 'CV Vetting Guidelines 2026-27',
+    description: 'The cell\'s official CV vetting guidelines for the current cycle: the accepted format, what recruiters look for in the first 15 seconds, common mistakes, and how to rewrite weak lines.',
     category: 'CV Template',
-    filePath: 'https://bit.ly/4muKqeu',
+    filePath: '/CV-Vetting-Guidelines-SVC-2026-27.pdf',
   },
   {
     id: 'cover-letter-templates',
