@@ -48,11 +48,27 @@ const SECTORS: RecruiterSector[] = [
   'Policy & Public',
 ];
 
+const COURSE_OPTIONS = [
+  'Open to all courses',
+  'Commerce (B.Com H/P)',
+  'Economics',
+  'Mathematics / Statistics',
+  'Sciences',
+  'Humanities / Arts',
+] as const;
+
+const HIRING_TYPES = ['Full-time', 'Internship', 'Both'] as const;
+
 const schema = z.object({
   name: z.string().min(2, 'Please share your full name'),
   organization: z.string().min(2, 'Organization name is required'),
   email: z.string().email('A valid work email is required'),
   phone: z.string().optional(),
+  role: z.string().min(2, 'Tell us the role or position title'),
+  ctcOffered: z.string().min(1, 'CTC being offered is required'),
+  headcount: z.string().min(1, 'Approximate number of hires is required'),
+  hiringType: z.enum(HIRING_TYPES, { message: 'Select a hiring type' }),
+  coursesEligible: z.array(z.string()).min(1, 'Select at least one eligible course'),
   hiringBrief: z.string().min(20, 'Tell us a little about the role (at least 20 characters)'),
   preferredSectors: z.array(z.string()).optional(),
   consent: z.boolean().refine((v) => v === true, { message: 'Consent is required to submit' }),
@@ -67,8 +83,13 @@ const DRAFT_KEY = 'svc-form-recruiter-interest';
 function buildBrief(data: z.infer<typeof schema>): { subject: string; body: string } {
   const subject = `Recruiter interest from ${data.organization}`;
   const body =
-    `Name: ${data.name}\n` +
     `Organization: ${data.organization}\n` +
+    `Role: ${data.role}\n` +
+    `CTC offered: ${data.ctcOffered}\n` +
+    `Courses eligible: ${data.coursesEligible.join(', ')}\n` +
+    `Hiring type: ${data.hiringType}\n` +
+    `Headcount: ${data.headcount}\n` +
+    `Name: ${data.name}\n` +
     `Email: ${data.email}\n` +
     `Phone: ${data.phone ?? ''}\n` +
     `Preferred sectors: ${(data.preferredSectors ?? []).join(', ')}\n\n` +
@@ -114,8 +135,13 @@ export function RecruiterInterestForm() {
     const { subject, body } = buildBrief(data);
     const usedChannel = await submitForm({
       payload: {
-        name: data.name,
         organization: data.organization,
+        role: data.role,
+        ctcOffered: data.ctcOffered,
+        coursesEligible: data.coursesEligible,
+        hiringType: data.hiringType,
+        headcount: data.headcount,
+        name: data.name,
         email: data.email,
         phone: data.phone ?? '',
         preferredSectors: data.preferredSectors ?? [],
@@ -196,6 +222,26 @@ export function RecruiterInterestForm() {
             {channel === 'endpoint' ? 'What we have on file' : 'In this brief'}
           </div>
           <div className="flex justify-between gap-3">
+            <span className="flex-shrink-0 text-ink-3">Role</span>
+            <span className="text-right text-ink">{submittedData.role}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="flex-shrink-0 text-ink-3">CTC offered</span>
+            <span className="text-right text-ink">{submittedData.ctcOffered}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="flex-shrink-0 text-ink-3">Hiring type</span>
+            <span className="text-right text-ink">{submittedData.hiringType}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="flex-shrink-0 text-ink-3">Headcount</span>
+            <span className="text-right text-ink">{submittedData.headcount}</span>
+          </div>
+          <div className="flex justify-between gap-3">
+            <span className="flex-shrink-0 text-ink-3">Courses</span>
+            <span className="text-right text-ink">{submittedData.coursesEligible.join(', ')}</span>
+          </div>
+          <div className="flex justify-between gap-3">
             <span className="text-ink-3">Contact</span>
             <span className="truncate text-ink">{submittedData.email}</span>
           </div>
@@ -273,6 +319,55 @@ export function RecruiterInterestForm() {
         </div>
       </div>
 
+      {/* CTC — the single most important question. Given a highlighted,
+          gold-edged block near the top so it never gets skipped. */}
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+        <div className="rounded-xl border border-gold/40 bg-gold/5 p-4 shadow-sm sm:col-span-2">
+          <label className={cn(labelBase, 'text-gold')} htmlFor="r-ctc">
+            CTC being offered (LPA)
+          </label>
+          <input
+            id="r-ctc"
+            className={fieldBase}
+            placeholder="e.g. 12 or 10-15 LPA"
+            {...fieldAria('r-ctc', !!errors.ctcOffered)}
+            {...register('ctcOffered')}
+          />
+          <FieldError id="r-ctc" message={errors.ctcOffered?.message} />
+          <p className={cn(helperText, 'mt-2')}>
+            The number our applicants care about most. Enter a figure or a range.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+        <div>
+          <label className={labelBase} htmlFor="r-role">Role or position</label>
+          <input
+            id="r-role"
+            className={fieldBase}
+            placeholder="e.g. Analyst, Associate Consultant"
+            {...fieldAria('r-role', !!errors.role)}
+            {...register('role')}
+          />
+          <FieldError id="r-role" message={errors.role?.message} />
+        </div>
+        <div>
+          <label className={labelBase} htmlFor="r-headcount">Approximate number of hires</label>
+          <input
+            id="r-headcount"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            className={fieldBase}
+            placeholder="e.g. 5"
+            {...fieldAria('r-headcount', !!errors.headcount)}
+            {...register('headcount')}
+          />
+          <FieldError id="r-headcount" message={errors.headcount?.message} />
+        </div>
+      </div>
+
       <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
         <div>
           <label className={labelBase} htmlFor="r-email">Work email</label>
@@ -301,6 +396,44 @@ export function RecruiterInterestForm() {
           />
         </div>
       </div>
+
+      <fieldset>
+        <legend className={labelBase}>Hiring type</legend>
+        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Hiring type">
+          {HIRING_TYPES.map((t) => (
+            <label key={t} className={chipBase}>
+              <input
+                type="radio"
+                value={t}
+                className="sr-only"
+                {...fieldAria('r-hiring-type', !!errors.hiringType)}
+                {...register('hiringType')}
+              />
+              {t}
+            </label>
+          ))}
+        </div>
+        <FieldError id="r-hiring-type" message={errors.hiringType?.message} />
+      </fieldset>
+
+      <fieldset>
+        <legend className={labelBase}>Eligible courses / streams</legend>
+        <div className="flex flex-wrap gap-2">
+          {COURSE_OPTIONS.map((c) => (
+            <label key={c} className={chipBase}>
+              <input
+                type="checkbox"
+                value={c}
+                className="sr-only"
+                {...fieldAria('r-courses', !!errors.coursesEligible)}
+                {...register('coursesEligible')}
+              />
+              {c}
+            </label>
+          ))}
+        </div>
+        <FieldError id="r-courses" message={errors.coursesEligible?.message} />
+      </fieldset>
 
       <fieldset>
         <legend className={labelBase}>Preferred sectors (optional)</legend>

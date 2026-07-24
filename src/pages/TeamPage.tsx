@@ -216,7 +216,7 @@ export function TeamPage() {
               placement@svc.ac.in
             </a>
             <Link
-              to="/recruiters"
+              to="/recruiters#interest"
               className="inline-flex items-center gap-2 rounded-full border border-line px-6 py-3 text-sm text-ink transition-colors hover:border-accent hover:text-accent"
             >
               Recruit with us

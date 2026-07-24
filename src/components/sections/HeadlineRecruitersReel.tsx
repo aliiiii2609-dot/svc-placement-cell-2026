@@ -9,32 +9,35 @@ import { useReducedMotion } from '@/lib/hooks/useReducedMotion';
 const EASE = [0.22, 1, 0.36, 1] as const;
 const CYCLE_DURATION_MS = 6800;
 
+// Brand accents only. Navy + gold — no mint / pink / purple anywhere.
+const GOLD = '#d4a857';
+const GOLD_DEEP = '#b8893b';
+const NAVY = '#1e4e8c';
+
 /**
- * Headline Recruiters by Cycle, with prestige-tier hierarchy.
+ * Headline Recruiters by Cycle — an organised logo-card grid.
  *
- * Each cycle lists 15-22 real recruiters from the cell's annual reports.
- * Within each cycle, recruiters are rendered in tier order:
+ * Each cycle lists 15-22 real recruiters from the cell's annual reports,
+ * rendered as a uniform, responsive grid of logo cards (2 cols mobile,
+ * 3 sm, 4 lg, 5 xl). Every card is the same size: a crisp white logo tile
+ * (the hero of the card, so brand logos pop against the dark navy band)
+ * with the company name beneath.
  *
- *   - Premium: MBB consulting, Goldman Sachs, D.E. Shaw, Big 4, American
- *     Express, Nomura Research, Barclays, ICICI Prudential Life. Rendered
- *     as bright bg-white chips with ink text, slightly larger, brand-color
- *     accent dot on the left. The visual centerpiece.
+ * Tier hierarchy adds tasteful emphasis without breaking the grid:
+ *   - Premium (MBB, Goldman, D.E. Shaw, Big 4, Amex, Nomura, Barclays,
+ *     ICICI Prudential Life, Arcesium, DSP BlackRock): gold accent ring +
+ *     gold corner dot. Sorted first, so they lead the grid.
+ *   - Strong: brighter card surface, hairline border.
+ *   - Standard: quieter surface + border, name slightly recessed.
  *
- *   - Strong: Accenture, ZS Associates, AON, WTW, Genpact, EXL, HCL Tech,
- *     TresVista, Grant Thornton, BSR, Futures First, Oxane Partners,
- *     Milliman, ICICI Bank, HDFC Bank, etc. Rendered as bright translucent
- *     white chips with hairline border, white text.
+ * Cards with a matching partners slug link to /companies/<slug>; the rest
+ * render as static tiles. Logos load via brandIconUrl(domain) with the
+ * NAME_DOMAIN_MAP, falling back to a monogram on the same white tile.
  *
- *   - Standard: every other firm. Rendered as subtle translucent chips at
- *     slightly lower opacity to recede.
- *
- * Chips with a matching slug in the partners data link to that company's
- * page. Non-matches render as static spans.
- *
- * Cycle ticker: 240ms outgoing fade, 80ms beat, 320ms character ticker on
- * the giant cycle label, 280ms incoming entrance. Click any year to lock.
- *
- * Reduced motion: 200ms fade swap, no per-chip stagger, no ticker.
+ * Mechanics kept intact: click a year to lock, auto-advance every ~6.8s,
+ * the giant animated cycle label, and cross-fade between cycles. Entrance
+ * on cycle change is opacity/transform only, gated on reduced motion, and
+ * always ends fully visible.
  */
 
 // ---------------------------------------------------------------------------
@@ -103,7 +106,7 @@ function resolveSlug(name: string): string | null {
   return direct ?? null;
 }
 
-// Per-name domain lookup so chips can fetch logos via Brandfetch.
+// Per-name domain lookup so cards can fetch logos via Brandfetch.
 // Falls back to a brand-color monogram tile when nothing matches.
 const NAME_DOMAIN_MAP: Record<string, string> = {
   'bcg':                   'bcg.com',
@@ -174,11 +177,11 @@ function getDomainForName(name: string): string | undefined {
 }
 
 // ---------------------------------------------------------------------------
-// Single chip — logo tile + name. Same height (38px), variable width.
+// Single logo card — uniform size, white logo tile hero + name beneath.
 // ---------------------------------------------------------------------------
-function RecruiterChip({
+function RecruiterCard({
   recruiter,
-  index: _index,
+  index,
   reduced,
 }: {
   recruiter: CycleRecruiter;
@@ -191,73 +194,97 @@ function RecruiterChip({
   const useLogo = !!domain && !logoFailed;
   const monogram = recruiter.name
     .split(/[\s&.\-,]+/).filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
-  const innerInitial = reduced ? false : { opacity: 0, y: 6 };
-  const innerAnimate = { opacity: 1, y: 0 };
-  const innerTransition = {
-    duration: 0.28,
+
+  const isPremium = recruiter.tier === 'premium';
+  const isStandard = recruiter.tier === 'standard';
+
+  // Cheap, reduced-motion-gated entrance. Always ends fully visible.
+  const initial = reduced ? false : { opacity: 0, y: 10 };
+  const animate = { opacity: 1, y: 0 };
+  const transition = {
+    duration: 0.42,
     ease: EASE,
-    delay: 0,
+    delay: reduced ? 0 : Math.min(index * 0.022, 0.42),
   };
 
-  const tileClassName =
-    'group inline-flex items-center gap-2.5 pr-3.5 rounded-full bg-white/[0.06] border border-white/15 text-white font-display font-medium text-[13.5px] md:text-[14.5px] tracking-tight transition-all duration-300 hover:bg-white/[0.14] hover:border-white/40';
+  const cardBase =
+    'group relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-300';
+  const cardTone = isPremium
+    ? 'bg-white/[0.06] border-[#d4a857]/45 ring-1 ring-inset ring-[#d4a857]/25 hover:border-[#d4a857]/75 hover:bg-white/[0.09]'
+    : isStandard
+      ? 'bg-white/[0.02] border-white/10 hover:border-white/25 hover:bg-white/[0.05]'
+      : 'bg-white/[0.045] border-white/[0.14] hover:border-white/35 hover:bg-white/[0.08]';
+  const interactive = slug ? 'hover:-translate-y-0.5' : '';
 
   const inner = (
     <>
-      {/* Logo tile */}
-      <span
-        aria-hidden="true"
-        className="flex-shrink-0 flex items-center justify-center overflow-hidden"
-        style={{
-          width: 30,
-          height: 30,
-          marginLeft: 4,
-          background: '#fff',
-          borderRadius: '22%',
-          border: '1px solid rgba(255, 255, 255, 0.20)',
-        }}
+      {/* White logo tile — the hero of the card so brand logos pop */}
+      <div
+        className="relative mx-2 mt-2 flex items-center justify-center rounded-xl bg-white"
+        style={{ height: 72 }}
       >
+        {isPremium && (
+          <span
+            aria-hidden="true"
+            className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full"
+            style={{ background: GOLD_DEEP }}
+          />
+        )}
         {useLogo ? (
           <img
             src={brandIconUrl(domain!)}
             alt=""
-            className="w-full h-full object-contain"
-            style={{ padding: 3 }}
+            className="max-h-[68%] max-w-[74%] object-contain transition-transform duration-300 group-hover:scale-[1.04]"
             loading="lazy"
             onError={() => setLogoFailed(true)}
           />
         ) : (
           <span
             className="font-display font-bold text-ink"
-            style={{ fontSize: monogram.length <= 2 ? 11 : 9, letterSpacing: '-0.02em' }}
+            style={{ fontSize: monogram.length <= 2 ? 22 : 16, letterSpacing: '-0.02em' }}
           >
             {monogram}
           </span>
         )}
-      </span>
-      <span>{recruiter.name}</span>
+      </div>
+
+      {/* Company name */}
+      <div className="flex flex-1 items-center justify-center px-2 py-2.5 text-center">
+        <span
+          className={`font-display font-medium leading-tight tracking-tight line-clamp-2 ${
+            isStandard ? 'text-[12px] text-white/65' : 'text-[12.5px] text-white/90'
+          }`}
+        >
+          {recruiter.name}
+        </span>
+      </div>
     </>
   );
 
   if (slug) {
     return (
-      <motion.div initial={innerInitial} animate={innerAnimate} transition={innerTransition}>
-        <Link to={`/companies/${slug}`} className={tileClassName} style={{ height: 38 }} aria-label={`View ${recruiter.name}`}>
+      <motion.div initial={initial} animate={animate} transition={transition}>
+        <Link
+          to={`/companies/${slug}`}
+          className={`${cardBase} ${cardTone} ${interactive}`}
+          style={{ minHeight: 124 }}
+          aria-label={`View ${recruiter.name}`}
+        >
           {inner}
         </Link>
       </motion.div>
     );
   }
   return (
-    <motion.span
-      initial={innerInitial}
-      animate={innerAnimate}
-      transition={innerTransition}
-      className={tileClassName.replace(/ hover:[^ ]+/g, '')}
-      style={{ height: 38 }}
+    <motion.div
+      initial={initial}
+      animate={animate}
+      transition={transition}
+      className={`${cardBase} ${cardTone}`}
+      style={{ minHeight: 124 }}
     >
       {inner}
-    </motion.span>
+    </motion.div>
   );
 }
 
@@ -295,13 +322,13 @@ export function HeadlineRecruitersReel() {
       className="relative py-20 md:py-28 bg-ink border-y border-line overflow-hidden"
       aria-label="Headline recruiters across recent cycles"
     >
-      {/* Atmospheric backing */}
+      {/* Atmospheric backing — navy + gold blooms only */}
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at 25% 30%, rgba(30, 78, 140, 0.28), transparent 55%), radial-gradient(ellipse at 75% 70%, rgba(255, 107, 157, 0.16), transparent 55%)',
+            'radial-gradient(ellipse at 25% 30%, rgba(30, 78, 140, 0.30), transparent 55%), radial-gradient(ellipse at 78% 72%, rgba(212, 168, 87, 0.12), transparent 55%)',
         }}
       />
       <div
@@ -320,11 +347,11 @@ export function HeadlineRecruitersReel() {
             <span className="relative inline-flex w-2 h-2">
               <span
                 className="absolute inset-0 rounded-full opacity-70 animate-ping"
-                style={{ background: '#7fd9c1' }}
+                style={{ background: GOLD }}
               />
               <span
                 className="relative w-2 h-2 rounded-full"
-                style={{ background: '#7fd9c1' }}
+                style={{ background: GOLD }}
               />
             </span>
             <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
@@ -361,7 +388,7 @@ export function HeadlineRecruitersReel() {
                       layoutId="cycle-active-underline"
                       aria-hidden="true"
                       className="absolute -bottom-0.5 left-2 right-2 h-[2px]"
-                      style={{ background: '#7fd9c1' }}
+                      style={{ background: GOLD }}
                       transition={{ duration: 0.4, ease: EASE }}
                     />
                   )}
@@ -401,34 +428,44 @@ export function HeadlineRecruitersReel() {
               from the cell&apos;s offer-level archives.
             </p>
 
-            {/* Total count */}
-            <div className="mt-6 flex flex-col gap-1.5 max-w-xs">
+            {/* Total count + tier legend */}
+            <div className="mt-6 flex flex-col gap-2.5 max-w-xs">
               <div className="flex items-center gap-2">
                 <span
                   aria-hidden="true"
                   className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{ background: '#1e4e8c' }}
+                  style={{ background: NAVY }}
                 />
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 tabular-nums">
                   {sortedRecruiters.length} firms · this cycle
                 </span>
               </div>
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="inline-block w-1.5 h-1.5 rounded-full"
+                  style={{ background: GOLD_DEEP }}
+                />
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
+                  Gold ring · premier partner
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Chip cloud — smooth cross-fade, no per-chip stagger */}
-          <div className="relative min-h-[200px]">
+          {/* Logo-card grid — smooth cross-fade, cheap per-card stagger */}
+          <div className="relative min-h-[260px]">
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={`chips-${current.cycle}`}
-                className="flex flex-wrap gap-2.5 md:gap-3"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.32, ease: EASE }}
+                key={`grid-${current.cycle}`}
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 sm:gap-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: EASE }}
               >
                 {sortedRecruiters.map((r, i) => (
-                  <RecruiterChip
+                  <RecruiterCard
                     key={`${current.cycle}-${r.name}-${i}`}
                     recruiter={r}
                     index={i}
@@ -443,7 +480,7 @@ export function HeadlineRecruitersReel() {
         {/* Bottom hairline */}
         <div className="mt-12 pt-6 border-t border-white/10 flex items-center justify-between gap-4 flex-wrap">
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45">
-            Cycles auto-advance · click a year to lock · click a chip to open
+            Cycles auto-advance · click a year to lock · click a card to open
           </span>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/45 tabular-nums">
             {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')} · {sortedRecruiters.length} firms

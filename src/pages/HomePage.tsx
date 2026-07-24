@@ -101,13 +101,18 @@ export function HomePage() {
 
       <section id="proof" className="scroll-mt-[120px]">
         <StatsBar />
-        <div className="container-svc pb-4 md:pb-8 -mt-2">
+        <div className="container-svc pb-16 md:pb-24 flex justify-center">
           <Link
             to="/rankings-press"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:text-accent-deep transition-colors"
+            className="group inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 text-sm font-medium text-ink shadow-soft transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-soft-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             See the full placement breakdown
-            <span aria-hidden="true">→</span>
+            <span
+              aria-hidden="true"
+              className="text-gold transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
           </Link>
         </div>
       </section>
@@ -160,7 +165,7 @@ export function HomePage() {
               placement@svc.ac.in
             </a>
             <Link
-              to="/recruiters"
+              to="/recruiters#interest"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-line text-ink hover:border-accent hover:text-accent transition-colors"
             >
               Recruit with us

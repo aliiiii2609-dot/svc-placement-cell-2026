@@ -276,13 +276,13 @@ export function RecruiterGalaxy() {
 
             {/* CTA */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <a
-                href="#interest"
+              <Link
+                to="/recruiters#interest"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-ink font-medium min-h-[44px] hover:bg-gold hover:text-white transition-colors shadow-soft-lg"
               >
                 Share a hiring brief
                 <span aria-hidden="true">→</span>
-              </a>
+              </Link>
             </div>
           </div>
 

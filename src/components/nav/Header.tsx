@@ -286,7 +286,7 @@ export function Header({ onSearchOpen }: Props) {
               <Download size={14} aria-hidden="true" />
               Brochure
             </a>
-            <Link to="/recruiters" className={cn(primaryBtn, 'hidden sm:inline-flex')}>
+            <Link to="/recruiters#interest" className={cn(primaryBtn, 'hidden sm:inline-flex')}>
               Recruit with us
             </Link>
             <button
@@ -356,7 +356,7 @@ export function Header({ onSearchOpen }: Props) {
               ))}
 
               <div className="flex flex-col gap-2 pt-3 pb-2">
-                <Link to="/recruiters" className={cn(primaryBtn, 'h-11 w-full')}>
+                <Link to="/recruiters#interest" className={cn(primaryBtn, 'h-11 w-full')}>
                   Recruit with us
                 </Link>
                 <div className="grid grid-cols-2 gap-2">
