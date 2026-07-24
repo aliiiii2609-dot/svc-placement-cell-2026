@@ -87,6 +87,44 @@ function Portrait({ src, alt, initials, rounded }: PortraitProps) {
   );
 }
 
+/** Compact round headshot for the roster cards, with a monogram fallback. */
+function RoundAvatar({
+  src,
+  alt,
+  initials,
+  className,
+}: {
+  src: string;
+  alt: string;
+  initials: string;
+  className?: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (failed || !src) {
+    return (
+      <div
+        role="img"
+        aria-label={alt}
+        className={`flex items-center justify-center bg-gradient-to-br from-gold-soft to-bg-2 ${className ?? ''}`}
+      >
+        <span className="select-none font-display text-[0.95rem] font-bold tracking-tight text-gold">
+          {initials}
+        </span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="eager"
+      decoding="async"
+      onError={() => setFailed(true)}
+      className={`object-cover object-top ${className ?? ''}`}
+    />
+  );
+}
+
 /** Accessible member dialog: larger portrait, bio, and live contact links. */
 function MemberDialog({ member, onClose }: { member: Member; onClose: () => void }) {
   const reduced = useReducedMotion();
@@ -228,80 +266,45 @@ export function HomeTeamStrip() {
           </motion.h2>
         </div>
 
-        {/* Core team — refined portrait-card grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Core team — compact roster cards */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {coreTeam.map((member, i) => {
             const initials = member.initials || initialsFromName(member.name);
             return (
-              <motion.div key={member.id} {...rise(i)} className="h-full">
+              <motion.div key={member.id} {...rise(i)}>
                 <button
                   type="button"
                   onClick={() => setActive(member)}
                   aria-label={`Open profile of ${member.name}, ${member.role}`}
                   aria-haspopup="dialog"
-                  className="group/card glass flex h-full w-full flex-col overflow-hidden text-left transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-soft-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                  className="group/card glass flex w-full items-center gap-4 p-3.5 text-left transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg sm:p-4"
                 >
-                  {/* Portrait */}
-                  <div className="relative aspect-[4/5] w-full overflow-hidden">
-                    <Portrait
-                      src={member.photoPath}
-                      alt={`Portrait of ${member.name}`}
-                      initials={initials}
-                    />
-                    <div
-                      className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
-                      style={{
-                        background:
-                          'linear-gradient(to top, rgba(10, 37, 64, 0.22), transparent)',
-                      }}
-                      aria-hidden="true"
-                    />
-                  </div>
-
-                  {/* Body */}
-                  <div className="flex flex-1 flex-col p-5">
+                  <RoundAvatar
+                    src={member.photoPath}
+                    alt={`Portrait of ${member.name}`}
+                    initials={initials}
+                    className="h-16 w-16 shrink-0 rounded-full ring-1 ring-line"
+                  />
+                  <div className="min-w-0 flex-1">
                     <h3
-                      className="font-display font-semibold leading-snug tracking-tight text-ink [text-wrap:balance]"
-                      style={{ fontSize: '1.15rem', hyphens: 'none' }}
+                      className="truncate font-display text-[15px] font-semibold leading-tight tracking-tight text-ink"
+                      style={{ hyphens: 'none' }}
                     >
                       {member.name}
                     </h3>
-                    <p
-                      className="kicker mt-1.5 !normal-case tracking-[0.06em] [text-wrap:balance]"
-                      style={{ hyphens: 'none' }}
-                    >
+                    <p className="mt-0.5 truncate font-mono text-[11px] uppercase tracking-[0.08em] text-gold">
                       {member.role}
                     </p>
-
-                    <div className="mt-2 flex items-center gap-1.5 text-[12.5px] text-ink-3">
-                      <GraduationCap
-                        size={14}
-                        strokeWidth={1.75}
-                        className="flex-shrink-0 text-gold/80"
-                      />
+                    <div className="mt-1 flex items-center gap-1.5 text-[12px] text-ink-3">
+                      <GraduationCap size={12} strokeWidth={1.75} className="shrink-0 text-gold/70" />
                       <span className="truncate">{member.course}</span>
                     </div>
-
-                    {/* Contact — plain text on the card; live links live in the dialog */}
-                    <div className="mt-4 space-y-1.5 border-t border-line pt-4 text-[12.5px] text-ink-2">
-                      <div className="flex items-center gap-2">
-                        <Phone
-                          size={13}
-                          strokeWidth={1.75}
-                          className="flex-shrink-0 text-ink-3"
-                        />
-                        <span>{member.phone}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail
-                          size={13}
-                          strokeWidth={1.75}
-                          className="flex-shrink-0 text-ink-3"
-                        />
-                        <span className="truncate">{member.email}</span>
-                      </div>
-                    </div>
                   </div>
+                  <ArrowUpRight
+                    size={16}
+                    strokeWidth={2}
+                    className="ml-1 shrink-0 text-ink-3 transition-all duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-accent"
+                  />
                 </button>
               </motion.div>
             );
