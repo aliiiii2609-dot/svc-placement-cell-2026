@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { RecruiterGalaxy } from '@/components/partners/RecruiterGalaxy';
+import { HeadlineRecruitersReel } from '@/components/sections/HeadlineRecruitersReel';
 import { ProcessRoadmap } from '@/components/roadmap/ProcessRoadmap';
 import { RecruiterInterestForm } from '@/components/forms/RecruiterInterestForm';
 import { institutionFacts } from '@/lib/data/stats';
@@ -81,6 +81,9 @@ export function RecruitersPage() {
           </div>
         </div>
       </section>
+
+      {/* Recruiters across recent cycles (2017-18 through 2025-26). */}
+      <HeadlineRecruitersReel />
 
       <ProcessRoadmap />
 

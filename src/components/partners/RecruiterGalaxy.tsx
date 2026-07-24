@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { recruiters } from '@/lib/data/partners';
 import { brandIconUrl } from '@/lib/data/brand';
-import { previousCycleStats } from '@/lib/data/stats';
 
 /**
  * Recruit at Venky — the recruiters-page hero.
@@ -229,12 +228,6 @@ function LogoTile({
 // ---------------------------------------------------------------------------
 export function RecruiterGalaxy() {
   const featured = recruiters.filter((r) => r.featured);
-  const stats = [
-    { value: String(previousCycleStats.totalPlacementOffers), label: 'Placement offers' },
-    { value: String(previousCycleStats.totalInternshipOffers), label: 'Internship offers' },
-    { value: String(previousCycleStats.recruitersEngaged), label: 'Recruiters engaged' },
-    { value: `${previousCycleStats.peakCtcLPA}`, label: 'Peak CTC · LPA' },
-  ];
 
   return (
     <section
@@ -280,28 +273,6 @@ export function RecruiterGalaxy() {
               timeline. A coordinator runs the drive end to end, on a schedule the cell
               publishes.
             </p>
-
-            {/* Aggregate stat chips */}
-            <div className="mt-8 max-w-lg">
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40 mb-2.5">
-                {previousCycleStats.cycle} · last completed cycle
-              </div>
-              <dl className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {stats.map((s) => (
-                  <div
-                    key={s.label}
-                    className="rounded-xl px-3.5 py-3 bg-white/[0.06] border border-white/10"
-                  >
-                    <dd className="font-display font-bold text-white text-xl leading-none tabular-nums">
-                      {s.value}
-                    </dd>
-                    <dt className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-white/55 mt-2 leading-tight">
-                      {s.label}
-                    </dt>
-                  </div>
-                ))}
-              </dl>
-            </div>
 
             {/* CTA */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">

@@ -6,7 +6,7 @@ import { SectionSlider, type SliderSection } from '@/components/nav/SectionSlide
 
 // --- Above the fold. Eager. ---
 import { Hero } from '@/components/hero/Hero';
-import { RecruiterMarqueeBar } from '@/components/partners/RecruiterMarqueeBar';
+import { RecruiterGalaxy } from '@/components/partners/RecruiterGalaxy';
 import { StatsBar } from '@/components/stats/StatsBar';
 import { AudienceCards } from '@/components/sections/AudienceCards';
 
@@ -75,6 +75,10 @@ export function HomePage() {
     <>
       <Hero />
 
+      {/* Recruit at Venky — the recruiter pitch sits directly under the landing
+          hero: floating recruiter logos, the headline, and the hiring-brief CTA. */}
+      <RecruiterGalaxy />
+
       {/* Official rankings banner. A GIF loops continuously on its own with no
           play control, which is what the cell wants here. */}
       <section className="border-b border-line bg-bg-2/60">
@@ -90,8 +94,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-
-      <RecruiterMarqueeBar />
 
       {/* Sticky chapter nav. Pins under the header once the hero has passed, so
           the page's shape is legible and every section is one tap away. */}
