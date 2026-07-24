@@ -101,19 +101,36 @@ export function HomePage() {
 
       <section id="proof" className="scroll-mt-[120px]">
         <StatsBar />
-        <div className="container-svc pb-16 md:pb-24 flex justify-center">
-          <Link
-            to="/rankings-press"
-            className="group inline-flex items-center gap-2.5 rounded-full border border-line bg-surface px-7 py-3.5 text-sm font-medium text-ink shadow-soft transition-all duration-300 hover:border-accent hover:text-accent hover:shadow-soft-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            See the full placement breakdown
+        <div className="container-svc pb-16 md:pb-24">
+          <div className="relative overflow-hidden rounded-2xl border border-line bg-bg-2/50 px-6 py-7 sm:px-9 sm:py-8 flex flex-col items-center gap-5 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
+            {/* faint gold rule seating the panel under the numbers */}
             <span
               aria-hidden="true"
-              className="text-gold transition-transform duration-300 group-hover:translate-x-1"
+              className="absolute inset-x-0 top-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(212,168,87,0.5), transparent)' }}
+            />
+            <div>
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent mb-1.5">
+                The full record
+              </div>
+              <p className="text-ink-2 text-sm leading-relaxed max-w-md">
+                Every offer, cycle by cycle, with the rankings and press behind
+                the numbers, drawn from the cell&apos;s archives.
+              </p>
+            </div>
+            <Link
+              to="/rankings-press"
+              className="group shrink-0 inline-flex items-center gap-2.5 rounded-full bg-accent px-7 py-3.5 text-sm font-medium text-white shadow-soft transition-all duration-300 hover:bg-accent-deep hover:shadow-soft-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              →
-            </span>
-          </Link>
+              See the full placement breakdown
+              <span
+                aria-hidden="true"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
 
