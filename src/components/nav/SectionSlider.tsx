@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -129,24 +130,30 @@ export function SectionSlider({ sections }: { sections: SliderSection[] }) {
   return (
     <>
       <div ref={sentinelRef} aria-hidden="true" />
+      {/* Height is reserved so pinning never shifts layout, but the visible
+          control is a floating, centered glass capsule rather than a full-width
+          bar. Subtle: it lifts off the page, and the active chapter is marked by
+          a soft pill that slides between labels instead of a hard fill. */}
       <div
         style={{ height: SLIDER_HEIGHT }}
         className={cn('relative z-40', pinned && 'sticky')}
       >
         <div
           className={cn(
-            'transition-all duration-300',
-            pinned
-              ? 'fixed left-0 right-0 bg-bg/90 backdrop-blur-xl border-b border-line shadow-[0_1px_20px_-12px_rgba(10,37,64,0.25)]'
-              : 'absolute left-0 right-0 border-y border-line bg-bg-2/40',
+            'left-0 right-0 flex justify-center px-4 transition-[top] duration-300',
+            pinned ? 'fixed' : 'absolute',
           )}
-          style={pinned ? { top: HEADER_OFFSET } : undefined}
+          style={{ top: pinned ? HEADER_OFFSET + 8 : 6 }}
         >
           <nav
             ref={stripRef}
             aria-label="Page sections"
-            className="container-svc flex items-center gap-1.5 overflow-x-auto scrollbar-none"
-            style={{ height: SLIDER_HEIGHT, scrollbarWidth: 'none' }}
+            className={cn(
+              'flex items-center gap-0.5 max-w-full overflow-x-auto scrollbar-none rounded-full',
+              'border border-line/80 bg-bg/70 backdrop-blur-xl px-1.5 py-1',
+              'shadow-[0_12px_36px_-16px_rgba(10,37,64,0.34)] transition-shadow duration-300',
+            )}
+            style={{ scrollbarWidth: 'none' }}
           >
             {sections.map((s) => {
               const active = s.id === activeId;
@@ -158,13 +165,19 @@ export function SectionSlider({ sections }: { sections: SliderSection[] }) {
                   onClick={() => jump(s.id)}
                   aria-current={active ? 'true' : undefined}
                   className={cn(
-                    'shrink-0 rounded-full px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.13em] transition-colors duration-300 whitespace-nowrap',
-                    active
-                      ? 'bg-accent text-white'
-                      : 'text-ink-3 hover:text-accent hover:bg-accent-soft',
+                    'relative shrink-0 rounded-full px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.13em] transition-colors duration-300 whitespace-nowrap',
+                    active ? 'text-accent-deep' : 'text-ink-3 hover:text-ink',
                   )}
                 >
-                  {s.label}
+                  {active && (
+                    <motion.span
+                      layoutId="section-slider-active"
+                      className="absolute inset-0 rounded-full bg-accent-soft ring-1 ring-inset ring-accent/15"
+                      transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+                      aria-hidden="true"
+                    />
+                  )}
+                  <span className="relative z-10">{s.label}</span>
                 </button>
               );
             })}
