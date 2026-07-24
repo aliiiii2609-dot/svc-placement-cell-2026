@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowUpRight, GraduationCap, Mail, Phone, X } from 'lucide-react';
+import { ArrowUpRight, Mail, Phone, X } from 'lucide-react';
 import { coreTeam } from '@/lib/data/team';
 import { useReducedMotion } from '@/lib/hooks/useReducedMotion';
 
@@ -12,23 +12,41 @@ type Member = (typeof coreTeam)[number];
 /**
  * Home "Core Team" section.
  *
- * A tight, editorial roster of the six students who run the cell:
+ * A refined, editorial roster of the six students who run the cell:
  *   - Quiet gold eyebrow + a single display heading ("The Core Team 2026-27")
- *   - A refined portrait-card grid (1 / 2 / 3 columns) with real photos,
- *     name, role, course, phone and email on each card
+ *   - A medium, modern portrait-card grid (1 / 2 / 3 columns): a tall portrait
+ *     photo on top, then the name (font-display) and a gold mono role kicker.
+ *     No course, phone, or email on the card face.
  *   - Clicking a card opens an accessible dialog with the larger portrait,
- *     full bio, and live mailto / tel links
+ *     full bio, and live mailto / tel links (course omitted here too)
  *   - A quiet footer link through to the full /team page
  *
  * The faculty convener is deliberately NOT rendered here — he is featured once,
  * in the homepage LeadershipDesks section. This strip is student leadership only.
  *
  * Portraits load eagerly (this section is deferred-mounted, so lazy loading
- * never fires) and use object-top so heads are never cropped. On image error a
- * gold monogram disc stands in, so a card never renders as a broken frame.
- * Motion is a subtle whileInView rise, gated on reduced motion and always
- * resolving to fully visible content.
+ * never fires). Framing is tuned per member via a vertical object-position
+ * lookup: most faces sit high in the frame, but two members photograph low with
+ * wall above, so they use a lower crop. On image error a gold monogram disc
+ * stands in, so a card never renders as a broken frame. Motion is a subtle
+ * whileInView rise, gated on reduced motion and always resolving to fully
+ * visible content.
  */
+
+/**
+ * Per-member vertical crop. Most portraits frame well showing the upper area,
+ * but `shiv-chopra` and `gurbani-chandok` have faces low in the frame (wall
+ * above) that a top crop would cut, so they show the lower portion instead.
+ */
+const OBJECT_POSITION: Record<string, string> = {
+  'shiv-chopra': 'center 78%',
+  'gurbani-chandok': 'center 78%',
+};
+const DEFAULT_OBJECT_POSITION = 'center 22%';
+
+function objectPositionFor(id: string): string {
+  return OBJECT_POSITION[id] ?? DEFAULT_OBJECT_POSITION;
+}
 
 /** Derive up-to-two-letter initials from a display name. */
 function initialsFromName(name: string): string {
@@ -46,18 +64,18 @@ interface PortraitProps {
   src: string;
   alt: string;
   initials: string;
-  rounded?: string;
+  objectPosition: string;
 }
 
 /**
  * Portrait that degrades to a gold monogram disc on load failure.
  * Eager loading (never lazy) because this section is deferred-mounted.
  */
-function Portrait({ src, alt, initials, rounded }: PortraitProps) {
+function Portrait({ src, alt, initials, objectPosition }: PortraitProps) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className={`relative h-full w-full overflow-hidden bg-bg-2 ${rounded ?? ''}`}>
+    <div className="relative h-full w-full overflow-hidden bg-bg-2">
       {failed || !src ? (
         <div
           className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gold-soft to-bg-2"
@@ -80,48 +98,11 @@ function Portrait({ src, alt, initials, rounded }: PortraitProps) {
           loading="eager"
           decoding="async"
           onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-[600ms] ease-out group-hover/card:scale-[1.03]"
+          style={{ objectPosition }}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[600ms] ease-out group-hover/card:scale-[1.04]"
         />
       )}
     </div>
-  );
-}
-
-/** Compact round headshot for the roster cards, with a monogram fallback. */
-function RoundAvatar({
-  src,
-  alt,
-  initials,
-  className,
-}: {
-  src: string;
-  alt: string;
-  initials: string;
-  className?: string;
-}) {
-  const [failed, setFailed] = useState(false);
-  if (failed || !src) {
-    return (
-      <div
-        role="img"
-        aria-label={alt}
-        className={`flex items-center justify-center bg-gradient-to-br from-gold-soft to-bg-2 ${className ?? ''}`}
-      >
-        <span className="select-none font-display text-[0.95rem] font-bold tracking-tight text-gold">
-          {initials}
-        </span>
-      </div>
-    );
-  }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      loading="eager"
-      decoding="async"
-      onError={() => setFailed(true)}
-      className={`object-cover object-top ${className ?? ''}`}
-    />
   );
 }
 
@@ -175,7 +156,7 @@ function MemberDialog({ member, onClose }: { member: Member; onClose: () => void
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={reduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
         transition={{ duration: reduced ? 0.15 : 0.32, ease: EASE }}
-        className="glass-strong relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl outline-none sm:rounded-2xl md:flex-row"
+        className="group/card glass-strong relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl outline-none sm:rounded-2xl md:flex-row"
       >
         {/* Close button */}
         <button
@@ -193,6 +174,7 @@ function MemberDialog({ member, onClose }: { member: Member; onClose: () => void
             src={member.photoPath}
             alt={`Portrait of ${member.name}`}
             initials={initials}
+            objectPosition={objectPositionFor(member.id)}
           />
         </div>
 
@@ -208,11 +190,6 @@ function MemberDialog({ member, onClose }: { member: Member; onClose: () => void
           </h3>
 
           <span className="mt-3 block h-px w-10 bg-gold" aria-hidden="true" />
-
-          <div className="mt-4 flex items-center gap-2 text-[13.5px] text-ink-2">
-            <GraduationCap size={15} strokeWidth={1.75} className="flex-shrink-0 text-gold" />
-            <span>{member.course}</span>
-          </div>
 
           <p className="mt-5 text-[14px] leading-relaxed text-ink-2">{member.bio}</p>
 
@@ -266,8 +243,8 @@ export function HomeTeamStrip() {
           </motion.h2>
         </div>
 
-        {/* Core team — compact roster cards */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Core team — portrait cards */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {coreTeam.map((member, i) => {
             const initials = member.initials || initialsFromName(member.name);
             return (
@@ -277,30 +254,42 @@ export function HomeTeamStrip() {
                   onClick={() => setActive(member)}
                   aria-label={`Open profile of ${member.name}, ${member.role}`}
                   aria-haspopup="dialog"
-                  className="group/card glass flex w-full items-center gap-4 p-3.5 text-left transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg sm:p-4"
+                  className="group/card glass block w-full overflow-hidden text-left transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-soft-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
-                  <RoundAvatar
-                    src={member.photoPath}
-                    alt={`Portrait of ${member.name}`}
-                    initials={initials}
-                    className="h-16 w-16 shrink-0 rounded-full ring-1 ring-line"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <h3
-                      className="truncate font-display text-[15px] font-semibold leading-tight tracking-tight text-ink"
-                      style={{ hyphens: 'none' }}
-                    >
-                      {member.name}
-                    </h3>
-                    <p className="mt-0.5 truncate font-mono text-[11px] uppercase tracking-[0.08em] text-gold">
-                      {member.role}
-                    </p>
+                  {/* Portrait */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2">
+                    <Portrait
+                      src={member.photoPath}
+                      alt={`Portrait of ${member.name}`}
+                      initials={initials}
+                      objectPosition={objectPositionFor(member.id)}
+                    />
+                    {/* Soft ink scrim at the base for depth and legibility */}
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/25 to-transparent"
+                      aria-hidden="true"
+                    />
                   </div>
-                  <ArrowUpRight
-                    size={16}
-                    strokeWidth={2}
-                    className="ml-1 shrink-0 text-ink-3 transition-all duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-accent"
-                  />
+
+                  {/* Name + role */}
+                  <div className="flex items-start justify-between gap-3 p-5">
+                    <div className="min-w-0">
+                      <h3
+                        className="font-display text-[17px] font-semibold leading-snug tracking-tight text-ink"
+                        style={{ hyphens: 'none' }}
+                      >
+                        {member.name}
+                      </h3>
+                      <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-gold">
+                        {member.role}
+                      </p>
+                    </div>
+                    <ArrowUpRight
+                      size={17}
+                      strokeWidth={2}
+                      className="mt-0.5 shrink-0 text-ink-3 transition-all duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-accent"
+                    />
+                  </div>
                 </button>
               </motion.div>
             );

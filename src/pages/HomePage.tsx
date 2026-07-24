@@ -158,10 +158,10 @@ export function HomePage() {
               placement@svc.ac.in
             </a>
             <Link
-              to="/partnerships"
+              to="/recruiters"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-line text-ink hover:border-accent hover:text-accent transition-colors"
             >
-              Partner with us
+              Recruit with us
             </Link>
           </div>
         </div>

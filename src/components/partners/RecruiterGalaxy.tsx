@@ -303,7 +303,7 @@ export function RecruiterGalaxy() {
               </dl>
             </div>
 
-            {/* CTAs */}
+            {/* CTA */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <a
                 href="#interest"
@@ -312,12 +312,6 @@ export function RecruiterGalaxy() {
                 Share a hiring brief
                 <span aria-hidden="true">→</span>
               </a>
-              <Link
-                to="/recruiters/dashboard"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/25 text-white/85 font-medium min-h-[44px] hover:border-white/60 hover:text-white transition-colors"
-              >
-                Recruiter dashboard
-              </Link>
             </div>
           </div>
 
@@ -373,7 +367,7 @@ export function RecruiterGalaxy() {
         </div>
 
         <p className="mt-10 md:mt-12 font-mono text-[11px] uppercase tracking-[0.16em] text-white/40 max-w-2xl text-pretty">
-          A selection of firms that have hired at SVC. The full directory lives in the recruiter dashboard.
+          A selection of firms that have hired at Sri Venkateswara College across recent cycles.
         </p>
       </div>
 

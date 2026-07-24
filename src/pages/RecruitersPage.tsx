@@ -111,18 +111,6 @@ export function RecruitersPage() {
           <RecruiterInterestForm />
         </div>
       </section>
-
-      {/* Partner link */}
-      <section className="py-10 border-t border-line">
-        <div className="container-svc text-center">
-          <Link
-            to="/recruiters/dashboard"
-            className="text-sm text-accent hover:text-ink transition-colors"
-          >
-            Already a partner? Open the recruiter dashboard →
-          </Link>
-        </div>
-      </section>
     </>
   );
 }

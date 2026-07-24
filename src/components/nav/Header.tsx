@@ -46,11 +46,6 @@ const navItems: NavGroup[] = [
     to: '/recruiters',
     label: 'Recruiters',
     prominent: true,
-    children: [
-      { to: '/recruiters', label: 'Recruiter desk', hint: 'Process, past recruiters, express interest' },
-      { to: '/partnerships', label: 'Partnerships', hint: 'Longer-term engagement with the cell' },
-      { to: '/recruiters/dashboard', label: 'Partner dashboard', hint: 'For firms already in a cycle' },
-    ],
   },
   {
     to: '/students/portal',

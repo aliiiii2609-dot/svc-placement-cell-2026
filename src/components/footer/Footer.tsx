@@ -96,7 +96,6 @@ export function Footer() {
                   <span aria-hidden="true" className="text-[10px]">↗</span>
                 </a>
               </li>
-              <li><Link className="hover:text-accent transition-colors" to="/partnerships">Partnerships</Link></li>
               <li><Link className="hover:text-accent transition-colors" to="/rankings-press">Rankings &amp; Press</Link></li>
               <li><Link className="hover:text-accent transition-colors" to="/resources">Resources</Link></li>
               <li><Link className="hover:text-accent transition-colors" to="/privacy">Privacy</Link></li>

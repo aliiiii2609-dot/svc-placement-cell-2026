@@ -79,11 +79,12 @@ export interface SocietyEntry {
 export const studentSocieties: SocietyEntry[] = [
   // Academic
   { name: 'Commerce Association',    shortName: 'CA',    category: 'Academic' },
-  { name: 'Economics & Debating Society', shortName: 'EDS', category: 'Academic' },
+  { name: 'Economics Society',       shortName: 'Eco Soc', category: 'Academic' },
+  { name: 'Debating Society',        shortName: 'Debating', category: 'Academic' },
   { name: 'The IMPACT Project',      shortName: 'IMPACT',category: 'Academic' },
   { name: 'The Blue Chip',           shortName: 'TBC',   category: 'Academic' },
   { name: '180 Degrees Consulting',  shortName: '180DC', category: 'Academic', domain: '180dc.org' },
-  { name: 'Indian Finance and Securities Association', shortName: 'IFSA', category: 'Academic' },
+  { name: 'International Finance Student Association', shortName: 'IFSA', category: 'Academic' },
 
   // Cultural
   { name: 'Fine Arts Association',   shortName: 'FAA',   category: 'Cultural' },

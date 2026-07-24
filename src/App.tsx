@@ -25,7 +25,6 @@ const AlumniDetailPage = lazyWithRetry(() => import('@/pages/AlumniDetailPage').
 const CollegePage = lazyWithRetry(() => import('@/pages/CollegePage').then((m) => ({ default: m.CollegePage })));
 const TeamPage = lazyWithRetry(() => import('@/pages/TeamPage').then((m) => ({ default: m.TeamPage })));
 const RecruitersPage = lazyWithRetry(() => import('@/pages/RecruitersPage').then((m) => ({ default: m.RecruitersPage })));
-const RecruiterDashboardPage = lazyWithRetry(() => import('@/pages/RecruiterDashboardPage').then((m) => ({ default: m.RecruiterDashboardPage })));
 const StudentPortalPage = lazyWithRetry(() => import('@/pages/StudentPortalPage').then((m) => ({ default: m.StudentPortalPage })));
 const EventsPage = lazyWithRetry(() => import('@/pages/EventsPage').then((m) => ({ default: m.EventsPage })));
 const NewsPage = lazyWithRetry(() => import('@/pages/NewsPage').then((m) => ({ default: m.NewsPage })));
@@ -33,7 +32,6 @@ const ResourcesPage = lazyWithRetry(() => import('@/pages/ResourcesPage').then((
 const CompanyProfilePage = lazyWithRetry(() => import('@/pages/CompanyProfilePage').then((m) => ({ default: m.CompanyProfilePage })));
 const FaqPage = lazyWithRetry(() => import('@/pages/FaqPage').then((m) => ({ default: m.FaqPage })));
 const RankingsPressPage = lazyWithRetry(() => import('@/pages/RankingsPressPage').then((m) => ({ default: m.RankingsPressPage })));
-const PartnershipsPage = lazyWithRetry(() => import('@/pages/PartnershipsPage').then((m) => ({ default: m.PartnershipsPage })));
 const PrivacyPage = lazyWithRetry(() => import('@/pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
 const TermsPage = lazyWithRetry(() => import('@/pages/TermsPage').then((m) => ({ default: m.TermsPage })));
 const AdminPage = lazyWithRetry(() => import('@/pages/AdminPage').then((m) => ({ default: m.AdminPage })));
@@ -176,7 +174,6 @@ export default function App() {
               <Route path="/college" element={<CollegePage />} />
               <Route path="/team" element={<TeamPage />} />
               <Route path="/recruiters" element={<RecruitersPage />} />
-              <Route path="/recruiters/dashboard" element={<RecruiterDashboardPage />} />
               <Route path="/students/portal" element={<StudentPortalPage />} />
               <Route path="/events" element={<EventsPage />} />
               <Route path="/news" element={<NewsPage />} />
@@ -184,7 +181,6 @@ export default function App() {
               <Route path="/companies/:slug" element={<CompanyProfilePage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/rankings-press" element={<RankingsPressPage />} />
-              <Route path="/partnerships" element={<PartnershipsPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/admin" element={<AdminPage />} />
