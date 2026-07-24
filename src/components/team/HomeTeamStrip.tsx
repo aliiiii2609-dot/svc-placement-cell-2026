@@ -295,10 +295,6 @@ export function HomeTeamStrip() {
                     <p className="mt-0.5 truncate font-mono text-[11px] uppercase tracking-[0.08em] text-gold">
                       {member.role}
                     </p>
-                    <div className="mt-1 flex items-center gap-1.5 text-[12px] text-ink-3">
-                      <GraduationCap size={12} strokeWidth={1.75} className="shrink-0 text-gold/70" />
-                      <span className="truncate">{member.course}</span>
-                    </div>
                   </div>
                   <ArrowUpRight
                     size={16}

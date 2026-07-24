@@ -418,18 +418,14 @@ export function CouncilCoordinators() {
           transition={{ duration: 0.6, ease: EASE }}
           className="mb-12 max-w-2xl md:mb-16"
         >
-          <div className="eyebrow mb-4">Council &amp; Coordinators</div>
+          <div className="eyebrow mb-4">The Placement Cell</div>
           <h2
             id="council-coordinators-heading"
             className="display-italic font-display font-bold leading-[1.05] tracking-tight text-ink"
             style={{ fontSize: 'clamp(2rem, 4.6vw, 3.6rem)' }}
           >
-            The team behind the <em>team.</em>
+            The Council and <em>Placement Coordinators.</em>
           </h2>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-2">
-            Thirteen department heads and more than thirty coordinators keep every
-            drive, event, and recruiter conversation moving.
-          </p>
         </motion.div>
 
         {/* Council — department glass cards. */}
