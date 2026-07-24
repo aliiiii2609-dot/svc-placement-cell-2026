@@ -58,7 +58,7 @@ import { AudienceCards } from '@/components/sections/AudienceCards';
 
 const LeadershipDesks = lazyWithRetry(() => import('@/components/sections/LeadershipDesks').then((m) => ({ default: m.LeadershipDesks })));
 const HomeTeamStrip = lazyWithRetry(() => import('@/components/team/HomeTeamStrip').then((m) => ({ default: m.HomeTeamStrip })));
-const CouncilCoordinators = lazyWithRetry(() => import('@/components/team/CouncilCoordinators').then((m) => ({ default: m.CouncilCoordinators })));
+const CouncilOrbit = lazyWithRetry(() => import('@/components/council/CouncilOrbit').then((m) => ({ default: m.CouncilOrbit })));
 
 /** Chapter targets for the sticky slider. Ids must match the section ids below. */
 const SECTIONS: SliderSection[] = [
@@ -124,7 +124,7 @@ export function HomePage() {
 
       <section id="council" className="scroll-mt-[120px] border-t border-line">
         <DeferLazy minHeight={500}>
-          <CouncilCoordinators />
+          <CouncilOrbit />
         </DeferLazy>
       </section>
 

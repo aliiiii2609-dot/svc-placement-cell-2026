@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 import { lazyWithRetry } from '@/lib/utils/lazyWithRetry';
 import { DeferLazy } from '@/components/utils/Defer';
-import { CouncilCoordinators } from '@/components/team/CouncilCoordinators';
+import { CouncilOrbit } from '@/components/council/CouncilOrbit';
 import { coreTeam, convener, principal } from '@/lib/data/team';
 import type { CoreTeamMember, ConvenerProfile } from '@/types';
 
@@ -192,7 +192,7 @@ export function TeamPage() {
       </section>
 
       {/* Council + Coordinators — real headshots, grouped council + marquee, modals */}
-      <CouncilCoordinators />
+      <CouncilOrbit />
 
       {/* Archive photographs of the cohort */}
       <DeferLazy minHeight={560}>

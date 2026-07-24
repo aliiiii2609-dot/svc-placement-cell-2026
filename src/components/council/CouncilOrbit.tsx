@@ -37,25 +37,58 @@ function avatarInitials(name: string): string {
 
 /**
  * Deterministic brand-palette gradient for a member id.
- * Cycles through the Stripe ribbon palette (purple/violet/rose/peach/azure/mint)
- * so adjacent pills don't repeat colors.
+ * Navy + gold only (no off-brand pastels): the monogram fallback that shows
+ * when a headshot is missing still reads as part of the navy/gold system.
  */
 function avatarGradient(id: string): string {
   const palettes = [
-    'linear-gradient(135deg, #1e4e8c 0%, #b8893b 100%)', // purple
-    'linear-gradient(135deg, #b8893b 0%, #b8893b 100%)', // violet → rose
-    'linear-gradient(135deg, #b8893b 0%, #d4a857 100%)', // rose → peach
-    'linear-gradient(135deg, #1e4e8c 0%, #1e4e8c 100%)', // azure → purple
-    'linear-gradient(135deg, #7fd9c1 0%, #1e4e8c 100%)', // mint → azure
-    'linear-gradient(135deg, #d4a857 0%, #b8893b 100%)', // peach → rose
-    'linear-gradient(135deg, #3b1b6f 0%, #1e4e8c 100%)', // deep violet → purple
-    'linear-gradient(135deg, #1f4e3d 0%, #7fd9c1 100%)', // forest → mint
+    'linear-gradient(135deg, #1e4e8c 0%, #b8893b 100%)', // navy → gold
+    'linear-gradient(135deg, #b8893b 0%, #d4a857 100%)', // gold → bright gold
+    'linear-gradient(135deg, #d4a857 0%, #1e4e8c 100%)', // bright gold → navy
+    'linear-gradient(135deg, #1e4e8c 0%, #0a2540 100%)', // navy → deep navy
+    'linear-gradient(135deg, #0a2540 0%, #b8893b 100%)', // deep navy → gold
+    'linear-gradient(135deg, #d4a857 0%, #b8893b 100%)', // bright gold → gold
+    'linear-gradient(135deg, #0a2540 0%, #1e4e8c 100%)', // deep navy → navy
+    'linear-gradient(135deg, #b8893b 0%, #0a2540 100%)', // gold → deep navy
   ];
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
     hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
   }
   return palettes[hash % palettes.length];
+}
+
+/**
+ * Photo avatar with monogram fallback. Renders the person's headshot filling
+ * the circular container; on load failure it falls back to the deterministic
+ * gradient background (owned by the parent container) + initials. Each instance
+ * tracks its own load state. No lazy loading: this section is deferred-mounted,
+ * where lazy images fail to trigger.
+ */
+function MemberAvatar({
+  member, fontSize, letterSpacing,
+}: { member: Member; fontSize: string; letterSpacing: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <span
+        className="relative z-10 font-display font-bold text-white tracking-tight"
+        style={{ fontSize, letterSpacing }}
+      >
+        {avatarInitials(member.name)}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={`/images/people/${member.id}.jpg`}
+      alt={member.name}
+      onError={() => setFailed(true)}
+      className="absolute inset-0 w-full h-full object-cover object-top"
+    />
+  );
 }
 
 type Member = {
@@ -97,8 +130,6 @@ function chunkIntoRows(arr: Member[], rows: number): Member[][] {
 function MemberPill({
   member, onClick, reduced,
 }: { member: Member; onClick: () => void; reduced: boolean }) {
-  const initials = member.name.split(' ').filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
-
   return (
     <motion.button
       layoutId={reduced ? undefined : `pill-${member.id}`}
@@ -129,12 +160,7 @@ function MemberPill({
           background: avatarGradient(member.id),
         }}
       >
-        <span
-          className="relative z-10 font-display font-bold text-white tracking-tight"
-          style={{ fontSize: '20px', letterSpacing: '-0.02em' }}
-        >
-          {avatarInitials(member.name)}
-        </span>
+        <MemberAvatar member={member} fontSize="20px" letterSpacing="-0.02em" />
       </motion.div>
 
       <div className="text-left leading-tight flex flex-col justify-center pr-1">
@@ -157,7 +183,6 @@ function MemberPill({
 }
 
 function MemberDetail({ member, onClose }: { member: Member; onClose: () => void }) {
-  const initials = member.name.split(' ').filter(Boolean).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
   const charter =
     member.department && (member.department as keyof typeof departmentCharters) in departmentCharters
       ? departmentCharters[member.department as keyof typeof departmentCharters].charter
@@ -192,15 +217,10 @@ function MemberDetail({ member, onClose }: { member: Member; onClose: () => void
         <div className="p-7 flex flex-col items-center text-center">
           <motion.div
             layoutId={`avatar-${member.id}`}
-            className="w-24 h-24 rounded-full overflow-hidden border-[4px] border-bg shadow-soft mb-5 flex items-center justify-center"
+            className="w-24 h-24 rounded-full overflow-hidden border-[4px] border-bg shadow-soft mb-5 flex items-center justify-center relative"
             style={{ background: avatarGradient(member.id) }}
           >
-            <span
-              className="font-display font-bold text-white tracking-tight"
-              style={{ fontSize: '34px', letterSpacing: '-0.03em' }}
-            >
-              {avatarInitials(member.name)}
-            </span>
+            <MemberAvatar member={member} fontSize="34px" letterSpacing="-0.03em" />
           </motion.div>
 
           <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-accent mb-2">
@@ -214,7 +234,6 @@ function MemberDetail({ member, onClose }: { member: Member; onClose: () => void
 
           <motion.div layoutId={`course-${member.id}`} className="text-sm text-ink-3 mb-6">
             {member.course}
-            {member.year && ` · Year ${member.year}`}
           </motion.div>
 
           {charter && (
@@ -292,9 +311,9 @@ function CouncilParticles({ count = 28 }: { count?: number }) {
   const blobs = [
     { x: 8, y: 22, size: 220, color: 'rgba(30, 78, 140, 0.18)', dur: 22 },
     { x: 72, y: 18, size: 260, color: 'rgba(184, 137, 59, 0.16)', dur: 26 },
-    { x: 40, y: 60, size: 240, color: 'rgba(255, 107, 157, 0.14)', dur: 30 },
-    { x: 86, y: 70, size: 200, color: 'rgba(107, 166, 255, 0.16)', dur: 28 },
-    { x: 18, y: 82, size: 180, color: 'rgba(127, 217, 193, 0.14)', dur: 24 },
+    { x: 40, y: 60, size: 240, color: 'rgba(184, 137, 59, 0.14)', dur: 30 },
+    { x: 86, y: 70, size: 200, color: 'rgba(30, 78, 140, 0.16)', dur: 28 },
+    { x: 18, y: 82, size: 180, color: 'rgba(212, 168, 87, 0.14)', dur: 24 },
   ];
 
   return (
@@ -378,12 +397,12 @@ export function CouncilOrbit() {
 
   return (
     <>
-      <section className="section-spacing relative overflow-hidden" id="council">
+      <section className="section-spacing relative overflow-hidden" id="council-heads">
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse at 30% 20%, rgba(30, 78, 140, 0.12), transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(255, 107, 157, 0.08), transparent 60%)',
+              'radial-gradient(ellipse at 30% 20%, rgba(30, 78, 140, 0.12), transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(184, 137, 59, 0.08), transparent 60%)',
           }}
           aria-hidden="true"
         />
