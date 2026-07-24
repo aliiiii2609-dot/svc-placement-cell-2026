@@ -103,17 +103,18 @@ export function Hero() {
         className="relative w-full min-h-[640px] sm:min-h-[600px] lg:min-h-0 overflow-hidden"
         style={{ aspectRatio: '770 / 434', backgroundColor: NAVY }}
       >
-        {/* The building — bright and clearly visible, framed with object-cover and a
-            focal point tuned so the facade and sign read well at both wide and tall
-            box shapes. Slow ken-burns drift; static when motion is reduced. */}
+        {/* The building — treated as a faded, editorial backdrop (echoing the
+            guidelines cover): softly desaturated and low-contrast so it recedes,
+            with the focal point tuned high so the Indian flag and the college
+            sign sit in frame. Slow ken-burns drift; static when motion is reduced. */}
         <motion.img
           src="/images/campus/svc-building-cover.jpg"
-          alt="Sri Venkateswara College main building"
+          alt="Sri Venkateswara College main building with the Indian flag"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           style={{
-            objectPosition: 'center 26%',
-            filter: 'saturate(1.02) brightness(0.9) contrast(1.02)',
-            transformOrigin: '38% 38%',
+            objectPosition: 'center 22%',
+            filter: 'saturate(0.72) brightness(0.86) contrast(0.94)',
+            transformOrigin: '46% 26%',
           }}
           loading="eager"
           initial={{ scale: reduce ? 1.04 : 1.03 }}
@@ -125,13 +126,32 @@ export function Hero() {
           }
         />
 
-        {/* Left-heavy scrim: deep where the text sits, clearing to the right so the
-            building stays clearly visible; a faint warm rise on the far edge. */}
+        {/* Uniform navy veil: fades the whole photo evenly so it reads as a soft,
+            receding cover rather than a sharp photograph. */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'rgba(9,23,46,0.34)' }}
+          aria-hidden="true"
+        />
+
+        {/* Vignette focused high-centre: keeps the flag and sign the clearest point
+            while the frame's edges fall away, the way a cover draws the eye inward. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(100deg, rgba(6,18,38,0.94) 0%, rgba(7,21,43,0.80) 26%, rgba(8,25,49,0.44) 52%, rgba(8,25,49,0.16) 78%, rgba(8,25,49,0.34) 100%)',
+              'radial-gradient(120% 115% at 48% 24%, transparent 40%, rgba(6,17,36,0.55) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Left-heavy scrim: deep where the text sits, clearing to the right so the
+            faded building and flag stay visible; a faint warm rise on the far edge. */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(100deg, rgba(6,18,38,0.90) 0%, rgba(7,21,43,0.66) 28%, rgba(8,25,49,0.24) 58%, transparent 86%)',
           }}
           aria-hidden="true"
         />
