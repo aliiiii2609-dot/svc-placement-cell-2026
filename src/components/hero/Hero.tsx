@@ -113,7 +113,7 @@ export function Hero() {
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           style={{
             objectPosition: 'center 22%',
-            filter: 'saturate(0.72) brightness(0.86) contrast(0.94)',
+            filter: 'saturate(0.5) brightness(0.8) contrast(0.9)',
             transformOrigin: '46% 26%',
           }}
           loading="eager"
@@ -130,7 +130,7 @@ export function Hero() {
             receding cover rather than a sharp photograph. */}
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: 'rgba(9,23,46,0.34)' }}
+          style={{ background: 'rgba(9,23,46,0.48)' }}
           aria-hidden="true"
         />
 
@@ -202,18 +202,12 @@ export function Hero() {
         <div className="absolute inset-0 z-10 flex items-center">
           <div className="container-svc w-full">
             <div className="max-w-2xl">
-              {/* Label with a gold tick that draws in before it */}
-              <motion.div {...reveal(0.12)} className="mb-6 flex items-center gap-3">
-                <motion.span
-                  className="block h-px w-10 origin-left bg-ribbon-gold will-change-transform"
-                  initial={reduce ? false : { scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={reduce ? undefined : { delay: 0.28, duration: 0.7, ease: EASE }}
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.22em] text-ribbon-gold">
-                  The Placement Cell · Sri Venkateswara College
-                </span>
+              {/* Gold label */}
+              <motion.div
+                {...reveal(0.12)}
+                className="mb-6 font-mono text-[11px] md:text-[12px] uppercase tracking-[0.22em] text-ribbon-gold"
+              >
+                The Placement Cell · Sri Venkateswara College
               </motion.div>
 
               {/* Headline — serif editorial, one gold italic accent word */}
