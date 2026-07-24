@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils/cn';
 const audiences: Array<{ id: FaqAudience; label: string }> = [
   { id: 'recruiters', label: 'Recruiters' },
   { id: 'students', label: 'Students' },
+  { id: 'policy', label: 'Placement Policy' },
+  { id: 'vetting', label: 'CV Vetting' },
   { id: 'alumni', label: 'Alumni' },
 ];
 
@@ -31,7 +33,8 @@ export function FaqAccordion() {
             Frequently asked questions.
           </h2>
           <p className="text-ink-2 text-lg">
-            Recruiters, students, and alumni.
+            Recruiters, students, and alumni, plus the placement policy and CV
+            vetting process in plain language.
           </p>
         </motion.div>
 

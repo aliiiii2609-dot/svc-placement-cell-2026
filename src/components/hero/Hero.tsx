@@ -14,8 +14,8 @@ import { cn } from '@/lib/utils/cn';
  * lower left) keeps the left-aligned copy at strong contrast while the building
  * stays clearly visible on the right. A thin inset hairline frames the whole band.
  *
- * Content is minimal and left aligned: a gold label, a serif editorial headline with
- * one gold italic accent word, and the two CTAs.
+ * Content is minimal and left aligned: a gold label, a clean sans headline with
+ * one gold accent word, and the two CTAs.
  *
  * Below the photo band: the rankings constellation on its own paper background.
  *
@@ -63,7 +63,7 @@ function MaskedHeadline({
           <motion.span
             className={cn(
               'inline-block will-change-transform',
-              piece.accent && 'italic text-ribbon-gold',
+              piece.accent && 'text-ribbon-gold',
             )}
             initial={reduce ? { y: '0%' } : { y: '118%' }}
             animate={{ y: '0%' }}
@@ -111,9 +111,9 @@ export function Hero() {
           alt="Sri Venkateswara College main building"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           style={{
-            objectPosition: 'center 42%',
+            objectPosition: 'center 26%',
             filter: 'saturate(1.02) brightness(0.9) contrast(1.02)',
-            transformOrigin: '38% 45%',
+            transformOrigin: '38% 38%',
           }}
           loading="eager"
           initial={{ scale: reduce ? 1.04 : 1.03 }}
@@ -198,9 +198,9 @@ export function Hero() {
 
               {/* Headline — serif editorial, one gold italic accent word */}
               <h1
-                className="font-serif font-normal text-white leading-[1.04] tracking-[-0.005em]"
+                className="font-display font-semibold text-white leading-[1.06] tracking-[-0.02em]"
                 style={{
-                  fontSize: 'clamp(2.4rem, 5.2vw, 4.35rem)',
+                  fontSize: 'clamp(2.1rem, 4.6vw, 3.7rem)',
                   textShadow: '0 1px 30px rgba(3,12,28,0.55)',
                 }}
               >

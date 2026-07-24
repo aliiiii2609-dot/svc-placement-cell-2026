@@ -245,7 +245,7 @@ export interface Resource {
   filePath?: string;
 }
 
-export type FaqAudience = 'recruiters' | 'students' | 'alumni';
+export type FaqAudience = 'recruiters' | 'students' | 'policy' | 'vetting' | 'alumni';
 
 export interface FaqEntry {
   question: string;
