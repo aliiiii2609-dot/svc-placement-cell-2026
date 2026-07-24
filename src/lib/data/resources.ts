@@ -6,7 +6,7 @@ export const resources: Resource[] = [
     title: 'Placement Policy 2026-27',
     description: 'The official placement and internship policy for the current cycle: eligibility, the one-offer rule, application conduct, and blacklisting norms. Required reading before you register.',
     category: 'CV Template',
-    filePath: '/Placement-Policy-SVC-2026-27.pdf',
+    filePath: 'https://drive.google.com/file/d/1tHH1_iHY2V52_9kwROlxJQM0ffEBaFRh/view?usp=sharing',
   },
   {
     id: 'recruitment-brochure-2026-27',
@@ -20,7 +20,7 @@ export const resources: Resource[] = [
     title: 'CV Vetting Guidelines 2026-27',
     description: 'The cell\'s official CV vetting guidelines for the current cycle: the accepted format, what recruiters look for in the first 15 seconds, common mistakes, and how to rewrite weak lines.',
     category: 'CV Template',
-    filePath: '/CV-Vetting-Guidelines-SVC-2026-27.pdf',
+    filePath: 'https://drive.google.com/file/d/1H-rCQ7_PpgNrSK5shK-LIuDpNcAFALvJ/view?usp=sharing',
   },
   {
     id: 'cover-letter-templates',

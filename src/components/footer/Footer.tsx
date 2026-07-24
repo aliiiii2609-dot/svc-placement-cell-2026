@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, Facebook, Volume2, VolumeX, Download } from 'lucide-react';
+import { Instagram, Linkedin, Facebook, Volume2, VolumeX, Download, ArrowUpRight } from 'lucide-react';
 import { sound } from '@/lib/audio/sound-controller';
 import { cn } from '@/lib/utils/cn';
 
@@ -117,11 +117,23 @@ export function Footer() {
               <li>
                 <a
                   className="hover:text-accent transition-colors inline-flex items-center gap-1.5"
-                  href="/Placement-Policy-SVC-2026-27.pdf"
-                  download="Placement Policy SVC 2026-27.pdf"
+                  href="https://drive.google.com/file/d/1H-rCQ7_PpgNrSK5shK-LIuDpNcAFALvJ/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  CV Vetting Guidelines
+                  <ArrowUpRight size={13} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="hover:text-accent transition-colors inline-flex items-center gap-1.5"
+                  href="https://drive.google.com/file/d/1tHH1_iHY2V52_9kwROlxJQM0ffEBaFRh/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Placement Policy
-                  <Download size={13} aria-hidden="true" />
+                  <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
               </li>
             </ul>

@@ -36,10 +36,8 @@ export interface NavGroup {
 const SVC_OFFICIAL_URL = 'https://www.svc.ac.in/';
 const BROCHURE_HREF = '/Recruitment-Brochure-SVC-2026-27.pdf';
 const BROCHURE_FILE = 'Recruitment Brochure SVC 2026-27.pdf';
-const POLICY_HREF = '/Placement-Policy-SVC-2026-27.pdf';
-const POLICY_FILE = 'Placement Policy SVC 2026-27.pdf';
-const CV_VETTING_HREF = '/CV-Vetting-Guidelines-SVC-2026-27.pdf';
-const CV_VETTING_FILE = 'CV Vetting Guidelines SVC 2026-27.pdf';
+const POLICY_HREF = 'https://drive.google.com/file/d/1tHH1_iHY2V52_9kwROlxJQM0ffEBaFRh/view?usp=sharing';
+const CV_VETTING_HREF = 'https://drive.google.com/file/d/1H-rCQ7_PpgNrSK5shK-LIuDpNcAFALvJ/view?usp=sharing';
 
 const navItems: NavGroup[] = [
   { to: '/', label: 'Home', end: true },
@@ -55,8 +53,8 @@ const navItems: NavGroup[] = [
     children: [
       { to: '/students/portal', label: 'Student portal', hint: 'Start here' },
       { to: '/resources', label: 'Resources', hint: 'Guides, formats, prep material' },
-      { href: CV_VETTING_HREF, download: CV_VETTING_FILE, label: 'CV vetting guidelines', hint: 'The accepted CV format (PDF)' },
-      { href: POLICY_HREF, download: POLICY_FILE, label: 'Placement policy', hint: 'Download the 2026-27 policy (PDF)' },
+      { href: CV_VETTING_HREF, external: true, label: 'CV vetting guidelines', hint: 'The accepted CV format' },
+      { href: POLICY_HREF, external: true, label: 'Placement policy', hint: 'The 2026-27 placement policy' },
     ],
   },
   {
@@ -367,8 +365,8 @@ export function Header({ onSearchOpen }: Props) {
                     <Download size={14} aria-hidden="true" />
                     Brochure
                   </a>
-                  <a href={POLICY_HREF} download={POLICY_FILE} className={cn(secondaryBtn, 'h-11 w-full')}>
-                    <Download size={14} aria-hidden="true" />
+                  <a href={POLICY_HREF} target="_blank" rel="noopener noreferrer" className={cn(secondaryBtn, 'h-11 w-full')}>
+                    <ArrowUpRight size={14} aria-hidden="true" />
                     Policy
                   </a>
                 </div>
