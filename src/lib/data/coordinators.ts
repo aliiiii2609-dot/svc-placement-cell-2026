@@ -9,7 +9,6 @@ export const coordinators: Coordinator[] = [
   { id: 'shreya-shalini', name: 'Shreya Shalini', course: 'B.A. (H) Economics', year: 'I' },
   { id: 'aditya-kumar', name: 'Aditya Kumar', course: 'B.Com (H)', year: 'I' },
   { id: 'yash-gupta', name: 'Yash Gupta', course: 'B.Com (H)', year: 'I' },
-  { id: 'suhani', name: 'Suhani', course: 'B.Com (H)', year: 'I' },
   { id: 'mayank-mishra', name: 'Mayank Mishra', course: 'B.Com (P)', year: 'I' },
   { id: 'amit-kumar', name: 'Amit Kumar', course: 'B.Com (P)', year: 'I' },
   { id: 'ajay-kashyap', name: 'Ajay Kashyap', course: 'B.Com (P)', year: 'I' },

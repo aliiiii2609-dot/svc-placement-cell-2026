@@ -23,14 +23,14 @@ export const coreTeam: CoreTeamMember[] = [
   },
   {
     id: 'mohammed-ali',
-    name: 'Muhammad Ali',
+    name: 'Mohammed Ali',
     role: 'Vice President, Placements',
     course: 'B.A. (H) English',
     year: 'III',
     bio:
       'Overseeing all placement-related engagement, ensuring smooth coordination between students and recruiting organisations.',
     email: 'ali.svcpcell@gmail.com',
-    phone: '+91 90273 89597',
+    phone: '+91 92059 32530',
     photoPath: '/images/team/mohammed-ali.jpg',
     initials: 'MA',
   },

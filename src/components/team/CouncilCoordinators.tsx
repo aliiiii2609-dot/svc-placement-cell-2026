@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { CouncilDepartment, CouncilMember, Coordinator } from '@/types';
 import { councilHeads } from '@/lib/data/council';
 import { coordinators } from '@/lib/data/coordinators';
@@ -25,6 +25,17 @@ import { cn } from '@/lib/utils/cn';
  */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * The person surfaced in the click-to-open dialog. `meta` carries the
+ * department for a council member, or the label "Coordinator".
+ */
+type SelectedPerson = {
+  id: string;
+  name: string;
+  course: string;
+  meta: string;
+};
 
 /** Fixed presentation order for the five departments. */
 const DEPARTMENT_ORDER: CouncilDepartment[] = [
@@ -95,7 +106,7 @@ function Monogram({
         alt={name}
         decoding="async"
         onError={() => setFailed(true)}
-        className="shrink-0 rounded-full object-cover shadow-soft ring-1 ring-line"
+        className="shrink-0 rounded-full object-cover object-top shadow-soft ring-1 ring-line"
         style={{ width: size, height: size }}
       />
     );
@@ -125,11 +136,13 @@ function DepartmentCard({
   members,
   index,
   reduced,
+  onSelect,
 }: {
   department: CouncilDepartment;
   members: CouncilMember[];
   index: number;
   reduced: boolean;
+  onSelect: (person: SelectedPerson) => void;
 }) {
   return (
     <motion.div
@@ -148,18 +161,36 @@ function DepartmentCard({
         </span>
       </div>
 
-      <ul className="flex flex-col gap-4">
+      <ul className="flex flex-col gap-1.5">
         {members.map((member) => (
-          <li key={member.id} className="flex items-center gap-3.5">
-            <Monogram id={member.id} name={member.name} size={42} />
-            <div className="min-w-0 leading-tight">
-              <div className="truncate font-sans text-[15px] font-medium text-ink">
-                {member.name}
+          <li key={member.id}>
+            <button
+              type="button"
+              onClick={() =>
+                onSelect({
+                  id: member.id,
+                  name: member.name,
+                  course: member.course,
+                  meta: member.department,
+                })
+              }
+              className={cn(
+                'flex w-full items-center gap-3.5 rounded-xl px-2 py-2 text-left min-h-[44px]',
+                'transition-colors duration-200 hover:bg-ink/[0.04]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+              )}
+              aria-label={`View ${member.name}`}
+            >
+              <Monogram id={member.id} name={member.name} size={42} />
+              <div className="min-w-0 leading-tight">
+                <div className="truncate font-sans text-[15px] font-medium text-ink">
+                  {member.name}
+                </div>
+                <div className="truncate font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
+                  {member.course}
+                </div>
               </div>
-              <div className="truncate font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
-                {member.course} · Year {member.year}
-              </div>
-            </div>
+            </button>
           </li>
         ))}
       </ul>
@@ -170,14 +201,31 @@ function DepartmentCard({
 // ---------------------------------------------------------------------------
 // Coordinator chip.
 // ---------------------------------------------------------------------------
-function CoordinatorChip({ coordinator }: { coordinator: Coordinator }) {
+function CoordinatorChip({
+  coordinator,
+  onSelect,
+}: {
+  coordinator: Coordinator;
+  onSelect: (person: SelectedPerson) => void;
+}) {
   return (
-    <div
+    <button
+      type="button"
+      onClick={() =>
+        onSelect({
+          id: coordinator.id,
+          name: coordinator.name,
+          course: coordinator.course,
+          meta: 'Coordinator',
+        })
+      }
+      aria-label={`View ${coordinator.name}`}
       className={cn(
-        'group/chip inline-flex shrink-0 items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5',
+        'group/chip inline-flex min-h-[44px] shrink-0 items-center gap-3 rounded-full py-1.5 pl-1.5 pr-5 text-left',
         'border border-line bg-surface shadow-soft',
         'transition-[transform,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         'hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-soft-lg',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
       )}
     >
       <Monogram id={coordinator.id} name={coordinator.name} size={38} />
@@ -186,10 +234,10 @@ function CoordinatorChip({ coordinator }: { coordinator: Coordinator }) {
           {coordinator.name}
         </div>
         <div className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.12em] text-ink-3">
-          {coordinator.course} · {coordinator.year}
+          {coordinator.course}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -202,10 +250,12 @@ function MarqueeRow({
   members,
   reverse,
   durationSeconds,
+  onSelect,
 }: {
   members: Coordinator[];
   reverse: boolean;
   durationSeconds: number;
+  onSelect: (person: SelectedPerson) => void;
 }) {
   const track = [...members, ...members];
   return (
@@ -219,10 +269,116 @@ function MarqueeRow({
         style={{ animationDuration: `${durationSeconds}s` }}
       >
         {track.map((coordinator, i) => (
-          <CoordinatorChip key={`${coordinator.id}-${i}`} coordinator={coordinator} />
+          <CoordinatorChip
+            key={`${coordinator.id}-${i}`}
+            coordinator={coordinator}
+            onSelect={onSelect}
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Person dialog — a clean modal with a larger photo, name, course, and the
+// person's role/department. Accessible: role="dialog" + aria-modal, focus moves
+// to the close button on open and restores on close, Escape and backdrop-click
+// both dismiss. Motion is gated on prefers-reduced-motion and ends visible.
+// ---------------------------------------------------------------------------
+function PersonModal({
+  person,
+  reduced,
+  onClose,
+}: {
+  person: SelectedPerson;
+  reduced: boolean;
+  onClose: () => void;
+}) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const titleId = `person-modal-title-${person.id}`;
+
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previouslyFocused?.focus?.();
+    };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
+      initial={reduced ? { opacity: 1 } : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={reduced ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.2, ease: EASE }}
+    >
+      {/* Backdrop */}
+      <button
+        type="button"
+        aria-label="Close dialog"
+        onClick={onClose}
+        className="absolute inset-0 h-full w-full cursor-default bg-ink/40 backdrop-blur-sm"
+      />
+
+      <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        initial={reduced ? false : { opacity: 0, y: 14, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={reduced ? undefined : { opacity: 0, y: 14, scale: 0.98 }}
+        transition={{ duration: 0.28, ease: EASE }}
+        className="glass-strong relative z-[1] w-full max-w-sm overflow-hidden p-7 text-center"
+      >
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className={cn(
+            'absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full text-ink-3',
+            'transition-colors duration-200 hover:bg-ink/[0.06] hover:text-ink',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+          )}
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 4l10 10M14 4L4 14" />
+          </svg>
+        </button>
+
+        <div className="flex flex-col items-center">
+          <Monogram id={person.id} name={person.name} size={148} />
+          <h3
+            id={titleId}
+            className="mt-6 font-display text-2xl font-semibold tracking-tight text-ink"
+          >
+            {person.name}
+          </h3>
+          <p className="mt-1.5 font-sans text-[15px] text-ink-2">{person.course}</p>
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-gold">
+            {person.meta}
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -231,6 +387,7 @@ function MarqueeRow({
 // ---------------------------------------------------------------------------
 export function CouncilCoordinators() {
   const reduced = useReducedMotion();
+  const [selected, setSelected] = useState<SelectedPerson | null>(null);
 
   // Split coordinators into two balanced rows for the opposing-direction effect.
   const mid = Math.ceil(coordinators.length / 2);
@@ -294,6 +451,7 @@ export function CouncilCoordinators() {
                 members={group.members}
                 index={i}
                 reduced={reduced}
+                onSelect={setSelected}
               />
             ))}
           </div>
@@ -305,9 +463,6 @@ export function CouncilCoordinators() {
             <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-gold">
               The Coordinators
             </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-3">
-              {coordinators.length} across every course
-            </span>
           </div>
         </div>
       </div>
@@ -317,16 +472,35 @@ export function CouncilCoordinators() {
         <div className="container-svc relative">
           <div className="flex flex-wrap gap-3">
             {coordinators.map((coordinator) => (
-              <CoordinatorChip key={coordinator.id} coordinator={coordinator} />
+              <CoordinatorChip
+                key={coordinator.id}
+                coordinator={coordinator}
+                onSelect={setSelected}
+              />
             ))}
           </div>
         </div>
       ) : (
         <div className="relative flex flex-col gap-3">
-          <MarqueeRow members={rowOne} reverse={false} durationSeconds={58} />
-          <MarqueeRow members={rowTwo} reverse durationSeconds={64} />
+          <MarqueeRow
+            members={rowOne}
+            reverse={false}
+            durationSeconds={58}
+            onSelect={setSelected}
+          />
+          <MarqueeRow members={rowTwo} reverse durationSeconds={64} onSelect={setSelected} />
         </div>
       )}
+
+      <AnimatePresence>
+        {selected && (
+          <PersonModal
+            person={selected}
+            reduced={reduced}
+            onClose={() => setSelected(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

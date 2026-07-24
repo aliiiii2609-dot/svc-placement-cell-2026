@@ -1,30 +1,33 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Mail } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, GraduationCap, Mail, Phone, X } from 'lucide-react';
 import { coreTeam } from '@/lib/data/team';
 import { useReducedMotion } from '@/lib/hooks/useReducedMotion';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+type Member = (typeof coreTeam)[number];
+
 /**
- * Home "Meet the team" strip.
+ * Home "Core Team" section.
  *
- * A restrained, editorial preview of the students who run the cell:
- *   - Eyebrow + display heading (one gold emphasis word) + one-line intro
- *   - The core team as a portrait-forward glass-card grid (1 / 2 / 3 columns)
+ * A tight, editorial roster of the six students who run the cell:
+ *   - Quiet gold eyebrow + a single display heading ("The Core Team 2026-27")
+ *   - A refined portrait-card grid (1 / 2 / 3 columns) with real photos,
+ *     name, role, course, phone and email on each card
+ *   - Clicking a card opens an accessible dialog with the larger portrait,
+ *     full bio, and live mailto / tel links
  *   - A quiet footer link through to the full /team page
  *
- * The faculty convener is deliberately NOT rendered here — he is featured
- * once, in the homepage LeadershipDesks section, so the home page shows him
- * a single time. This strip is student leadership only.
+ * The faculty convener is deliberately NOT rendered here — he is featured once,
+ * in the homepage LeadershipDesks section. This strip is student leadership only.
  *
- * Each card leads with a tall portrait (gold-tinted monogram fallback on
- * image error, so a card never renders as a broken frame), then name, a gold
- * mono role kicker, a short real detail from the data, and a mailto pill.
- * Hover lifts the card, breathes the portrait, and draws a gold underline.
- * Motion is a subtle whileInView rise with a small stagger, gated on reduced
- * motion, and always resolves to fully visible content.
+ * Portraits load eagerly (this section is deferred-mounted, so lazy loading
+ * never fires) and use object-top so heads are never cropped. On image error a
+ * gold monogram disc stands in, so a card never renders as a broken frame.
+ * Motion is a subtle whileInView rise, gated on reduced motion and always
+ * resolving to fully visible content.
  */
 
 /** Derive up-to-two-letter initials from a display name. */
@@ -43,27 +46,28 @@ interface PortraitProps {
   src: string;
   alt: string;
   initials: string;
+  rounded?: string;
 }
 
 /**
- * Tall 4:5 portrait that degrades to a gold monogram disc on load failure.
- * The image scales gently when its parent card is hovered (group/card).
+ * Portrait that degrades to a gold monogram disc on load failure.
+ * Eager loading (never lazy) because this section is deferred-mounted.
  */
-function Portrait({ src, alt, initials }: PortraitProps) {
+function Portrait({ src, alt, initials, rounded }: PortraitProps) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden bg-bg-2">
+    <div className={`relative h-full w-full overflow-hidden bg-bg-2 ${rounded ?? ''}`}>
       {failed || !src ? (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent/10 to-bg-2"
+          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gold-soft to-bg-2"
           aria-label={alt}
           role="img"
         >
-          <span className="flex h-24 w-24 items-center justify-center rounded-full border border-gold/30 bg-gold-soft md:h-28 md:w-28">
+          <span className="flex h-20 w-20 items-center justify-center rounded-full border border-gold/30 bg-surface md:h-24 md:w-24">
             <span
               className="select-none font-display font-bold tracking-tight text-gold"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)' }}
+              style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)' }}
             >
               {initials}
             </span>
@@ -73,126 +77,241 @@ function Portrait({ src, alt, initials }: PortraitProps) {
         <img
           src={src}
           alt={alt}
-         
+          loading="eager"
+          decoding="async"
           onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-[600ms] ease-out group-hover/card:scale-[1.04]"
+          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-[600ms] ease-out group-hover/card:scale-[1.03]"
         />
       )}
-
-      {/* Inner top hairline for depth */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/40"
-        aria-hidden="true"
-      />
-      {/* Soft bottom vignette so the card seam reads softly */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
-        style={{
-          background:
-            'linear-gradient(to top, rgba(10, 37, 64, 0.28), transparent)',
-        }}
-        aria-hidden="true"
-      />
     </div>
   );
 }
 
-/** Small mailto pill (>=44px tap target) used by each member card. */
-function EmailPill({ email }: { email: string }) {
+/** Accessible member dialog: larger portrait, bio, and live contact links. */
+function MemberDialog({ member, onClose }: { member: Member; onClose: () => void }) {
+  const reduced = useReducedMotion();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const titleId = `team-dialog-title-${member.id}`;
+  const initials = member.initials || initialsFromName(member.name);
+
+  // Focus the dialog on open, lock body scroll, and close on Escape.
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    dialogRef.current?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+
   return (
-    <a
-      href={`mailto:${email}`}
-      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2 text-[12px] text-ink-2 transition-colors duration-300 hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+    <motion.div
+      className="fixed inset-0 z-[100] flex items-end justify-center p-0 sm:items-center sm:p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reduced ? 0.15 : 0.25, ease: EASE }}
     >
-      <Mail size={13} strokeWidth={1.75} className="flex-shrink-0" />
-      <span className="truncate">{email}</span>
-    </a>
+      {/* Backdrop — click closes */}
+      <button
+        type="button"
+        aria-label="Close dialog"
+        onClick={onClose}
+        className="absolute inset-0 h-full w-full cursor-default bg-ink/40 backdrop-blur-sm"
+      />
+
+      <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        initial={reduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={reduced ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
+        transition={{ duration: reduced ? 0.15 : 0.32, ease: EASE }}
+        className="glass-strong relative flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl outline-none sm:rounded-2xl md:flex-row"
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-ink-2 transition-colors duration-300 hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+        >
+          <X size={18} strokeWidth={1.75} />
+        </button>
+
+        {/* Portrait */}
+        <div className="relative aspect-[4/5] w-full flex-shrink-0 overflow-hidden bg-bg-2 md:aspect-auto md:w-2/5">
+          <Portrait
+            src={member.photoPath}
+            alt={`Portrait of ${member.name}`}
+            initials={initials}
+          />
+        </div>
+
+        {/* Detail */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-6 md:p-8">
+          <p className="kicker !normal-case tracking-[0.08em]">{member.role}</p>
+          <h3
+            id={titleId}
+            className="mt-2 font-display font-semibold leading-tight tracking-tight text-ink"
+            style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', hyphens: 'none' }}
+          >
+            {member.name}
+          </h3>
+
+          <span className="mt-3 block h-px w-10 bg-gold" aria-hidden="true" />
+
+          <div className="mt-4 flex items-center gap-2 text-[13.5px] text-ink-2">
+            <GraduationCap size={15} strokeWidth={1.75} className="flex-shrink-0 text-gold" />
+            <span>
+              {member.course} · Year {member.year}
+            </span>
+          </div>
+
+          <p className="mt-5 text-[14px] leading-relaxed text-ink-2">{member.bio}</p>
+
+          <div className="mt-6 flex flex-col gap-2.5 pt-1">
+            <a
+              href={`mailto:${member.email}`}
+              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-[13px] text-ink-2 transition-colors duration-300 hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <Mail size={15} strokeWidth={1.75} className="flex-shrink-0 text-gold" />
+              <span className="truncate">{member.email}</span>
+            </a>
+            <a
+              href={`tel:${member.phone.replace(/\s+/g, '')}`}
+              className="inline-flex min-h-[44px] items-center gap-2.5 rounded-xl border border-line bg-surface px-4 py-2.5 text-[13px] text-ink-2 transition-colors duration-300 hover:border-accent/40 hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+            >
+              <Phone size={15} strokeWidth={1.75} className="flex-shrink-0 text-gold" />
+              <span>{member.phone}</span>
+            </a>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export function HomeTeamStrip() {
   const reduced = useReducedMotion();
+  const [active, setActive] = useState<Member | null>(null);
 
   const rise = (index: number) => ({
-    initial: reduced ? { opacity: 0 } : { opacity: 0, y: 24 },
+    initial: reduced ? { opacity: 0 } : { opacity: 0, y: 20 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, amount: 0.15 },
-    transition: { duration: 0.6, delay: reduced ? 0 : index * 0.08, ease: EASE },
+    transition: { duration: 0.55, delay: reduced ? 0 : index * 0.06, ease: EASE },
   });
 
   return (
     <section className="section-spacing border-t border-line" id="team">
       <div className="container-svc">
         {/* Header */}
-        <div className="mb-12 max-w-2xl md:mb-16">
-          <motion.div {...rise(0)} className="eyebrow mb-4">
-            The team
+        <div className="mb-10 max-w-2xl md:mb-14">
+          <motion.div {...rise(0)} className="eyebrow mb-3">
+            The Placement Cell
           </motion.div>
           <motion.h2
             {...rise(1)}
-            className="display-italic font-display font-bold leading-[1.05] tracking-tight text-ink"
+            className="font-display font-bold leading-[1.05] tracking-tight text-ink"
             style={{ fontSize: 'clamp(1.9rem, 4vw, 3rem)' }}
           >
-            The students who run the <em>cell.</em>
+            The Core Team 2026-27
           </motion.h2>
-          <motion.p
-            {...rise(2)}
-            className="mt-4 text-[15px] leading-relaxed text-ink-2 md:text-base"
-          >
-            Six elected leads carry the drives, briefs, and recruiter
-            conversations across the cycle.
-          </motion.p>
         </div>
 
-        {/* Core team — portrait-forward glass grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {coreTeam.map((member, i) => (
-            <motion.article
-              key={member.id}
-              {...rise(i)}
-              className="group/card glass flex h-full flex-col overflow-hidden transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-soft-lg)]"
-            >
-              <Portrait
-                src={member.photoPath}
-                alt={`Portrait of ${member.name}`}
-                initials={member.initials || initialsFromName(member.name)}
-              />
-
-              <div className="flex flex-1 flex-col p-6 md:p-7">
-                <h3
-                  className="font-display font-semibold leading-snug tracking-tight text-ink [text-wrap:balance]"
-                  style={{ fontSize: 'clamp(1.15rem, 2vw, 1.35rem)', hyphens: 'none' }}
+        {/* Core team — refined portrait-card grid */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {coreTeam.map((member, i) => {
+            const initials = member.initials || initialsFromName(member.name);
+            return (
+              <motion.div key={member.id} {...rise(i)} className="h-full">
+                <button
+                  type="button"
+                  onClick={() => setActive(member)}
+                  aria-label={`Open profile of ${member.name}, ${member.role}`}
+                  aria-haspopup="dialog"
+                  className="group/card glass flex h-full w-full flex-col overflow-hidden text-left transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-[var(--shadow-soft-lg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                 >
-                  {member.name}
-                </h3>
+                  {/* Portrait */}
+                  <div className="relative aspect-[4/5] w-full overflow-hidden">
+                    <Portrait
+                      src={member.photoPath}
+                      alt={`Portrait of ${member.name}`}
+                      initials={initials}
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
+                      style={{
+                        background:
+                          'linear-gradient(to top, rgba(10, 37, 64, 0.22), transparent)',
+                      }}
+                      aria-hidden="true"
+                    />
+                  </div>
 
-                {/* Gold underline — draws wider on hover */}
-                <span
-                  className="mt-3 block h-px w-8 bg-gold transition-[width] duration-500 ease-out group-hover/card:w-16"
-                  aria-hidden="true"
-                />
+                  {/* Body */}
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3
+                      className="font-display font-semibold leading-snug tracking-tight text-ink [text-wrap:balance]"
+                      style={{ fontSize: '1.15rem', hyphens: 'none' }}
+                    >
+                      {member.name}
+                    </h3>
+                    <p
+                      className="kicker mt-1.5 !normal-case tracking-[0.06em] [text-wrap:balance]"
+                      style={{ hyphens: 'none' }}
+                    >
+                      {member.role}
+                    </p>
 
-                <p
-                  className="kicker mt-3 !normal-case tracking-[0.08em] [text-wrap:balance]"
-                  style={{ hyphens: 'none' }}
-                >
-                  {member.role}
-                </p>
+                    <div className="mt-2 flex items-center gap-1.5 text-[12.5px] text-ink-3">
+                      <GraduationCap
+                        size={14}
+                        strokeWidth={1.75}
+                        className="flex-shrink-0 text-gold/80"
+                      />
+                      <span className="truncate">{member.course}</span>
+                    </div>
 
-                <p className="mt-4 text-[13.5px] leading-relaxed text-ink-2">
-                  {member.bio}
-                </p>
-
-                <div className="mt-6 pt-2">
-                  <EmailPill email={member.email} />
-                </div>
-              </div>
-            </motion.article>
-          ))}
+                    {/* Contact — plain text on the card; live links live in the dialog */}
+                    <div className="mt-4 space-y-1.5 border-t border-line pt-4 text-[12.5px] text-ink-2">
+                      <div className="flex items-center gap-2">
+                        <Phone
+                          size={13}
+                          strokeWidth={1.75}
+                          className="flex-shrink-0 text-ink-3"
+                        />
+                        <span>{member.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail
+                          size={13}
+                          strokeWidth={1.75}
+                          className="flex-shrink-0 text-ink-3"
+                        />
+                        <span className="truncate">{member.email}</span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Footer CTA */}
-        <motion.div {...rise(0)} className="mt-12 md:mt-14">
+        <motion.div {...rise(0)} className="mt-10 md:mt-12">
           <Link
             to="/team"
             className="group inline-flex min-h-[44px] items-center gap-2 font-mono text-[13px] uppercase tracking-[0.16em] text-accent transition-colors duration-300 hover:text-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
@@ -206,6 +325,11 @@ export function HomeTeamStrip() {
           </Link>
         </motion.div>
       </div>
+
+      {/* Member dialog */}
+      <AnimatePresence>
+        {active && <MemberDialog member={active} onClose={() => setActive(null)} />}
+      </AnimatePresence>
     </section>
   );
 }
