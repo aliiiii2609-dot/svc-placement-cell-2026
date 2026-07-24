@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail } from 'lucide-react';
-import { councilHeads, departmentCharters } from '@/lib/data/council';
+import { councilHeads } from '@/lib/data/council';
 import { coordinators } from '@/lib/data/coordinators';
 import { useReducedMotion } from '@/lib/hooks/useReducedMotion';
 import { cn } from '@/lib/utils/cn';
@@ -183,10 +183,12 @@ function MemberPill({
 }
 
 function MemberDetail({ member, onClose }: { member: Member; onClose: () => void }) {
-  const charter =
-    member.department && (member.department as keyof typeof departmentCharters) in departmentCharters
-      ? departmentCharters[member.department as keyof typeof departmentCharters].charter
-      : null;
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  // Move focus into the dialog on open so keyboard + screen-reader users land here.
+  useEffect(() => {
+    closeRef.current?.focus();
+  }, []);
 
   return (
     <motion.div
@@ -203,55 +205,68 @@ function MemberDetail({ member, onClose }: { member: Member; onClose: () => void
       <motion.div
         layoutId={`pill-${member.id}`}
         onClick={(e) => e.stopPropagation()}
-        className="bg-surface border border-line rounded-2xl shadow-soft-lg w-full max-w-md overflow-hidden relative"
+        className="bg-surface border border-line rounded-3xl shadow-soft-lg w-full max-w-sm overflow-hidden relative"
         transition={{ type: 'spring', stiffness: 260, damping: 26 }}
       >
+        {/* Soft navy → gold bloom behind the header, keeps the card on-brand and premium. */}
+        <div
+          className="absolute inset-x-0 top-0 h-40 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(120% 90% at 50% 0%, rgba(184,137,59,0.16), transparent 60%), radial-gradient(120% 120% at 50% 0%, rgba(30,78,140,0.10), transparent 70%)',
+          }}
+          aria-hidden="true"
+        />
+
         <button
+          ref={closeRef}
           onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-bg-2 hover:bg-accent-soft text-ink-3 hover:text-accent transition-colors inline-flex items-center justify-center z-10"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-bg-2 hover:bg-accent-soft text-ink-3 hover:text-accent transition-colors inline-flex items-center justify-center z-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
           aria-label="Close detail"
         >
           <X size={16} />
         </button>
 
-        <div className="p-7 flex flex-col items-center text-center">
+        <div className="relative px-7 pt-10 pb-8 flex flex-col items-center text-center">
           <motion.div
             layoutId={`avatar-${member.id}`}
-            className="w-24 h-24 rounded-full overflow-hidden border-[4px] border-bg shadow-soft mb-5 flex items-center justify-center relative"
+            className="w-28 h-28 rounded-full overflow-hidden border-[5px] border-surface shadow-soft-lg mb-5 flex items-center justify-center relative ring-1 ring-accent/25"
             style={{ background: avatarGradient(member.id) }}
           >
-            <MemberAvatar member={member} fontSize="34px" letterSpacing="-0.03em" />
+            <MemberAvatar member={member} fontSize="40px" letterSpacing="-0.03em" />
           </motion.div>
 
-          <div className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-accent mb-2">
+          <motion.div
+            layoutId={`name-${member.id}`}
+            className="font-display text-[1.75rem] leading-tight text-ink mb-2.5"
+          >
+            {member.name}
+          </motion.div>
+
+          <div className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-accent mb-5 max-w-full break-words">
             {member.role}
             {member.department && ` · ${member.department}`}
           </div>
 
-          <motion.div layoutId={`name-${member.id}`} className="font-display text-3xl text-ink mb-1">
-            {member.name}
-          </motion.div>
+          <div className="w-12 h-px bg-line mb-5" aria-hidden="true" />
 
-          <motion.div layoutId={`course-${member.id}`} className="text-sm text-ink-3 mb-6">
+          <div className="font-mono text-[0.58rem] uppercase tracking-[0.18em] text-ink-3 mb-1">
+            Course
+          </div>
+          <motion.div
+            layoutId={`course-${member.id}`}
+            className="text-[0.95rem] text-ink-2 mb-6 break-words"
+          >
             {member.course}
           </motion.div>
-
-          {charter && (
-            <div className="text-sm text-ink-2 leading-relaxed pt-5 border-t border-line w-full mb-5">
-              <div className="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-ink-3 mb-2">
-                Department charter
-              </div>
-              {charter}
-            </div>
-          )}
 
           {member.email && (
             <a
               href={`mailto:${member.email}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent text-surface text-sm font-medium hover:bg-gold-deep transition-colors shadow-soft"
+              className="inline-flex items-center gap-2 max-w-full px-5 py-2.5 rounded-full bg-accent text-surface text-[0.82rem] font-medium hover:bg-gold-deep transition-colors shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
             >
-              <Mail size={14} />
-              {member.email}
+              <Mail size={14} className="shrink-0" />
+              <span className="truncate">{member.email}</span>
             </a>
           )}
         </div>

@@ -12,7 +12,6 @@ const CYCLE_DURATION_MS = 6800;
 // Brand accents only. Navy + gold — no mint / pink / purple anywhere.
 const GOLD = '#d4a857';
 const GOLD_DEEP = '#b8893b';
-const NAVY = '#1e4e8c';
 
 /**
  * Headline Recruiters by Cycle — an organised logo-card grid.
@@ -170,6 +169,35 @@ const NAME_DOMAIN_MAP: Record<string, string> = {
   'oyo':                   'oyorooms.com',
   'capgemini':             'capgemini.com',
   'infosys':               'infosys.com',
+  'boston consulting group': 'bcg.com',
+  'aig':                   'aig.com',
+  'air india':             'airindia.com',
+  'axa xl':                'axaxl.com',
+  'better.com':            'better.com',
+  "byju's":                'byjus.com',
+  'byjus':                 'byjus.com',
+  'clairvolex':            'clairvolex.com',
+  'concentrix':            'concentrix.com',
+  'ditto by finshots':     'joinditto.in',
+  'dyson':                 'dyson.com',
+  'ecom express':          'ecomexpress.in',
+  'fis':                   'fisglobal.com',
+  'great learning':        'mygreatlearning.com',
+  'internshala':           'internshala.com',
+  'jaro education':        'jaroeducation.com',
+  'makemytrip':            'makemytrip.com',
+  'mobikwik':              'mobikwik.com',
+  'niit':                  'niit.com',
+  'planetspark':           'planetspark.in',
+  'policybazaar':          'policybazaar.com',
+  'rsa':                   'rsagroup.com',
+  'rsa actuarial':         'rsagroup.com',
+  'snapdeal':              'snapdeal.com',
+  'united airlines':       'united.com',
+  'upgrad':                'upgrad.com',
+  'urban company':         'urbancompany.com',
+  'wise finserv':          'wisefinserv.com',
+  'wise finserve':         'wisefinserv.com',
 };
 
 function getDomainForName(name: string): string | undefined {
@@ -427,30 +455,6 @@ export function HeadlineRecruitersReel() {
               Every firm that ran a drive at SVC during this cycle. Drawn
               from the cell&apos;s offer-level archives.
             </p>
-
-            {/* Total count + tier legend */}
-            <div className="mt-6 flex flex-col gap-2.5 max-w-xs">
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{ background: NAVY }}
-                />
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 tabular-nums">
-                  {sortedRecruiters.length} firms · this cycle
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="inline-block w-1.5 h-1.5 rounded-full"
-                  style={{ background: GOLD_DEEP }}
-                />
-                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
-                  Gold ring · premier partner
-                </span>
-              </div>
-            </div>
           </div>
 
           {/* Logo-card grid — smooth cross-fade, cheap per-card stagger */}
