@@ -230,3 +230,5 @@ svc-placement-cell/
 ## License
 
 Code is the cell's. Brand marks belong to their respective owners. Real photographs are released to the cell with the consent pipeline documented in the codebase and the brochure.
+
+> Live: https://svc-placement-cell.vercel.app
