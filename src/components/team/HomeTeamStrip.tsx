@@ -173,9 +173,7 @@ function MemberDialog({ member, onClose }: { member: Member; onClose: () => void
 
           <div className="mt-4 flex items-center gap-2 text-[13.5px] text-ink-2">
             <GraduationCap size={15} strokeWidth={1.75} className="flex-shrink-0 text-gold" />
-            <span>
-              {member.course} · Year {member.year}
-            </span>
+            <span>{member.course}</span>
           </div>
 
           <p className="mt-5 text-[14px] leading-relaxed text-ink-2">{member.bio}</p>
