@@ -25,10 +25,6 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 const NAVY = '#0a2540';
 
-// The building only appears toward the bottom; the top stays pure navy.
-const BUILDING_MASK =
-  'linear-gradient(to bottom, transparent 0%, transparent 22%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.85) 82%, rgba(0,0,0,1) 100%)';
-
 const wordRevealAnim = {
   hidden: { opacity: 0, y: 16 },
   visible: (i: number) => ({
@@ -102,17 +98,14 @@ export function Hero() {
         <motion.img
           src="/images/campus/svc-building.jpg"
           alt="Sri Venkateswara College main building"
-          className="absolute inset-0 w-full h-full object-cover object-bottom pointer-events-none"
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none"
           style={{
-            opacity: 0.24,
-            filter: 'saturate(0.5) brightness(0.92) contrast(1.02)',
-            WebkitMaskImage: BUILDING_MASK,
-            maskImage: BUILDING_MASK,
-            transformOrigin: 'center 82%',
+            filter: 'saturate(0.92) brightness(0.9)',
+            transformOrigin: 'center center',
           }}
           loading="eager"
-          initial={{ scale: reduce ? 1.06 : 1.04 }}
-          animate={{ scale: reduce ? 1.06 : 1.12 }}
+          initial={{ scale: reduce ? 1.03 : 1.02 }}
+          animate={{ scale: reduce ? 1.03 : 1.07 }}
           transition={
             reduce
               ? undefined
@@ -120,24 +113,22 @@ export function Hero() {
           }
         />
 
-        {/* Deep-navy tint — pure navy at the top, translucent through the middle so
-            the building peeks softly, and a touch denser at the very bottom to keep
-            the CTAs legible and to blend into the band below. */}
+        {/* Left-heavy scrim: dark where the text sits, clearing to the right so the
+            building stays clearly visible. */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'linear-gradient(180deg, #0a2540 0%, rgba(10,37,64,0.80) 44%, rgba(11,42,78,0.34) 78%, rgba(12,46,84,0.58) 100%)',
+              'linear-gradient(100deg, rgba(6,20,42,0.90) 0%, rgba(6,20,42,0.66) 32%, rgba(7,24,48,0.30) 58%, rgba(7,24,48,0.12) 84%, rgba(7,24,48,0.30) 100%)',
           }}
           aria-hidden="true"
         />
 
-        {/* Soft gold bloom rising from the bottom center — quiet institutional warmth. */}
+        {/* Bottom fade so the band blends into the paper section below. */}
         <div
-          className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none mix-blend-screen"
+          className="absolute inset-x-0 bottom-0 h-2/5 pointer-events-none"
           style={{
-            background:
-              'radial-gradient(62% 82% at 50% 102%, rgba(212,168,87,0.14) 0%, transparent 70%)',
+            background: 'linear-gradient(0deg, rgba(6,20,42,0.70) 0%, transparent 100%)',
           }}
           aria-hidden="true"
         />
@@ -149,56 +140,24 @@ export function Hero() {
           aria-hidden="true"
         />
 
-        {/* Centered editorial content. Entrances run once, then idle. */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center">
+        {/* Content — left aligned, minimal. Entrances run once, then idle. */}
+        <div className="absolute inset-0 z-10 flex items-center">
           <div className="container-svc w-full">
-            <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-              {/* Crest lockup */}
-              <motion.div {...reveal(0, -8)} className="mb-5 flex flex-col items-center gap-3">
-                <span className="inline-flex items-center justify-center rounded-xl bg-white/[0.08] ring-1 ring-white/15 backdrop-blur-md p-2 shadow-lg">
-                  <img
-                    src="/logos/svc-crest.png"
-                    alt="Sri Venkateswara College official seal"
-                    className="w-12 h-12 md:w-14 md:h-14 drop-shadow"
-                  />
-                </span>
-                <span className="font-mono text-[10.5px] md:text-[11px] uppercase tracking-[0.18em] text-white/85 leading-[1.6]">
-                  Sri Venkateswara College
-                  <br />
-                  <span className="text-white/55">University of Delhi</span>
-                </span>
-              </motion.div>
-
-              {/* Eyebrow with symmetric gold hairlines */}
+            <div className="max-w-2xl">
+              {/* Simple label */}
               <motion.div
-                {...reveal(0.14)}
-                className="mb-6 flex items-center justify-center gap-3"
+                {...reveal(0.1)}
+                className="mb-5 font-mono text-[11px] md:text-[12px] uppercase tracking-[0.22em] text-ribbon-gold"
               >
-                <span
-                  className="h-px w-8"
-                  style={{
-                    background: 'linear-gradient(90deg, rgba(212,168,87,0) 0%, rgba(212,168,87,0.9) 100%)',
-                  }}
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.28em] text-ribbon-gold">
-                  The Placement Cell
-                </span>
-                <span
-                  className="h-px w-8"
-                  style={{
-                    background: 'linear-gradient(90deg, rgba(212,168,87,0.9) 0%, rgba(212,168,87,0) 100%)',
-                  }}
-                  aria-hidden="true"
-                />
+                The Placement Cell · Sri Venkateswara College
               </motion.div>
 
-              {/* Headline — calmer, smaller, gold accent on the closing word. */}
+              {/* Headline */}
               <h1
-                className="font-display font-semibold text-white leading-[1.12] tracking-[-0.02em] mb-6"
+                className="font-display font-semibold text-white leading-[1.08] tracking-[-0.02em] mb-8"
                 style={{
-                  fontSize: 'clamp(1.75rem, 3.6vw, 3.1rem)',
-                  textShadow: '0 1px 24px rgba(3,12,28,0.5)',
+                  fontSize: 'clamp(2rem, 4.4vw, 3.6rem)',
+                  textShadow: '0 1px 26px rgba(3,12,28,0.55)',
                 }}
               >
                 <WordsCascade
@@ -208,31 +167,8 @@ export function Hero() {
                 />
               </h1>
 
-              {/* Gold divider */}
-              <motion.span
-                {...reveal(0.9)}
-                className="mb-6 block h-px w-12"
-                style={{
-                  background:
-                    'linear-gradient(90deg, transparent 0%, rgba(212,168,87,0.85) 50%, transparent 100%)',
-                }}
-                aria-hidden="true"
-              />
-
-              {/* Subtitle */}
-              <motion.p
-                {...reveal(1.0)}
-                className="text-sm md:text-base text-white/80 max-w-xl leading-relaxed mb-8"
-              >
-                The single point of coordination for placements and internships at Sri
-                Venkateswara College, University of Delhi.
-              </motion.p>
-
               {/* CTAs */}
-              <motion.div
-                {...reveal(1.12)}
-                className="flex flex-col sm:flex-row items-center justify-center gap-3"
-              >
+              <motion.div {...reveal(0.9)} className="flex flex-col sm:flex-row gap-3">
                 <Button as={Link as never} to="/recruiters#interest" size="lg">
                   Recruit with us
                 </Button>
