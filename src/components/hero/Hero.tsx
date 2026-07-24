@@ -63,10 +63,12 @@ function WordsCascade({
             'inline-block will-change-transform',
             i === words.length - 1 && lastWordClassName,
           )}
+          // A trailing space inside an inline-block is trimmed, which jams the
+          // words together. A right margin gives a reliable, wrap-friendly gap.
+          style={{ marginRight: i < words.length - 1 ? '0.28em' : undefined }}
           aria-hidden="true"
         >
           {word}
-          {i < words.length - 1 && ' '}
         </motion.span>
       ))}
     </span>
